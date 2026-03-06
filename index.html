@@ -374,6 +374,9 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
 <div id="step0">
   <div class="hero">
     <div class="hero-eyebrow">Free Estimator</div>
+    <div style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#e8380d,#f0a500);color:#fff;font-size:1.1rem;font-weight:900;letter-spacing:.06em;padding:10px 24px;border-radius:8px;margin-bottom:16px;box-shadow:0 4px 18px rgba(232,56,13,.35);">
+      🎉 今だけ限定価格 <span style="font-size:1.6rem;line-height:1;">50% OFF</span>
+    </div>
     <h1 class="hero-title">何を制作しますか？</h1>
     <p class="hero-sub">カテゴリを選ぶと、専用の見積もりステップが始まります</p>
   </div>
@@ -1140,7 +1143,8 @@ function calcTotal() {
       const delivAmt = Math.round(baseExTax * deliv.rate);
       const afterDeliv = baseExTax + delivAmt;
       const tax = Math.round(afterDeliv * 0.1);
-      return { base:baseExTax, discount:plan.saving, delivAmt, afterDeliv, tax, total:afterDeliv+tax };
+      const rawTotal = afterDeliv + tax;
+      return { base:baseExTax, discount:plan.saving, delivAmt, afterDeliv, tax, total:rawTotal, saleTotal:Math.round(rawTotal*0.5) };
     }
   }
 

@@ -362,8 +362,11 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
   <div style="display:flex;align-items:center;gap:16px;">
     <button class="header-admin-btn" onclick="openAdmin()">⚙ 管理</button>
     <div class="header-total-wrap">
-      <div class="header-total-label">概算合計（税込）</div>
-      <div class="header-total-num" id="headerAmt">¥ 0</div>
+      <div class="header-total-label">通常価格 → <span id="headerAmtOriginal" style="text-decoration:line-through;color:rgba(255,255,255,.35);font-family:var(--mono)">¥ 0</span></div>
+      <div style="display:flex;align-items:center;gap:7px;">
+        <span style="background:linear-gradient(90deg,#e8380d,#f0a500);color:#fff;font-size:.6rem;font-weight:900;padding:2px 7px;border-radius:3px;letter-spacing:.04em;">50%OFF</span>
+        <div class="header-total-num" id="headerAmt">¥ 0</div>
+      </div>
     </div>
   </div>
 </header>
@@ -1028,6 +1031,7 @@ function showResultFromSet(plan) {
   const afterDeliv = baseExTax + delivAmt;
   const tax = Math.round(afterDeliv * 0.1);
   const total = afterDeliv + tax;
+  const saleTotal = Math.round(total * 0.5);
 
   document.getElementById('stepsContainer').innerHTML = '';
   const panel = document.getElementById('resultPanel');
@@ -1035,8 +1039,11 @@ function showResultFromSet(plan) {
     <div class="step-head"><div class="step-eyebrow">見積もり結果</div><h2 class="step-title">セットプラン 概算見積もり</h2></div>
     <div class="result-hero">
       <div>
-        <div class="result-hero-label">概算合計金額（税込）</div>
-        <div class="result-hero-amount">¥ ${total.toLocaleString()}</div>
+        <div class="result-hero-label">通常価格（税込）</div>
+        <div style="font-family:var(--mono);font-size:1.1rem;font-weight:600;color:rgba(255,255,255,.45);text-decoration:line-through;">¥ ${total.toLocaleString()}</div>
+        <div style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#e8380d,#f0a500);color:#fff;font-size:.75rem;font-weight:900;letter-spacing:.06em;padding:4px 12px;border-radius:5px;margin:6px 0;">今だけ 50% OFF</div>
+        <div class="result-hero-label" style="margin-top:4px;">50%OFF 価格（税込）</div>
+        <div class="result-hero-amount">¥ ${saleTotal.toLocaleString()}</div>
         <div class="result-hero-sub">税抜: ¥${afterDeliv.toLocaleString()} ／ディレクション費込</div>
       </div>
       <div>
@@ -1055,7 +1062,8 @@ function showResultFromSet(plan) {
   if (plan.saving) { const tr=document.createElement('tr'); tr.className='row-disc'; tr.innerHTML=`<td>🎁 セット割引</td><td class="num-col" style="color:var(--green)">−¥${plan.saving.toLocaleString()}</td>`; tb.appendChild(tr); }
   if (delivAmt !== 0) { const tr=document.createElement('tr'); tr.className='row-disc'; tr.innerHTML=`<td>${deliv.label}</td><td class="num-col" style="color:${delivAmt>0?'var(--accent)':'var(--green)'}">${delivAmt>0?'+':''}¥${Math.abs(delivAmt).toLocaleString()}</td>`; tb.appendChild(tr); }
   addBkRow(tb,'消費税（10%）', tax, '');
-  const ttr=document.createElement('tr'); ttr.className='row-total'; ttr.innerHTML=`<td>税込合計</td><td class="num-col">¥${total.toLocaleString()}</td>`; tb.appendChild(ttr);
+  const ttr=document.createElement('tr'); ttr.className='row-total'; ttr.innerHTML=`<td>税込合計（通常）</td><td class="num-col" style="text-decoration:line-through;color:rgba(255,255,255,.5)">¥${total.toLocaleString()}</td>`; tb.appendChild(ttr);
+  const ttr2=document.createElement('tr'); ttr2.className='row-total'; ttr2.style.background='linear-gradient(90deg,#e8380d,#f0a500)'; ttr2.innerHTML=`<td>🎉 今だけ50%OFF 税込合計</td><td class="num-col" style="font-size:1.05rem;color:#fff">¥${saleTotal.toLocaleString()}</td>`; tb.appendChild(ttr2);
   tbl.appendChild(tb); panel.appendChild(tbl);
 
   appendResultActions(panel);
@@ -1164,13 +1172,21 @@ function calcTotal() {
   const delivAmt = Math.round(beforeDeliv * deliv.rate);
   const afterDeliv = beforeDeliv + delivAmt;
   const tax = Math.round(afterDeliv * 0.1);
-  return { base, discount:disc, direction:dir, delivAmt, afterDeliv, tax, total:afterDeliv+tax };
+  const total = afterDeliv + tax;
+  return { base, discount:disc, direction:dir, delivAmt, afterDeliv, tax, total, saleTotal:Math.round(total*0.5) };
 }
 
 function updateHeader() {
-  const { total } = calcTotal();
+  const { total, saleTotal } = calcTotal();
   const el = document.getElementById('headerAmt');
-  el.textContent = total>0 ? '¥ '+total.toLocaleString() : '¥ 0';
+  const elOrig = document.getElementById('headerAmtOriginal');
+  if (total > 0) {
+    elOrig.textContent = '¥ ' + total.toLocaleString();
+    el.textContent = '¥ ' + saleTotal.toLocaleString();
+  } else {
+    elOrig.textContent = '¥ 0';
+    el.textContent = '¥ 0';
+  }
   el.classList.add('pop');
   setTimeout(() => el.classList.remove('pop'), 260);
 }
@@ -1184,7 +1200,7 @@ function showResult() {
     if(!ST.sel[def.id]||!ST.sel[def.id].value){ showToast('いずれかを1つ選んでください'); return; }
   }
   const cat = CATS[ST.cat];
-  const { base, discount, direction, delivAmt, afterDeliv, tax, total } = calcTotal();
+  const { base, discount, direction, delivAmt, afterDeliv, tax, total, saleTotal } = calcTotal();
   const deliv = DELIVERY_OPTIONS.find(d=>d.id===ST.delivery) || DELIVERY_OPTIONS[2];
   document.getElementById('stepsContainer').innerHTML = '';
   document.getElementById('progressWrap').style.display = 'none';
@@ -1194,8 +1210,11 @@ function showResult() {
     <div class="step-head"><div class="step-eyebrow">見積もり結果</div><h2 class="step-title">概算見積もり</h2></div>
     <div class="result-hero">
       <div>
-        <div class="result-hero-label">概算合計金額（税込）</div>
-        <div class="result-hero-amount">¥ ${total.toLocaleString()}</div>
+        <div class="result-hero-label">通常価格（税込）</div>
+        <div style="font-family:var(--mono);font-size:1.1rem;font-weight:600;color:rgba(255,255,255,.45);text-decoration:line-through;">¥ ${total.toLocaleString()}</div>
+        <div style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#e8380d,#f0a500);color:#fff;font-size:.75rem;font-weight:900;letter-spacing:.06em;padding:4px 12px;border-radius:5px;margin:6px 0;">今だけ 50% OFF</div>
+        <div class="result-hero-label" style="margin-top:4px;">50%OFF 価格（税込）</div>
+        <div class="result-hero-amount">¥ ${saleTotal.toLocaleString()}</div>
         <div class="result-hero-sub">税抜: ¥${afterDeliv.toLocaleString()} ／ディレクション費込</div>
       </div>
       <div>
@@ -1229,7 +1248,8 @@ function showResult() {
   if(direction) addBkRow3(tb,`ディレクション費（15%）`,direction,'');
   if(delivAmt!==0){ const tr=document.createElement('tr'); tr.className='row-disc'; tr.innerHTML=`<td colspan="2">${deliv.label}</td><td class="num-col" style="color:${delivAmt>0?'var(--accent)':'var(--green)'}">${delivAmt>0?'+':''}¥${Math.abs(delivAmt).toLocaleString()}</td>`; tb.appendChild(tr); }
   addBkRow3(tb,'消費税（10%）',tax,'');
-  const ttr=document.createElement('tr'); ttr.className='row-total'; ttr.innerHTML=`<td colspan="2">税込合計</td><td class="num-col">¥${total.toLocaleString()}</td>`; tb.appendChild(ttr);
+  const ttr=document.createElement('tr'); ttr.className='row-total'; ttr.innerHTML=`<td colspan="2">税込合計（通常）</td><td class="num-col" style="text-decoration:line-through;color:rgba(255,255,255,.5)">¥${total.toLocaleString()}</td>`; tb.appendChild(ttr);
+  const ttr2=document.createElement('tr'); ttr2.className='row-total'; ttr2.style.background='linear-gradient(90deg,#e8380d,#f0a500)'; ttr2.innerHTML=`<td colspan="2">🎉 今だけ50%OFF 税込合計</td><td class="num-col" style="font-size:1.05rem;color:#fff">¥${saleTotal.toLocaleString()}</td>`; tb.appendChild(ttr2);
   tbl.appendChild(tb); panel.appendChild(tbl);
 
   appendResultActions(panel);

@@ -290,6 +290,22 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
 .btn-send:hover{filter:brightness(1.07);transform:translateY(-2px);}
 .btn-cancel{padding:12px 16px;border-radius:9px;border:2px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;font-family:var(--gothic);}
 
+/* ─── 依頼者種別ラジオ ─── */
+.ftype-wrap{display:flex;gap:10px;flex-wrap:wrap;}
+.ftype-opt{
+  flex:1;min-width:130px;display:flex;align-items:center;gap:8px;
+  border:2px solid var(--line);border-radius:10px;padding:11px 14px;
+  cursor:pointer;transition:all .18s;background:var(--bg);font-size:.85rem;font-weight:700;
+}
+.ftype-opt:has(input:checked){border-color:var(--accent);background:var(--accent-light);color:var(--accent);}
+.ftype-opt input[type="radio"]{accent-color:var(--accent);width:16px;height:16px;cursor:pointer;}
+.form-divider{
+  font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin:18px 0 12px;
+  display:flex;align-items:center;gap:10px;
+}
+.form-divider::before,.form-divider::after{content:'';flex:1;height:1px;background:var(--line);}
+
 /* ─── TOAST ─── */
 .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--ink);color:#fff;padding:10px 20px;border-radius:50px;font-size:.8rem;font-weight:600;opacity:0;pointer-events:none;z-index:999;transition:all .26s;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
@@ -435,12 +451,80 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
 <div class="overlay" id="contactModal">
   <div class="modal">
     <div class="modal-title">お問い合わせ・ご相談</div>
-    <div class="modal-sub">見積もり内容を自動転記しました。詳細をご入力のうえ送信してください。</div>
+    <div class="modal-sub">見積もり内容を自動転記しました。お客様情報をご入力のうえ送信してください。</div>
     <div class="est-preview" id="modalPreview"></div>
-    <div class="form-row"><label class="form-label">お名前<sup>*</sup></label><input class="finput" id="fName" placeholder="山田 太郎"></div>
-    <div class="form-row"><label class="form-label">会社名・屋号</label><input class="finput" id="fCompany" placeholder="株式会社〇〇"></div>
-    <div class="form-row"><label class="form-label">メールアドレス<sup>*</sup></label><input class="finput" id="fEmail" type="email" placeholder="your@email.com"></div>
-    <div class="form-row"><label class="form-label">ご要望・補足</label><textarea class="ftextarea" id="fMsg"></textarea></div>
+
+    <!-- 依頼者種別 -->
+    <div class="form-row">
+      <label class="form-label">依頼者の種別<sup>*</sup></label>
+      <div class="ftype-wrap">
+        <label class="ftype-opt" id="typeCompanyLabel">
+          <input type="radio" name="clientType" value="company" id="typeCompany" onchange="toggleClientType()" checked>
+          <span>🏢 法人・事業者</span>
+        </label>
+        <label class="ftype-opt" id="typePersonalLabel">
+          <input type="radio" name="clientType" value="personal" id="typePersonal" onchange="toggleClientType()">
+          <span>👤 個人</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- 法人のみ -->
+    <div id="companyFields">
+      <div class="form-row">
+        <label class="form-label">会社名・屋号<sup>*</sup></label>
+        <input class="finput" id="fCompany" placeholder="株式会社〇〇">
+      </div>
+      <div class="form-row">
+        <label class="form-label">部署名</label>
+        <input class="finput" id="fDept" placeholder="マーケティング部（任意）">
+      </div>
+    </div>
+
+    <!-- 共通 -->
+    <div class="form-row">
+      <label class="form-label" id="fNameLabel">担当者名<sup>*</sup></label>
+      <input class="finput" id="fName" placeholder="山田 太郎">
+    </div>
+    <div class="form-row">
+      <label class="form-label">メールアドレス<sup>*</sup></label>
+      <input class="finput" id="fEmail" type="email" placeholder="your@email.com">
+    </div>
+    <div class="form-row">
+      <label class="form-label">電話番号</label>
+      <input class="finput" id="fTel" type="tel" placeholder="090-0000-0000（任意）">
+    </div>
+
+    <div class="form-divider">プロジェクト詳細</div>
+
+    <div class="form-row">
+      <label class="form-label">ご予算感</label>
+      <select class="finput" id="fBudget">
+        <option value="">選択してください（任意）</option>
+        <option value="〜50万円">〜50万円</option>
+        <option value="50〜100万円">50〜100万円</option>
+        <option value="100〜300万円">100〜300万円</option>
+        <option value="300〜500万円">300〜500万円</option>
+        <option value="500万円〜">500万円〜</option>
+        <option value="未定・相談したい">未定・相談したい</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label class="form-label">ご希望納期</label>
+      <select class="finput" id="fDeadline">
+        <option value="">選択してください（任意）</option>
+        <option value="1ヶ月以内（特急）">1ヶ月以内（特急）</option>
+        <option value="2〜3ヶ月">2〜3ヶ月</option>
+        <option value="3〜6ヶ月">3〜6ヶ月</option>
+        <option value="半年以上">半年以上</option>
+        <option value="未定・相談したい">未定・相談したい</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label class="form-label">ご要望・補足</label>
+      <textarea class="ftextarea" id="fMsg" placeholder="参考サイト・こだわり・懸念点など自由にご記入ください"></textarea>
+    </div>
+
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">キャンセル</button>
       <button class="btn-send" onclick="submitContact()">送信する →</button>
@@ -1283,21 +1367,77 @@ function appendResultActions(panel) {
 //  PDF（ブラウザ印刷方式）
 // =============================================
 function generatePDF() {
+  // 連絡フォームに入力済みの情報があれば自動転記
+  const existingType = document.getElementById('typeCompany').checked ? 'company' : 'personal';
+  const existingCompany = document.getElementById('fCompany').value.trim();
+  const existingName = document.getElementById('fName').value.trim();
+  if (existingType === 'company') {
+    document.getElementById('pdfTypeCompany').checked = true;
+  } else {
+    document.getElementById('pdfTypePersonal').checked = true;
+  }
+  document.getElementById('pdfCompany').value = existingCompany;
+  document.getElementById('pdfName').value = existingName;
+  togglePdfType();
+  document.getElementById('pdfModal').classList.add('open');
+}
+
+function togglePdfType() {
+  const isCompany = document.getElementById('pdfTypeCompany').checked;
+  document.getElementById('pdfCompanyField').style.display = isCompany ? '' : 'none';
+  document.getElementById('pdfNameLabel').textContent = isCompany ? '担当者名' : 'お名前';
+}
+
+function closePdfModal() { document.getElementById('pdfModal').classList.remove('open'); }
+document.getElementById('pdfModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) closePdfModal(); });
+
+function executePDF() {
+  const isCompany = document.getElementById('pdfTypeCompany').checked;
+  const company   = document.getElementById('pdfCompany').value.trim();
+  const name      = document.getElementById('pdfName').value.trim();
+  closePdfModal();
+
   const cat=CATS[ST.cat];
-  const { total, afterDeliv } = calcTotal();
+  const { total, saleTotal } = calcTotal();
   const today=new Date();
   const ds=`${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日`;
-  ['printHeader','printDisclaimer'].forEach(id=>{ const e=document.getElementById(id); if(e)e.remove(); });
+  ['printHeader','printTo','printDisclaimer'].forEach(id=>{ const e=document.getElementById(id); if(e)e.remove(); });
+
   const panel=document.getElementById('resultPanel');
+
+  // 宛先ブロック
+  const pt=document.createElement('div'); pt.className='print-to'; pt.id='printTo';
+  if (isCompany && company) {
+    pt.innerHTML=`<div class="print-to-company">${company} 御中</div>${name?`<div class="print-to-name">${name} 様</div>`:''}`;
+  } else if (!isCompany && name) {
+    pt.innerHTML=`<div class="print-to-company">${name} 様</div>`;
+  } else {
+    pt.innerHTML=`<div class="print-to-blank">（宛先未入力）</div>`;
+  }
+
+  // ヘッダー
   const ph=document.createElement('div'); ph.className='print-header'; ph.id='printHeader';
-  ph.innerHTML=`<div class="print-header-left"><h1>概算見積書</h1><p>${cat.icon} ${cat.label}　発行日：${ds}</p></div>
-    <div class="print-header-right"><div class="ph-label">概算合計（税込）</div><div class="ph-total">¥ ${total.toLocaleString()}</div></div>`;
+  ph.innerHTML=`<div class="print-header-left">
+      <h1>概算見積書</h1>
+      <p>${cat.icon} ${cat.label}　発行日：${ds}</p>
+    </div>
+    <div class="print-header-right">
+      <div class="ph-label">通常価格（税込）</div>
+      <div style="font-size:.85rem;color:rgba(255,255,255,.4);text-decoration:line-through;font-family:'IBM Plex Mono',monospace;">¥ ${total.toLocaleString()}</div>
+      <div class="ph-label" style="margin-top:4px;">50%OFF 価格（税込）</div>
+      <div class="ph-total">¥ ${saleTotal.toLocaleString()}</div>
+      <div style="font-size:.58rem;color:rgba(255,255,255,.4);margin-top:2px;">期間限定〜2026年8月末</div>
+    </div>`;
+
+  panel.insertBefore(pt, panel.firstChild);
   panel.insertBefore(ph, panel.firstChild);
+
   const pd=document.createElement('div'); pd.className='print-disclaimer'; pd.id='printDisclaimer';
   pd.textContent='※ 本書は概算見積書です。実際の金額はヒアリング・要件定義後に正式なお見積もりをご提示します。';
   panel.appendChild(pd);
+
   window.print();
-  setTimeout(()=>{ ['printHeader','printDisclaimer'].forEach(id=>{ const e=document.getElementById(id); if(e)e.remove(); }); },1000);
+  setTimeout(()=>{ ['printHeader','printTo','printDisclaimer'].forEach(id=>{ const e=document.getElementById(id); if(e)e.remove(); }); }, 1000);
 }
 
 // =============================================
@@ -1327,16 +1467,29 @@ function copyEstimate() {
 // =============================================
 //  CONTACT MODAL
 // =============================================
+function toggleClientType() {
+  const isCompany = document.getElementById('typeCompany').checked;
+  document.getElementById('companyFields').style.display = isCompany ? '' : 'none';
+  document.getElementById('fNameLabel').innerHTML = isCompany ? '担当者名<sup>*</sup>' : 'お名前<sup>*</sup>';
+  document.getElementById('fName').placeholder = isCompany ? '山田 太郎' : '山田 太郎';
+}
+
 function openModal() {
   const cat=CATS[ST.cat];
-  const { total }=calcTotal();
+  const { total, saleTotal }=calcTotal();
   const deliv=DELIVERY_OPTIONS.find(d=>d.id===ST.delivery)||DELIVERY_OPTIONS[2];
   const items=[];
   if(ST.setPlan){ const p=cat.sets.find(s=>s.id===ST.setPlan); if(p){ items.push('🎁 '+p.name); p.chips.forEach(c=>items.push(c)); } }
   else { cat.steps.forEach(step=>{ const sel=ST.sel[step.id]; if(!sel)return; if(step.type==='single'){const opt=step.options.find(o=>o.id===sel.value);if(opt)items.push(opt.name);}else Object.entries(sel).forEach(([id,qty])=>{const opt=step.options.find(o=>o.id===id);if(opt)items.push(opt.name+(qty>1?` ×${qty}`:'')); }); }); }
   items.push(`📅 ${deliv.label}`);
-  document.getElementById('modalPreview').innerHTML=`<strong>概算合計（税込）: ¥${total.toLocaleString()}</strong><br>${items.map(i=>'・'+i).join('<br>')}`;
-  document.getElementById('fMsg').value=`【見積もり内容】\n概算（税込）: ¥${total.toLocaleString()}\n選択: ${items.join('、')}\n\n`;
+  document.getElementById('modalPreview').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;margin-bottom:6px;">
+      <span style="font-size:.72rem;color:var(--muted);text-decoration:line-through;">通常: ¥${total.toLocaleString()}</span>
+      <strong style="color:var(--accent);font-size:1rem;">50%OFF: ¥${saleTotal.toLocaleString()}（税込）</strong>
+    </div>
+    ${items.map(i=>'・'+i).join('<br>')}`;
+  document.getElementById('fMsg').value=`【見積もり内容】\n通常価格（税込）: ¥${total.toLocaleString()}\n50%OFF価格（税込）: ¥${saleTotal.toLocaleString()}\n選択項目: ${items.join('、')}\n\n`;
+  toggleClientType();
   document.getElementById('contactModal').classList.add('open');
 }
 function closeModal(){ document.getElementById('contactModal').classList.remove('open'); }
@@ -1347,25 +1500,39 @@ const WORKERS_URL = 'https://rapid-dream-c353.t-yoshizaki-taka.workers.dev';
 const ADMIN_KEY = 'admin1234'; // ← Workerのものと一致させる
 
 async function submitContact() {
-  const name=document.getElementById('fName').value.trim();
-  const email=document.getElementById('fEmail').value.trim();
-  const company=document.getElementById('fCompany').value.trim();
-  const message=document.getElementById('fMsg').value.trim();
-  if(!name){ showToast('お名前を入力してください'); return; }
-  if(!email){ showToast('メールを入力してください'); return; }
+  const clientType = document.getElementById('typeCompany').checked ? 'company' : 'personal';
+  const name    = document.getElementById('fName').value.trim();
+  const company = clientType==='company' ? document.getElementById('fCompany').value.trim() : '';
+  const dept    = clientType==='company' ? document.getElementById('fDept').value.trim() : '';
+  const email   = document.getElementById('fEmail').value.trim();
+  const tel     = document.getElementById('fTel').value.trim();
+  const budget  = document.getElementById('fBudget').value;
+  const deadline= document.getElementById('fDeadline').value;
+  const message = document.getElementById('fMsg').value.trim();
+
+  if(clientType==='company' && !company){ showToast('会社名を入力してください'); return; }
+  if(!name){ showToast(clientType==='company'?'担当者名を入力してください':'お名前を入力してください'); return; }
+  if(!email){ showToast('メールアドレスを入力してください'); return; }
+
   const cat=CATS[ST.cat];
-  const { total }=calcTotal();
+  const { total, saleTotal }=calcTotal();
   const deliv=DELIVERY_OPTIONS.find(d=>d.id===ST.delivery)||DELIVERY_OPTIONS[2];
   const items=[];
   if(ST.setPlan){ const p=cat.sets.find(s=>s.id===ST.setPlan); if(p){ items.push('🎁 '+p.name); p.chips.forEach(c=>items.push(c)); } }
   else { cat.steps.forEach(step=>{ const sel=ST.sel[step.id]; if(!sel)return; if(step.type==='single'){const opt=step.options.find(o=>o.id===sel.value);if(opt)items.push(opt.name);}else Object.entries(sel).forEach(([id,qty])=>{const opt=step.options.find(o=>o.id===id);if(opt)items.push(opt.name+(qty>1?` ×${qty}`:'')); }); }); }
   items.push(`📅 ${deliv.label}`);
-  const estimate=`${cat.label}\n概算合計（税込）: ¥${total.toLocaleString()}\n\n選択項目:\n${items.map(i=>'・'+i).join('\n')}`;
+
+  const clientInfo = clientType==='company'
+    ? `会社名: ${company}${dept?` / ${dept}`:''}\n担当者: ${name}`
+    : `お名前: ${name}`;
+  const estimate=`【依頼者情報】\n種別: ${clientType==='company'?'法人・事業者':'個人'}\n${clientInfo}\nメール: ${email}${tel?`\nTEL: ${tel}`:''}\n\n【見積もり内容】\n${cat.label}\n通常価格（税込）: ¥${total.toLocaleString()}\n50%OFF価格（税込）: ¥${saleTotal.toLocaleString()}\n\n選択項目:\n${items.map(i=>'・'+i).join('\n')}${budget?`\n\nご予算: ${budget}`:''}${deadline?`\nご希望納期: ${deadline}`:''}${message?`\n\nご要望:\n${message}`:''}`;
+
   const btn=document.querySelector('.btn-send');
   btn.textContent='送信中...'; btn.disabled=true;
   try {
     if(WORKERS_URL&&!WORKERS_URL.includes('YOUR_WORKER')){
-      const res=await fetch(WORKERS_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name,company,email,message,estimate}) });
+      const res=await fetch(WORKERS_URL,{ method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({clientType,name,company,dept,email,tel,budget,deadline,message,estimate}) });
       if(!res.ok) throw new Error('API error');
     }
     closeModal(); showToast('お問い合わせを送信しました 🎉');
@@ -1648,6 +1815,39 @@ async function resetAdminData(){
   </div>
 </div>
 
+<!-- PDF宛先入力モーダル -->
+<div class="overlay" id="pdfModal">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-title">📄 PDF出力 — 宛先情報</div>
+    <div class="modal-sub">見積書に記載する宛先を入力してください（任意）。</div>
+    <div class="form-row">
+      <label class="form-label">依頼者の種別</label>
+      <div class="ftype-wrap">
+        <label class="ftype-opt">
+          <input type="radio" name="pdfClientType" value="company" id="pdfTypeCompany" onchange="togglePdfType()" checked>
+          <span>🏢 法人・事業者</span>
+        </label>
+        <label class="ftype-opt">
+          <input type="radio" name="pdfClientType" value="personal" id="pdfTypePersonal" onchange="togglePdfType()">
+          <span>👤 個人</span>
+        </label>
+      </div>
+    </div>
+    <div id="pdfCompanyField" class="form-row">
+      <label class="form-label">会社名・屋号</label>
+      <input class="finput" id="pdfCompany" placeholder="株式会社〇〇">
+    </div>
+    <div class="form-row">
+      <label class="form-label" id="pdfNameLabel">担当者名</label>
+      <input class="finput" id="pdfName" placeholder="山田 太郎">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closePdfModal()">キャンセル</button>
+      <button class="btn-send" onclick="executePDF()">出力する →</button>
+    </div>
+  </div>
+</div>
+
 <!-- 印刷用スタイル -->
 <style>
 @media print {
@@ -1656,15 +1856,20 @@ async function resetAdminData(){
   body{background:#fff!important;}
   .container{padding:0!important;max-width:100%!important;}
   .result-panel{display:block!important;box-shadow:none!important;border-radius:0!important;padding:0!important;}
-  .print-header{display:flex!important;background:#111118!important;color:#fff!important;padding:18px 24px!important;justify-content:space-between!important;align-items:center!important;-webkit-print-color-adjust:exact!important;}
+  .print-header{display:flex!important;background:#111118!important;color:#fff!important;padding:18px 24px!important;justify-content:space-between!important;align-items:flex-start!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
   .print-header-left h1{font-size:1.1rem;font-weight:900;color:#fff;}
   .print-header-left p{font-size:.72rem;color:rgba(255,255,255,.6);margin-top:2px;}
+  .print-header-right{text-align:right;}
   .print-header-right .ph-label{font-size:.6rem;color:rgba(255,255,255,.5);}
-  .print-header-right .ph-total{font-family:var(--mono);font-size:1.3rem;color:#f0a500;font-weight:600;}
+  .print-header-right .ph-total{font-family:'IBM Plex Mono',monospace;font-size:1.3rem;color:#f0a500;font-weight:600;}
+  .print-to{display:block!important;padding:16px 24px 10px;border-bottom:1px solid #e2e0da;}
+  .print-to-company{font-size:1rem;font-weight:900;letter-spacing:.02em;margin-bottom:2px;}
+  .print-to-name{font-size:.82rem;color:#444;}
+  .print-to-blank{font-size:.8rem;color:#999;font-style:italic;}
   .print-disclaimer{display:block!important;margin-top:20px;font-size:.68rem;color:#888;border-top:1px solid #ddd;padding-top:8px;}
   #stepsArea{display:block!important;}
 }
-.print-header,.print-disclaimer{display:none;}
+.print-header,.print-disclaimer,.print-to{display:none;}
 </style>
 
 </body>

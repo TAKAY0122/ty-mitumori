@@ -380,7 +380,7 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
     <div class="header-total-wrap">
       <div class="header-total-label">通常価格 → <span id="headerAmtOriginal" style="text-decoration:line-through;color:rgba(255,255,255,.35);font-family:var(--mono)">¥ 0</span></div>
       <div style="display:flex;align-items:center;gap:7px;">
-        <span style="background:linear-gradient(90deg,#e8380d,#f0a500);color:#fff;font-size:.6rem;font-weight:900;padding:2px 7px;border-radius:3px;letter-spacing:.04em;">50%OFF</span>
+        <span class="sale-badge" style="background:linear-gradient(90deg,#e8380d,#f0a500);color:#fff;font-size:.6rem;font-weight:900;padding:2px 7px;border-radius:3px;letter-spacing:.04em;">50%OFF</span>
         <div class="header-total-num" id="headerAmt">¥ 0</div>
       </div>
     </div>
@@ -393,10 +393,10 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
 <div id="step0">
   <div class="hero">
     <div class="hero-eyebrow">無料 概算見積書</div>
-    <div style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#e8380d,#f0a500);color:#fff;font-size:1.1rem;font-weight:900;letter-spacing:.06em;padding:10px 24px;border-radius:8px;margin-bottom:16px;box-shadow:0 4px 18px rgba(232,56,13,.35);">
+    <div id="heroBanner" style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#e8380d,#f0a500);color:#fff;font-size:1.1rem;font-weight:900;letter-spacing:.06em;padding:10px 24px;border-radius:8px;margin-bottom:16px;box-shadow:0 4px 18px rgba(232,56,13,.35);">
       🎉 今だけ限定価格 <span style="font-size:1.6rem;line-height:1;">50% OFF</span>
     </div>
-    <div style="font-size:.8rem;color:var(--accent);font-weight:700;margin-bottom:14px;">⏰ 期間限定：2026年8月末まで</div>
+    <div id="heroPeriod" style="font-size:.8rem;color:var(--accent);font-weight:700;margin-bottom:14px;">⏰ 期間限定：2026年8月末まで</div>
     <h1 class="hero-title">何を制作しますか？</h1>
     <p class="hero-sub">カテゴリを選ぶと、専用の見積もりステップが始まります</p>
   </div>
@@ -831,13 +831,50 @@ const CATS_DEFAULT = {
 };
 
 // 納品スケジュール定義
-const DELIVERY_OPTIONS = [
+let DELIVERY_OPTIONS = [
   { id:'urgent',   label:'⚡ 特急（通常の半分以下）', rate: 0.5,  sign:'+', desc:'通常納期の50%UP' },
   { id:'fast',     label:'🔥 急ぎ（通常より早め）',   rate: 0.25, sign:'+', desc:'通常納期の25%UP' },
   { id:'normal',   label:'📅 通常納期',               rate: 0,    sign:'',  desc:'標準スケジュール' },
   { id:'relaxed',  label:'🌿 ゆったり（+1ヶ月〜）',   rate:-0.05, sign:'-', desc:'5%割引' },
   { id:'flexible', label:'🍃 完全フレキシブル（+2ヶ月〜）', rate:-0.1, sign:'-', desc:'10%割引' },
 ];
+
+// キャンペーン・全体設定
+let GLOBAL_SETTINGS = {
+  saleEnabled: true,
+  saleRate: 50,           // OFF率（%）
+  salePeriod: '2026年8月末', // キャンペーン期間
+};
+
+function getSaleInfo() {
+  const { saleEnabled, saleRate, salePeriod } = GLOBAL_SETTINGS;
+  return {
+    enabled: saleEnabled,
+    rate: saleRate,
+    mult: 1 - saleRate / 100,
+    label: `${saleRate}%OFF（〜${salePeriod}）`,
+    badge: `🎉 ${saleRate}% OFF（〜${salePeriod}）`,
+    period: `期間限定：${salePeriod}まで`,
+  };
+}
+
+function renderSaleBanner() {
+  const s = getSaleInfo();
+  const banner = document.getElementById('heroBanner');
+  const period = document.getElementById('heroPeriod');
+  if (banner) {
+    if (s.enabled) {
+      banner.style.display = '';
+      banner.innerHTML = `🎉 今だけ限定価格 <span style="font-size:1.6rem;line-height:1;">${s.rate}% OFF</span>`;
+    } else {
+      banner.style.display = 'none';
+    }
+  }
+  if (period) {
+    period.style.display = s.enabled ? '' : 'none';
+    period.textContent = `⏰ ${s.period}`;
+  }
+}
 
 // =============================================
 //  STATE & INIT
@@ -859,6 +896,12 @@ let ST = { cat:null, step:-1, maxStep:0, sel:{}, setPlan:null, discount:0, deliv
 function mergeSavedData(data) {
   if (!data) return;
   Object.keys(data).forEach(catId => {
+    if (catId === '__settings__') {
+      if (data[catId].globalSettings) Object.assign(GLOBAL_SETTINGS, data[catId].globalSettings);
+      if (data[catId].deliveryOptions) DELIVERY_OPTIONS.splice(0, DELIVERY_OPTIONS.length, ...data[catId].deliveryOptions);
+      renderSaleBanner(); updateHeader();
+      return;
+    }
     if (!CATS[catId]) return;
     const cd = data[catId];
     if (cd.sets)  CATS[catId].sets  = cd.sets;
@@ -896,6 +939,8 @@ function startCat(catId) {
   renderAll();
   scrollTop();
 }
+// 初期バナー描画
+document.addEventListener('DOMContentLoaded', renderSaleBanner);
 
 function nextStep() {
   const def = CATS[ST.cat].steps[ST.step];
@@ -1116,7 +1161,7 @@ function showResultFromSet(plan) {
   const afterDeliv = baseExTax + delivAmt;
   const tax = Math.round(afterDeliv * 0.1);
   const total = afterDeliv + tax;
-  const saleTotal = Math.round(total * 0.5);
+  const _si=getSaleInfo(); const saleTotal = _si.enabled ? Math.round(total * _si.mult) : total;
 
   document.getElementById('stepsContainer').innerHTML = '';
   const panel = document.getElementById('resultPanel');
@@ -1124,10 +1169,10 @@ function showResultFromSet(plan) {
     <div class="step-head"><div class="step-eyebrow">見積もり結果</div><h2 class="step-title">セットプラン 概算見積もり</h2></div>
     <div class="result-hero">
       <div>
-        <div class="result-hero-label">通常価格（税込）</div>
+        ${_si.enabled?`<div class="result-hero-label">通常価格（税込）</div>
         <div style="font-family:var(--mono);font-size:1.1rem;font-weight:600;color:rgba(255,255,255,.45);text-decoration:line-through;">¥ ${total.toLocaleString()}</div>
-        <div style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#e8380d,#f0a500);color:#fff;font-size:.75rem;font-weight:900;letter-spacing:.06em;padding:4px 12px;border-radius:5px;margin:6px 0;">🎉 50% OFF（〜2026年8月末）</div>
-        <div class="result-hero-label" style="margin-top:4px;">50%OFF 価格（税込）</div>
+        <div style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#e8380d,#f0a500);color:#fff;font-size:.75rem;font-weight:900;letter-spacing:.06em;padding:4px 12px;border-radius:5px;margin:6px 0;">${_si.badge}</div>
+        <div class="result-hero-label" style="margin-top:4px;">${_si.rate}%OFF 価格（税込）</div>`:`<div class="result-hero-label">概算合計金額（税込）</div>`}
         <div class="result-hero-amount">¥ ${saleTotal.toLocaleString()}</div>
         <div class="result-hero-sub">税抜: ¥${afterDeliv.toLocaleString()} ／ディレクション費込</div>
       </div>
@@ -1147,8 +1192,8 @@ function showResultFromSet(plan) {
   if (plan.saving) { const tr=document.createElement('tr'); tr.className='row-disc'; tr.innerHTML=`<td>🎁 セット割引</td><td class="num-col" style="color:var(--green)">−¥${plan.saving.toLocaleString()}</td>`; tb.appendChild(tr); }
   if (delivAmt !== 0) { const tr=document.createElement('tr'); tr.className='row-disc'; tr.innerHTML=`<td>${deliv.label}</td><td class="num-col" style="color:${delivAmt>0?'var(--accent)':'var(--green)'}">${delivAmt>0?'+':''}¥${Math.abs(delivAmt).toLocaleString()}</td>`; tb.appendChild(tr); }
   addBkRow(tb,'消費税（10%）', tax, '');
-  const ttr=document.createElement('tr'); ttr.className='row-total'; ttr.innerHTML=`<td>税込合計（通常）</td><td class="num-col" style="text-decoration:line-through;color:rgba(255,255,255,.5)">¥${total.toLocaleString()}</td>`; tb.appendChild(ttr);
-  const ttr2=document.createElement('tr'); ttr2.className='row-total'; ttr2.style.background='linear-gradient(90deg,#e8380d,#f0a500)'; ttr2.innerHTML=`<td>🎉 50%OFF 税込合計（〜2026年8月末）</td><td class="num-col" style="font-size:1.05rem;color:#fff">¥${saleTotal.toLocaleString()}</td>`; tb.appendChild(ttr2);
+  if(_si.enabled){ const ttr=document.createElement('tr'); ttr.className='row-total'; ttr.innerHTML=`<td>税込合計（通常）</td><td class="num-col" style="text-decoration:line-through;color:rgba(255,255,255,.5)">¥${total.toLocaleString()}</td>`; tb.appendChild(ttr); }
+  const ttr2=document.createElement('tr'); ttr2.className='row-total'; ttr2.style.background=_si.enabled?'linear-gradient(90deg,#e8380d,#f0a500)':''; ttr2.innerHTML=`<td>${_si.enabled?`🎉 ${_si.rate}%OFF 税込合計（〜${GLOBAL_SETTINGS.salePeriod}）`:'税込合計'}</td><td class="num-col" style="font-size:1.05rem;color:#fff">¥${saleTotal.toLocaleString()}</td>`; tb.appendChild(ttr2);
   tbl.appendChild(tb); panel.appendChild(tbl);
 
   appendResultActions(panel);
@@ -1237,7 +1282,7 @@ function calcTotal() {
       const afterDeliv = baseExTax + delivAmt;
       const tax = Math.round(afterDeliv * 0.1);
       const rawTotal = afterDeliv + tax;
-      return { base:baseExTax, discount:plan.saving, delivAmt, afterDeliv, tax, total:rawTotal, saleTotal:Math.round(rawTotal*0.5) };
+      const s=getSaleInfo(); return { base:baseExTax, discount:plan.saving, delivAmt, afterDeliv, tax, total:rawTotal, saleTotal:s.enabled?Math.round(rawTotal*s.mult):rawTotal };
     }
   }
 
@@ -1258,18 +1303,21 @@ function calcTotal() {
   const afterDeliv = beforeDeliv + delivAmt;
   const tax = Math.round(afterDeliv * 0.1);
   const total = afterDeliv + tax;
-  return { base, discount:disc, direction:dir, delivAmt, afterDeliv, tax, total, saleTotal:Math.round(total*0.5) };
+  const _s=getSaleInfo(); return { base, discount:disc, direction:dir, delivAmt, afterDeliv, tax, total, saleTotal:_s.enabled?Math.round(total*_s.mult):total };
 }
 
 function updateHeader() {
   const { total, saleTotal } = calcTotal();
+  const s = getSaleInfo();
   const el = document.getElementById('headerAmt');
   const elOrig = document.getElementById('headerAmtOriginal');
+  const badge = document.querySelector('.header-total-wrap .sale-badge');
+  if (badge) badge.textContent = s.enabled ? `${s.rate}%OFF` : '';
   if (total > 0) {
-    elOrig.textContent = '¥ ' + total.toLocaleString();
+    elOrig.textContent = s.enabled ? '¥ ' + total.toLocaleString() : '';
     el.textContent = '¥ ' + saleTotal.toLocaleString();
   } else {
-    elOrig.textContent = '¥ 0';
+    elOrig.textContent = '';
     el.textContent = '¥ 0';
   }
   el.classList.add('pop');
@@ -1290,15 +1338,16 @@ function showResult() {
   document.getElementById('stepsContainer').innerHTML = '';
   document.getElementById('progressWrap').style.display = 'none';
 
+  const _sr=getSaleInfo();
   const panel = document.getElementById('resultPanel');
   panel.innerHTML = `
     <div class="step-head"><div class="step-eyebrow">見積もり結果</div><h2 class="step-title">概算見積もり</h2></div>
     <div class="result-hero">
       <div>
-        <div class="result-hero-label">通常価格（税込）</div>
+        ${_sr.enabled?`<div class="result-hero-label">通常価格（税込）</div>
         <div style="font-family:var(--mono);font-size:1.1rem;font-weight:600;color:rgba(255,255,255,.45);text-decoration:line-through;">¥ ${total.toLocaleString()}</div>
-        <div style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#e8380d,#f0a500);color:#fff;font-size:.75rem;font-weight:900;letter-spacing:.06em;padding:4px 12px;border-radius:5px;margin:6px 0;">🎉 50% OFF（〜2026年8月末）</div>
-        <div class="result-hero-label" style="margin-top:4px;">50%OFF 価格（税込）</div>
+        <div style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#e8380d,#f0a500);color:#fff;font-size:.75rem;font-weight:900;letter-spacing:.06em;padding:4px 12px;border-radius:5px;margin:6px 0;">${_sr.badge}</div>
+        <div class="result-hero-label" style="margin-top:4px;">${_sr.rate}%OFF 価格（税込）</div>`:`<div class="result-hero-label">概算合計金額（税込）</div>`}
         <div class="result-hero-amount">¥ ${saleTotal.toLocaleString()}</div>
         <div class="result-hero-sub">税抜: ¥${afterDeliv.toLocaleString()} ／ディレクション費込</div>
       </div>
@@ -1333,8 +1382,8 @@ function showResult() {
   if(direction) addBkRow3(tb,`ディレクション費（15%）`,direction,'');
   if(delivAmt!==0){ const tr=document.createElement('tr'); tr.className='row-disc'; tr.innerHTML=`<td colspan="2">${deliv.label}</td><td class="num-col" style="color:${delivAmt>0?'var(--accent)':'var(--green)'}">${delivAmt>0?'+':''}¥${Math.abs(delivAmt).toLocaleString()}</td>`; tb.appendChild(tr); }
   addBkRow3(tb,'消費税（10%）',tax,'');
-  const ttr=document.createElement('tr'); ttr.className='row-total'; ttr.innerHTML=`<td colspan="2">税込合計（通常）</td><td class="num-col" style="text-decoration:line-through;color:rgba(255,255,255,.5)">¥${total.toLocaleString()}</td>`; tb.appendChild(ttr);
-  const ttr2=document.createElement('tr'); ttr2.className='row-total'; ttr2.style.background='linear-gradient(90deg,#e8380d,#f0a500)'; ttr2.innerHTML=`<td colspan="2">🎉 50%OFF 税込合計（〜2026年8月末）</td><td class="num-col" style="font-size:1.05rem;color:#fff">¥${saleTotal.toLocaleString()}</td>`; tb.appendChild(ttr2);
+  if(_sr.enabled){ const ttr=document.createElement('tr'); ttr.className='row-total'; ttr.innerHTML=`<td colspan="2">税込合計（通常）</td><td class="num-col" style="text-decoration:line-through;color:rgba(255,255,255,.5)">¥${total.toLocaleString()}</td>`; tb.appendChild(ttr); }
+  const ttr2=document.createElement('tr'); ttr2.className='row-total'; ttr2.style.background=_sr.enabled?'linear-gradient(90deg,#e8380d,#f0a500)':''; ttr2.innerHTML=`<td colspan="2">${_sr.enabled?`🎉 ${_sr.rate}%OFF 税込合計（〜${GLOBAL_SETTINGS.salePeriod}）`:'税込合計'}</td><td class="num-col" style="font-size:1.05rem;color:#fff">¥${saleTotal.toLocaleString()}</td>`; tb.appendChild(ttr2);
   tbl.appendChild(tb); panel.appendChild(tbl);
 
   appendResultActions(panel);
@@ -1389,9 +1438,9 @@ function togglePdfType() {
 }
 
 function closePdfModal() { document.getElementById('pdfModal').classList.remove('open'); }
-document.getElementById('pdfModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) closePdfModal(); });
 
 function executePDF() {
+  const _sp=getSaleInfo();
   const isCompany = document.getElementById('pdfTypeCompany').checked;
   const company   = document.getElementById('pdfCompany').value.trim();
   const name      = document.getElementById('pdfName').value.trim();
@@ -1422,11 +1471,11 @@ function executePDF() {
       <p>${cat.icon} ${cat.label}　発行日：${ds}</p>
     </div>
     <div class="print-header-right">
-      <div class="ph-label">通常価格（税込）</div>
+      ${_sp.enabled?`<div class="ph-label">通常価格（税込）</div>
       <div style="font-size:.85rem;color:rgba(255,255,255,.4);text-decoration:line-through;font-family:'IBM Plex Mono',monospace;">¥ ${total.toLocaleString()}</div>
-      <div class="ph-label" style="margin-top:4px;">50%OFF 価格（税込）</div>
+      <div class="ph-label" style="margin-top:4px;">${_sp.rate}%OFF 価格（税込）</div>`:`<div class="ph-label">概算合計金額（税込）</div>`}
       <div class="ph-total">¥ ${saleTotal.toLocaleString()}</div>
-      <div style="font-size:.58rem;color:rgba(255,255,255,.4);margin-top:2px;">期間限定〜2026年8月末</div>
+      ${_sp.enabled?`<div style="font-size:.58rem;color:rgba(255,255,255,.4);margin-top:2px;">期間限定〜${GLOBAL_SETTINGS.salePeriod}</div>`:''}
     </div>`;
 
   panel.insertBefore(pt, panel.firstChild);
@@ -1482,13 +1531,14 @@ function openModal() {
   if(ST.setPlan){ const p=cat.sets.find(s=>s.id===ST.setPlan); if(p){ items.push('🎁 '+p.name); p.chips.forEach(c=>items.push(c)); } }
   else { cat.steps.forEach(step=>{ const sel=ST.sel[step.id]; if(!sel)return; if(step.type==='single'){const opt=step.options.find(o=>o.id===sel.value);if(opt)items.push(opt.name);}else Object.entries(sel).forEach(([id,qty])=>{const opt=step.options.find(o=>o.id===id);if(opt)items.push(opt.name+(qty>1?` ×${qty}`:'')); }); }); }
   items.push(`📅 ${deliv.label}`);
+  const _sm=getSaleInfo();
   document.getElementById('modalPreview').innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;margin-bottom:6px;">
-      <span style="font-size:.72rem;color:var(--muted);text-decoration:line-through;">通常: ¥${total.toLocaleString()}</span>
-      <strong style="color:var(--accent);font-size:1rem;">50%OFF: ¥${saleTotal.toLocaleString()}（税込）</strong>
+      ${_sm.enabled?`<span style="font-size:.72rem;color:var(--muted);text-decoration:line-through;">通常: ¥${total.toLocaleString()}</span>
+      <strong style="color:var(--accent);font-size:1rem;">${_sm.rate}%OFF: ¥${saleTotal.toLocaleString()}（税込）</strong>`:`<strong style="color:var(--accent);font-size:1rem;">¥${saleTotal.toLocaleString()}（税込）</strong>`}
     </div>
     ${items.map(i=>'・'+i).join('<br>')}`;
-  document.getElementById('fMsg').value=`【見積もり内容】\n通常価格（税込）: ¥${total.toLocaleString()}\n50%OFF価格（税込）: ¥${saleTotal.toLocaleString()}\n選択項目: ${items.join('、')}\n\n`;
+  document.getElementById('fMsg').value=`【見積もり内容】\n${_sm.enabled?`通常価格（税込）: ¥${total.toLocaleString()}\n${_sm.rate}%OFF価格（税込）: ¥${saleTotal.toLocaleString()}`:`概算合計（税込）: ¥${saleTotal.toLocaleString()}`}\n選択項目: ${items.join('、')}\n\n`;
   toggleClientType();
   document.getElementById('contactModal').classList.add('open');
 }
@@ -1577,10 +1627,10 @@ function adminLogout(){ adminLoggedIn=false; closeAdmin(); }
 
 function showAdminPanel(){
   const cats=Object.entries(CATS);
-  if(!adminCurrentCat) adminCurrentCat=cats[0][0];
+  if(!adminCurrentCat) adminCurrentCat='__settings__';
   document.getElementById('adminContent').innerHTML=`
     <div class="adm-header">
-      <div><h2 class="adm-title">⚙️ 管理画面</h2><p class="adm-sub">金額・項目・ステップ・セットプランを編集できます</p></div>
+      <div><h2 class="adm-title">⚙️ 管理画面</h2><p class="adm-sub">料金・キャンペーン・納品設定を編集できます</p></div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
         <button class="adm-btn-save" onclick="saveAllAdmin()">💾 保存して反映</button>
         <button class="adm-btn-reset" onclick="resetAdminData()">↺ 初期化</button>
@@ -1588,17 +1638,79 @@ function showAdminPanel(){
       </div>
     </div>
     <div class="adm-tabs" id="adminTabs">
+      <button class="adm-tab${adminCurrentCat==='__settings__'?' active':''}" onclick="switchAdminTab('__settings__',this)">⚙️ 全体設定</button>
       ${cats.map(([id,c])=>`<button class="adm-tab${id===adminCurrentCat?' active':''}" onclick="switchAdminTab('${id}',this)">${c.icon} ${c.label}</button>`).join('')}
     </div>
     <div id="adminTabContent"></div>`;
-  renderAdminTab(adminCurrentCat);
+  if(adminCurrentCat==='__settings__') renderAdminSettings();
+  else renderAdminTab(adminCurrentCat);
 }
 
 function switchAdminTab(catId, btn){
   adminCurrentCat=catId;
   document.querySelectorAll('.adm-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  renderAdminTab(catId);
+  if(catId==='__settings__') renderAdminSettings();
+  else renderAdminTab(catId);
+}
+
+function renderAdminSettings(){
+  const el=document.getElementById('adminTabContent');
+  el.innerHTML=`
+    <div class="adm-section">
+      <div class="adm-section-head"><span>🎉 キャンペーン設定</span></div>
+      <div class="adm-card">
+        <div class="adm-edit-body">
+          <div class="adm-row">
+            <label>キャンペーン有効</label>
+            <select class="adm-input-sm" onchange="GLOBAL_SETTINGS.saleEnabled=this.value==='true';renderSaleBanner();updateHeader();">
+              <option value="true" ${GLOBAL_SETTINGS.saleEnabled?'selected':''}>有効（割引を表示）</option>
+              <option value="false" ${!GLOBAL_SETTINGS.saleEnabled?'selected':''}>無効（通常価格を表示）</option>
+            </select>
+          </div>
+          <div class="adm-row">
+            <label>OFF率（%）</label>
+            <input class="adm-input-sm" type="number" min="1" max="99" value="${GLOBAL_SETTINGS.saleRate}"
+              oninput="GLOBAL_SETTINGS.saleRate=Number(this.value);renderSaleBanner();updateHeader();">
+          </div>
+          <div class="adm-row">
+            <label>キャンペーン期間</label>
+            <input class="adm-input-sm" value="${GLOBAL_SETTINGS.salePeriod}" placeholder="例：2026年8月末"
+              oninput="GLOBAL_SETTINGS.salePeriod=this.value;renderSaleBanner();">
+          </div>
+        </div>
+        <div class="adm-price-preview" style="margin-top:10px;">
+          現在: ${GLOBAL_SETTINGS.saleEnabled?`<strong>${GLOBAL_SETTINGS.saleRate}%OFF</strong>（〜${GLOBAL_SETTINGS.salePeriod}）`:'<span style="color:var(--muted)">キャンペーン無効</span>'}
+        </div>
+      </div>
+    </div>
+
+    <div class="adm-section">
+      <div class="adm-section-head"><span>🗓️ 納品スケジュール 料率設定</span></div>
+      ${DELIVERY_OPTIONS.map((d,di)=>`
+      <div class="adm-card">
+        <div class="adm-card-head">
+          <span class="adm-card-label">${d.label}</span>
+          <button class="adm-icon-btn" onclick="toggleEl('deliv-edit-${di}')">✏️ 編集</button>
+        </div>
+        <div id="deliv-edit-${di}" style="display:none;" class="adm-edit-body">
+          <div class="adm-row">
+            <label>ラベル</label>
+            <input class="adm-input-sm" value="${d.label}" oninput="DELIVERY_OPTIONS[${di}].label=this.value">
+          </div>
+          <div class="adm-row">
+            <label>料率（例: 0.5=+50%, -0.1=−10%）</label>
+            <input class="adm-input-sm" type="number" step="0.01" min="-0.5" max="2" value="${d.rate}"
+              oninput="DELIVERY_OPTIONS[${di}].rate=Number(this.value)">
+          </div>
+          <div class="adm-row">
+            <label>説明文</label>
+            <input class="adm-input-sm" value="${d.desc}" oninput="DELIVERY_OPTIONS[${di}].desc=this.value">
+          </div>
+        </div>
+        <div class="adm-price-preview">${d.rate===0?'標準':(d.rate>0?'+':'')+Math.round(d.rate*100)+'%'} — ${d.desc}</div>
+      </div>`).join('')}
+    </div>`;
 }
 
 function renderAdminTab(catId){
@@ -1708,9 +1820,8 @@ function renderAdminTab(catId){
 
   // ── 納品スケジュール設定 ──
   html+=`<div class="adm-section">
-    <div class="adm-section-head"><span>🗓️ 納品スケジュール 料率設定</span></div>
+    <div class="adm-section-head"><span>🗓️ 納品スケジュール</span><span style="font-size:.72rem;color:var(--muted);">「全体設定」タブで編集できます</span></div>
     <div class="adm-card">
-      <p style="font-size:.78rem;color:var(--muted);margin-bottom:10px;">以下の料率はHTMLの <code>DELIVERY_OPTIONS</code> で直接編集できます。現在の設定：</p>
       <table style="width:100%;font-size:.78rem;border-collapse:collapse;">
         <tr style="background:var(--bg)"><th style="padding:6px 10px;text-align:left;">スケジュール</th><th style="padding:6px 10px;text-align:right;">料率</th></tr>
         ${DELIVERY_OPTIONS.map(d=>`<tr><td style="padding:7px 10px;border-bottom:1px solid var(--line);">${d.label}</td><td style="padding:7px 10px;border-bottom:1px solid var(--line);text-align:right;font-family:var(--mono);color:${d.rate>0?'var(--accent)':d.rate<0?'var(--green)':'var(--muted)'}">${d.rate===0?'標準':(d.rate>0?'+':'')+Math.round(d.rate*100)+'%'}</td></tr>`).join('')}
@@ -1778,6 +1889,7 @@ function deleteSet(catId,si){
 async function saveAllAdmin(){
   const data={};
   Object.keys(CATS).forEach(catId=>{ data[catId]={ sets:CATS[catId].sets, steps:CATS[catId].steps }; });
+  data.__settings__ = { globalSettings: GLOBAL_SETTINGS, deliveryOptions: DELIVERY_OPTIONS };
   try {
     const res = await fetch(WORKERS_URL + '?action=saveData', {
       method: 'POST',
@@ -1786,6 +1898,7 @@ async function saveAllAdmin(){
     });
     const json = await res.json();
     if (json.ok) {
+      renderSaleBanner(); updateHeader();
       showToast('✅ 保存しました！全端末に反映されます');
     } else {
       showToast('❌ ' + (json.error || '保存に失敗しました'));
@@ -1816,7 +1929,7 @@ async function resetAdminData(){
 </div>
 
 <!-- PDF宛先入力モーダル -->
-<div class="overlay" id="pdfModal">
+<div class="overlay" id="pdfModal" onclick="if(event.target===this)closePdfModal()">
   <div class="modal" style="max-width:420px;">
     <div class="modal-title">📄 PDF出力 — 宛先情報</div>
     <div class="modal-sub">見積書に記載する宛先を入力してください（任意）。</div>

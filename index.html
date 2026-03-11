@@ -380,6 +380,7 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
     <div style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#e8380d,#f0a500);color:#fff;font-size:1.1rem;font-weight:900;letter-spacing:.06em;padding:10px 24px;border-radius:8px;margin-bottom:16px;box-shadow:0 4px 18px rgba(232,56,13,.35);">
       🎉 今だけ限定価格 <span style="font-size:1.6rem;line-height:1;">50% OFF</span>
     </div>
+    <div style="font-size:.8rem;color:var(--accent);font-weight:700;margin-bottom:14px;">⏰ 期間限定：2026年8月末まで</div>
     <h1 class="hero-title">何を制作しますか？</h1>
     <p class="hero-sub">カテゴリを選ぶと、専用の見積もりステップが始まります</p>
   </div>
@@ -1041,7 +1042,7 @@ function showResultFromSet(plan) {
       <div>
         <div class="result-hero-label">通常価格（税込）</div>
         <div style="font-family:var(--mono);font-size:1.1rem;font-weight:600;color:rgba(255,255,255,.45);text-decoration:line-through;">¥ ${total.toLocaleString()}</div>
-        <div style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#e8380d,#f0a500);color:#fff;font-size:.75rem;font-weight:900;letter-spacing:.06em;padding:4px 12px;border-radius:5px;margin:6px 0;">今だけ 50% OFF</div>
+        <div style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#e8380d,#f0a500);color:#fff;font-size:.75rem;font-weight:900;letter-spacing:.06em;padding:4px 12px;border-radius:5px;margin:6px 0;">🎉 50% OFF（〜2026年8月末）</div>
         <div class="result-hero-label" style="margin-top:4px;">50%OFF 価格（税込）</div>
         <div class="result-hero-amount">¥ ${saleTotal.toLocaleString()}</div>
         <div class="result-hero-sub">税抜: ¥${afterDeliv.toLocaleString()} ／ディレクション費込</div>
@@ -1063,7 +1064,7 @@ function showResultFromSet(plan) {
   if (delivAmt !== 0) { const tr=document.createElement('tr'); tr.className='row-disc'; tr.innerHTML=`<td>${deliv.label}</td><td class="num-col" style="color:${delivAmt>0?'var(--accent)':'var(--green)'}">${delivAmt>0?'+':''}¥${Math.abs(delivAmt).toLocaleString()}</td>`; tb.appendChild(tr); }
   addBkRow(tb,'消費税（10%）', tax, '');
   const ttr=document.createElement('tr'); ttr.className='row-total'; ttr.innerHTML=`<td>税込合計（通常）</td><td class="num-col" style="text-decoration:line-through;color:rgba(255,255,255,.5)">¥${total.toLocaleString()}</td>`; tb.appendChild(ttr);
-  const ttr2=document.createElement('tr'); ttr2.className='row-total'; ttr2.style.background='linear-gradient(90deg,#e8380d,#f0a500)'; ttr2.innerHTML=`<td>🎉 今だけ50%OFF 税込合計</td><td class="num-col" style="font-size:1.05rem;color:#fff">¥${saleTotal.toLocaleString()}</td>`; tb.appendChild(ttr2);
+  const ttr2=document.createElement('tr'); ttr2.className='row-total'; ttr2.style.background='linear-gradient(90deg,#e8380d,#f0a500)'; ttr2.innerHTML=`<td>🎉 50%OFF 税込合計（〜2026年8月末）</td><td class="num-col" style="font-size:1.05rem;color:#fff">¥${saleTotal.toLocaleString()}</td>`; tb.appendChild(ttr2);
   tbl.appendChild(tb); panel.appendChild(tbl);
 
   appendResultActions(panel);
@@ -1212,7 +1213,7 @@ function showResult() {
       <div>
         <div class="result-hero-label">通常価格（税込）</div>
         <div style="font-family:var(--mono);font-size:1.1rem;font-weight:600;color:rgba(255,255,255,.45);text-decoration:line-through;">¥ ${total.toLocaleString()}</div>
-        <div style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#e8380d,#f0a500);color:#fff;font-size:.75rem;font-weight:900;letter-spacing:.06em;padding:4px 12px;border-radius:5px;margin:6px 0;">今だけ 50% OFF</div>
+        <div style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#e8380d,#f0a500);color:#fff;font-size:.75rem;font-weight:900;letter-spacing:.06em;padding:4px 12px;border-radius:5px;margin:6px 0;">🎉 50% OFF（〜2026年8月末）</div>
         <div class="result-hero-label" style="margin-top:4px;">50%OFF 価格（税込）</div>
         <div class="result-hero-amount">¥ ${saleTotal.toLocaleString()}</div>
         <div class="result-hero-sub">税抜: ¥${afterDeliv.toLocaleString()} ／ディレクション費込</div>
@@ -1249,7 +1250,7 @@ function showResult() {
   if(delivAmt!==0){ const tr=document.createElement('tr'); tr.className='row-disc'; tr.innerHTML=`<td colspan="2">${deliv.label}</td><td class="num-col" style="color:${delivAmt>0?'var(--accent)':'var(--green)'}">${delivAmt>0?'+':''}¥${Math.abs(delivAmt).toLocaleString()}</td>`; tb.appendChild(tr); }
   addBkRow3(tb,'消費税（10%）',tax,'');
   const ttr=document.createElement('tr'); ttr.className='row-total'; ttr.innerHTML=`<td colspan="2">税込合計（通常）</td><td class="num-col" style="text-decoration:line-through;color:rgba(255,255,255,.5)">¥${total.toLocaleString()}</td>`; tb.appendChild(ttr);
-  const ttr2=document.createElement('tr'); ttr2.className='row-total'; ttr2.style.background='linear-gradient(90deg,#e8380d,#f0a500)'; ttr2.innerHTML=`<td colspan="2">🎉 今だけ50%OFF 税込合計</td><td class="num-col" style="font-size:1.05rem;color:#fff">¥${saleTotal.toLocaleString()}</td>`; tb.appendChild(ttr2);
+  const ttr2=document.createElement('tr'); ttr2.className='row-total'; ttr2.style.background='linear-gradient(90deg,#e8380d,#f0a500)'; ttr2.innerHTML=`<td colspan="2">🎉 50%OFF 税込合計（〜2026年8月末）</td><td class="num-col" style="font-size:1.05rem;color:#fff">¥${saleTotal.toLocaleString()}</td>`; tb.appendChild(ttr2);
   tbl.appendChild(tb); panel.appendChild(tbl);
 
   appendResultActions(panel);

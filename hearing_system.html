@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>詳細ヒアリングシート（システム開発） — 見積書作成</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=BIZ+UDPGothic:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ─── index.html と共通のスタイル（完全一致） ─── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+
+:root {
+  --gothic: 'BIZ UDPGothic','Noto Sans JP',sans-serif;
+  --mono: 'IBM Plex Mono',monospace;
+  --ink: #111118;
+  --ink2: #282835;
+  --muted: #6a6a7a;
+  --line: #e2e0da;
+  --bg: #f5f4f0;
+  --card: #ffffff;
+  --accent: #e8380d;
+  --accent-light: #fff1ee;
+  --accent2: #f0a500;
+  --green: #0d9e6a;
+  --shadow: 0 4px 28px rgba(0,0,0,.08);
+  --step-color: #e8380d;
+}
+
+html{scroll-behavior:smooth;}
+body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:100vh;overflow-x:hidden;}
+
+.header{
+  position:sticky;top:0;z-index:300;
+  background:var(--ink);height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;
+  box-shadow:0 2px 16px rgba(0,0,0,.3);
+}
+.header-brand{
+  font-family:var(--gothic);font-size:1.05rem;font-weight:700;
+  color:#fff;letter-spacing:.05em;cursor:pointer;
+  display:flex;align-items:center;gap:8px;
+  user-select:none;transition:opacity .2s;text-decoration:none;
+}
+.header-brand:hover{opacity:.75;}
+.header-brand-accent{color:var(--accent);}
+.header-total-wrap{text-align:right;}
+.header-total-label{font-size:.58rem;color:rgba(255,255,255,.45);letter-spacing:.1em;text-transform:uppercase;}
+.header-total-num{font-family:var(--mono);font-size:1.1rem;font-weight:600;color:var(--accent2);}
+
+.container{max-width:960px;margin:0 auto;padding:36px 18px 100px;}
+
+.breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.bc-item{font-size:.76rem;color:var(--muted);cursor:pointer;transition:color .15s;}
+.bc-item:hover{color:var(--step-color);}
+.bc-item.active{color:var(--ink);font-weight:700;pointer-events:none;}
+.bc-sep{color:var(--line);font-size:.8rem;}
+
+.progress-wrap{
+  background:var(--card);border-radius:14px;
+  padding:18px 24px;margin-bottom:24px;
+  display:flex;align-items:center;gap:0;
+  box-shadow:var(--shadow);
+}
+.prog-step{display:flex;align-items:center;flex:1;cursor:pointer;transition:opacity .18s;min-width:0;}
+.prog-step:hover:not(.locked){opacity:.72;}
+.prog-step.locked{cursor:default;}
+.prog-circle{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:700;
+  background:var(--line);color:var(--muted);transition:all .28s;
+}
+.prog-step.active .prog-circle{background:var(--step-color);color:#fff;box-shadow:0 0 0 4px color-mix(in srgb,var(--step-color) 22%,transparent);}
+.prog-step.done .prog-circle{background:var(--green);color:#fff;}
+.prog-info{padding-left:8px;overflow:hidden;}
+.prog-num{font-size:.58rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+.prog-label{font-size:.76rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.prog-line{flex:0 0 18px;height:2px;background:var(--line);margin:0 5px;transition:background .28s;}
+.prog-line.done{background:var(--green);}
+
+.step-panel{background:var(--card);border-radius:18px;padding:32px 36px;box-shadow:var(--shadow);display:none;}
+.step-panel.active{display:block;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+.step-head{margin-bottom:24px;}
+.step-eyebrow{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px;color:var(--step-color);}
+.step-title{font-family:var(--gothic);font-size:1.55rem;font-weight:900;line-height:1.3;letter-spacing:.02em;}
+.step-sub{font-size:.82rem;color:var(--muted);margin-top:5px;line-height:1.75;}
+
+.or-divider{display:flex;align-items:center;gap:10px;margin:22px 0 16px;color:var(--muted);font-size:.78rem;}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.opt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:11px;margin-bottom:8px;}
+.opt-grid.cols3{grid-template-columns:repeat(auto-fill,minmax(145px,1fr));}
+.opt-item{
+  border:2px solid var(--line);border-radius:12px;padding:15px;
+  cursor:pointer;background:var(--bg);transition:all .18s;
+  position:relative;user-select:none;
+}
+.opt-item:hover{border-color:var(--step-color);transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.09);}
+.opt-item.selected{border-color:var(--step-color);background:color-mix(in srgb,var(--step-color) 7%,white);}
+.opt-item.selected::after{
+  content:'✓';position:absolute;top:8px;right:9px;
+  width:19px;height:19px;border-radius:50%;
+  background:var(--step-color);color:#fff;
+  font-size:.68rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.opt-icon{font-size:1.5rem;margin-bottom:7px;display:block;}
+.opt-name{font-size:.83rem;font-weight:700;margin-bottom:3px;line-height:1.4;letter-spacing:.01em;}
+.opt-desc{font-size:.7rem;color:var(--muted);line-height:1.55;}
+
+/* delivery-item を流用：カラーパレット選択 */
+.delivery-section{margin:0 0 10px;padding:18px;background:var(--bg);border-radius:14px;border:2px solid var(--line);}
+.delivery-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:6px;}
+.delivery-title{font-weight:900;font-size:.92rem;letter-spacing:.02em;}
+.delivery-note{font-size:.72rem;color:var(--muted);}
+.delivery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:9px;}
+.delivery-item{border:2px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer;background:#fff;transition:all .18s;}
+.delivery-item:hover{border-color:var(--step-color);transform:translateY(-2px);}
+.delivery-item.selected{border-color:var(--step-color);background:color-mix(in srgb,var(--step-color) 6%,white);}
+.delivery-label{font-size:.75rem;font-weight:700;text-align:center;padding:6px 4px 4px;}
+.color-bar{height:32px;}
+.color-sub{height:14px;}
+
+.step-nav{display:flex;justify-content:space-between;align-items:center;padding-top:22px;margin-top:6px;border-top:1px solid var(--line);}
+.btn{padding:10px 24px;border-radius:50px;font-size:.84rem;font-weight:700;cursor:pointer;border:none;font-family:var(--gothic);transition:all .18s;}
+.btn-next{background:var(--step-color);color:#fff;box-shadow:0 4px 14px color-mix(in srgb,var(--step-color) 32%,transparent);}
+.btn-next:hover{transform:translateY(-2px);filter:brightness(1.07);}
+.btn-back{background:transparent;color:var(--muted);border:2px solid var(--line);}
+.btn-back:hover{border-color:var(--muted);color:var(--ink);}
+
+.form-row{margin-bottom:14px;}
+.form-row:last-child{margin-bottom:0;}
+.form-label{display:block;font-size:.76rem;font-weight:700;margin-bottom:4px;}
+.form-label sup{color:var(--accent);}
+.finput,.ftextarea,.fselect{
+  width:100%;padding:10px 13px;
+  border:2px solid var(--line);border-radius:9px;
+  font-size:.84rem;font-family:var(--gothic);
+  background:var(--bg);color:var(--ink);
+  outline:none;transition:border-color .18s;
+  -webkit-appearance:none;appearance:none;
+}
+.finput:focus,.ftextarea:focus,.fselect:focus{border-color:var(--accent);background:#fff;}
+.ftextarea{min-height:85px;resize:vertical;}
+.fselect{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236a6a7a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;
+  padding-right:36px;cursor:pointer;
+}
+::placeholder{color:#a8a8b0;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-divider{
+  font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin:18px 0 12px;
+  display:flex;align-items:center;gap:10px;
+}
+.form-divider::before,.form-divider::after{content:'';flex:1;height:1px;background:var(--line);}
+
+/* URLリスト */
+.url-list{display:grid;gap:7px;margin-bottom:6px;}
+.url-row{display:flex;gap:8px;align-items:center;}
+.url-row .finput{flex:1;margin-bottom:0;}
+.url-del{
+  flex-shrink:0;width:34px;height:34px;border-radius:8px;
+  border:2px solid var(--line);background:var(--bg);
+  color:var(--muted);font-size:1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;font-family:var(--gothic);
+}
+.url-del:hover{background:#fee2e2;border-color:#ffc0c0;color:#c00;}
+.url-add{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:100%;padding:9px 14px;border-radius:9px;
+  border:2px dashed var(--line);background:transparent;
+  color:var(--muted);font-size:.8rem;font-weight:700;
+  cursor:pointer;font-family:var(--gothic);transition:all .15s;
+  margin-top:6px;
+}
+.url-add:hover{border-color:var(--accent);color:var(--accent);}
+
+/* 結果パネル */
+.result-panel{background:var(--card);border-radius:18px;padding:36px;box-shadow:var(--shadow);display:none;}
+.result-panel.active{display:block;animation:fadeUp .32s ease;}
+.result-hero{
+  background:var(--ink);border-radius:14px;padding:26px 30px;
+  margin-bottom:24px;display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:14px;
+}
+.result-hero-label{font-size:.68rem;color:rgba(255,255,255,.45);letter-spacing:.1em;margin-bottom:3px;}
+.result-hero-amount{font-family:var(--mono);font-size:2rem;font-weight:600;color:var(--accent2);}
+.result-hero-sub{font-size:.76rem;color:rgba(255,255,255,.55);margin-top:3px;}
+.result-cat-badge{display:inline-block;background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);font-size:.72rem;padding:3px 10px;border-radius:5px;margin-bottom:5px;}
+.sec-title{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px;}
+.bk-tbl{width:100%;border-collapse:collapse;font-size:.84rem;margin-bottom:18px;}
+.bk-tbl th{text-align:left;padding:8px 11px;background:var(--bg);color:var(--muted);font-size:.7rem;letter-spacing:.04em;}
+.bk-tbl td{padding:10px 11px;border-bottom:1px solid var(--line);}
+.bk-tbl tr:last-child td{border-bottom:none;}
+.bk-tbl td.num-col{text-align:right;}
+.row-sub td{background:var(--bg);font-weight:700;font-size:.78rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+.result-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px;padding-top:20px;border-top:1px solid var(--line);}
+.act-btn{flex:1;min-width:120px;padding:12px 14px;border-radius:10px;border:none;font-size:.8rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:var(--gothic);transition:all .18s;}
+.act-btn:hover{transform:translateY(-2px);}
+.act-pdf{background:var(--ink);color:#fff;}
+.act-copy{background:var(--bg);color:var(--ink);border:2px solid var(--line);}
+.act-copy:hover{border-color:var(--accent);}
+.act-reset{background:var(--bg);color:var(--muted);border:2px solid var(--line);}
+.result-edit-btn{display:block;text-align:center;margin-top:14px;font-size:.78rem;color:var(--muted);cursor:pointer;text-decoration:underline;}
+.result-edit-btn:hover{color:var(--accent);}
+
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--ink);color:#fff;padding:10px 20px;border-radius:50px;font-size:.8rem;font-weight:600;opacity:0;pointer-events:none;z-index:999;transition:all .26s;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.disclaimer{text-align:center;font-size:.7rem;color:var(--muted);margin-top:36px;line-height:2;}
+
+/* ─── QUOTE BANNER (コード読み込み後) ─── */
+.quote-banner{
+  background:var(--ink);border-radius:14px;padding:20px 24px;
+  margin-bottom:24px;display:none;
+  animation:fadeUp .3s ease both;
+}
+.quote-banner.show{display:block;}
+.quote-banner-label{font-size:.65rem;color:rgba(255,255,255,.45);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
+.quote-banner-amount{font-family:var(--mono);font-size:1.8rem;font-weight:600;color:var(--accent2);margin-bottom:2px;}
+.quote-banner-cat{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);font-size:.72rem;padding:3px 10px;border-radius:5px;margin-bottom:8px;}
+.quote-banner-items{font-size:.75rem;color:rgba(255,255,255,.6);line-height:1.9;}
+.quote-banner-date{font-size:.68rem;color:rgba(255,255,255,.35);margin-top:6px;}
+
+/* コード入力パネル */
+.code-panel{
+  background:var(--card);border-radius:18px;padding:28px 32px;
+  box-shadow:var(--shadow);margin-bottom:24px;
+  border:2px solid var(--line);
+}
+.code-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+.code-panel-title{font-size:1rem;font-weight:900;color:var(--ink);}
+.code-panel-sub{font-size:.78rem;color:var(--muted);margin-top:2px;}
+.code-input-row{display:flex;gap:8px;align-items:stretch;}
+.code-input-row .finput{flex:1;font-family:var(--mono);font-size:.82rem;letter-spacing:.03em;}
+.code-load-btn{
+  flex-shrink:0;padding:0 20px;border-radius:9px;border:none;
+  background:var(--step-color);color:#fff;font-size:.84rem;font-weight:700;
+  cursor:pointer;font-family:var(--gothic);transition:all .18s;
+  box-shadow:0 4px 14px color-mix(in srgb,var(--step-color) 28%,transparent);
+}
+.code-load-btn:hover{transform:translateY(-2px);filter:brightness(1.07);}
+.code-error{font-size:.76rem;color:var(--accent);margin-top:8px;display:none;}
+.code-error.show{display:block;}
+.code-skip{font-size:.75rem;color:var(--muted);text-align:center;margin-top:12px;cursor:pointer;text-decoration:underline;}
+.code-skip:hover{color:var(--ink);}
+
+@media print{
+  .code-panel,.quote-banner{display:none!important;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  .header,.breadcrumb,.progress-wrap,.step-panel,.result-actions,.result-edit-btn,.disclaimer,.toast{display:none!important;}
+  body{background:#fff!important;}
+  .container{padding:0!important;max-width:100%!important;}
+  .result-panel{display:block!important;box-shadow:none!important;border-radius:0!important;padding:0!important;}
+  .print-header{display:flex!important;background:#111118!important;color:#fff!important;padding:18px 24px!important;justify-content:space-between!important;align-items:center!important;margin-bottom:0!important;}
+  .print-header-left h1{font-size:1.1rem;font-weight:900;color:#fff;}
+  .print-header-left p{font-size:.72rem;color:rgba(255,255,255,.6);margin-top:2px;}
+}
+.print-header{display:none;}
+
+@media(max-width:620px){
+  .header{padding:0 14px;}
+  .container{padding:20px 12px 80px;}
+  .step-panel,.result-panel{padding:20px 16px;}
+  .opt-grid{grid-template-columns:1fr 1fr;gap:9px;}
+  .progress-wrap{padding:14px 16px;}
+  .prog-info{display:none;}
+  .result-hero{flex-direction:column;}
+  .result-actions{flex-direction:column;}
+  .form-grid{grid-template-columns:1fr;}
+  .delivery-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr));}
+}
+.page-layout{display:grid;grid-template-columns:1fr 272px;gap:22px;align-items:start;}
+.main-col{min-width:0;}
+.side-panel{position:sticky;top:76px;max-height:calc(100vh - 96px);overflow-y:auto;background:var(--card);border-radius:18px;padding:20px 18px;box-shadow:var(--shadow);scrollbar-width:thin;}
+.side-section{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--line);}
+.side-section:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.side-label{font-size:.6rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;}
+.side-quote-filled{display:inline-block;padding:2px 7px;border-radius:4px;font-size:.63rem;font-weight:700;background:color-mix(in srgb,var(--green) 14%,white);color:var(--green);margin-bottom:8px;}
+.side-quote-cat{font-size:.76rem;color:var(--ink);font-weight:700;margin-bottom:3px;}
+.side-quote-amount{font-family:var(--mono);font-size:1.35rem;font-weight:600;color:var(--accent2);margin-bottom:5px;}
+.side-quote-items{font-size:.68rem;color:var(--muted);line-height:1.85;white-space:pre-line;}
+.side-field{display:flex;flex-direction:column;gap:2px;margin-bottom:9px;}
+.side-field:last-child{margin-bottom:0;}
+.side-field-key{font-size:.6rem;color:var(--muted);font-weight:700;}
+.side-field-val{font-size:.75rem;color:var(--ink);font-weight:700;line-height:1.45;overflow-wrap:break-word;}
+.side-empty{font-size:.7rem;color:var(--muted);font-style:italic;}
+.side-prog-item{display:flex;align-items:center;gap:7px;margin-bottom:7px;}
+.side-prog-item:last-child{margin-bottom:0;}
+.side-prog-dot{width:7px;height:7px;border-radius:50%;background:var(--line);flex-shrink:0;transition:background .22s;}
+.side-prog-dot.done{background:var(--green);}
+.side-prog-dot.active{background:var(--step-color);box-shadow:0 0 0 3px color-mix(in srgb,var(--step-color) 20%,transparent);}
+.side-prog-name{font-size:.71rem;color:var(--muted);}
+.side-prog-name.active{color:var(--ink);font-weight:700;}
+.side-prog-name.done{color:var(--green);}
+.side-reset-btn{width:100%;padding:9px;border-radius:9px;border:2px solid var(--line);background:transparent;color:var(--muted);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--gothic);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.side-reset-btn:hover{border-color:#f87171;color:#dc2626;background:#fff5f5;}
+.client-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.nav-reset-link{font-size:.7rem;color:var(--muted);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+.nav-reset-link:hover{color:var(--accent);}
+.reset-float{position:fixed;bottom:22px;right:22px;z-index:199;padding:10px 16px;border-radius:50px;background:var(--card);border:2px solid var(--line);color:var(--muted);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--gothic);box-shadow:0 4px 18px rgba(0,0,0,.13);transition:all .18s;display:none;align-items:center;gap:6px;}
+.reset-float.show{display:flex;}
+.reset-float:hover{border-color:#f87171;color:#dc2626;}
+@media(max-width:900px){.page-layout{grid-template-columns:1fr;}.side-panel{display:none;}.reset-float.show{display:flex;}}
+@media(max-width:620px){.reset-float{bottom:80px;}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a class="header-brand" href="https://ty-mitumori.t-yoshizaki-taka.workers.dev/" onclick="return confirm('見積もりページに戻りますか？')">
+    <span class="header-brand-accent">見積書</span>作成
+    <span style="font-size:.65rem;color:rgba(255,255,255,.35);font-weight:400;">かんたん概算見積書</span>
+  </a>
+  <div class="header-total-wrap">
+    <div class="header-total-label">Hearing Sheet</div>
+    <div class="header-total-num" id="headerStep">Step 1 / 4</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="breadcrumb">
+    <span class="bc-item" onclick="location.href='https://ty-mitumori.t-yoshizaki-taka.workers.dev/'">見積もり</span>
+    <span class="bc-sep">›</span>
+    <span class="bc-item active">詳細ヒアリング（システム）</span>
+  </div>
+
+  <div class="page-layout">
+    <div class="main-col">
+
+  <!-- コード入力パネル -->
+  <div class="code-panel" id="codePanel">
+    <div class="code-panel-head">
+      <div>
+        <div class="code-panel-title">見積もりコードを入力</div>
+        <div class="code-panel-sub">見積もりシミュレーターで発行されたコードを貼り付けると、見積もり内容を自動引き継ぎします</div>
+      </div>
+    </div>
+    <div class="code-input-row">
+      <input class="finput" type="text" id="codeInput" placeholder="TYE-XXXXXXXX..." autocomplete="off" spellcheck="false">
+      <button class="code-load-btn" onclick="loadCode()">読み込む</button>
+    </div>
+    <div class="code-error" id="codeError">コードが正しくありません。見積もりページで発行されたコードを入力してください。</div>
+    <div class="code-skip" onclick="skipCode()">コードなしで入力する →</div>
+  </div>
+
+  <!-- 見積もり引き継ぎバナー -->
+  <div class="quote-banner" id="quoteBanner">
+    <div class="quote-banner-label">見積もりシミュレーター 引き継ぎ済み</div>
+    <div id="qbCat" class="quote-banner-cat"></div>
+    <div class="quote-banner-amount" id="qbAmount"></div>
+    <div class="quote-banner-items" id="qbItems"></div>
+    <div class="quote-banner-date" id="qbDate"></div>
+  </div>
+
+  <div class="progress-wrap" id="progressWrap" style="display:none;"></div>
+
+  <!-- ───────────────────────────────────────────── -->
+  <!-- STEP 1: 事業・ご依頼の概要 -->
+  <!-- ───────────────────────────────────────────── -->
+  <div class="step-panel" id="step1">
+    <div class="step-head">
+      <div class="step-eyebrow">Step 1 of 4</div>
+      <div class="step-title">事業・ご依頼の概要</div>
+      <div class="step-sub">貴社の事業内容とご依頼の背景を教えてください。</div>
+    </div>
+
+    <div class="form-divider">お客様情報</div>
+    <div class="client-info-grid">
+      <div class="form-row">
+        <label class="form-label">会社名・屋号</label>
+        <input class="finput" type="text" id="f_clientName" placeholder="例）株式会社〇〇 / 個人事業主" oninput="sv('clientName',this.value)">
+      </div>
+      <div class="form-row">
+        <label class="form-label">担当者名</label>
+        <input class="finput" type="text" id="f_contactName" placeholder="例）山田 太郎" oninput="sv('contactName',this.value)">
+      </div>
+      <div class="form-row">
+        <label class="form-label">メールアドレス</label>
+        <input class="finput" type="email" id="f_contactEmail" placeholder="例）yamada@example.com" oninput="sv('contactEmail',this.value)">
+      </div>
+      <div class="form-row">
+        <label class="form-label">電話番号</label>
+        <input class="finput" type="tel" id="f_contactTel" placeholder="例）03-1234-5678" oninput="sv('contactTel',this.value)">
+      </div>
+    </div>
+
+    <div class="form-divider">会社・事業について</div>
+    <div class="form-row">
+      <label class="form-label">主な事業内容</label>
+      <textarea class="ftextarea" id="f_business" placeholder="例）食品卸売業を営んでいます。受発注・在庫管理にExcelを使用しています。" oninput="sv('business',this.value)"></textarea>
+    </div>
+    <div class="form-row">
+      <label class="form-label">現状の課題・解決したいこと</label>
+      <textarea class="ftextarea" id="f_challenge" placeholder="例）Excelでの管理に限界を感じている。複数人での同時編集ができない。集計に時間がかかる。" oninput="sv('challenge',this.value)"></textarea>
+    </div>
+
+    <div class="form-divider">システムの種別</div>
+    <div class="opt-grid" id="grid_sysType">
+      <div class="opt-item" data-val="order" onclick="pick1('sysType','order')">
+        <span class="opt-icon">📦</span>
+        <div class="opt-name">受発注・在庫管理</div>
+        <div class="opt-desc">在庫・仕入れ・出荷管理</div>
+      </div>
+      <div class="opt-item" data-val="crm" onclick="pick1('sysType','crm')">
+        <span class="opt-icon">👤</span>
+        <div class="opt-name">顧客管理（CRM）</div>
+        <div class="opt-desc">顧客情報・商談・案件管理</div>
+      </div>
+      <div class="opt-item" data-val="billing" onclick="pick1('sysType','billing')">
+        <span class="opt-icon">🧾</span>
+        <div class="opt-name">販売・請求管理</div>
+        <div class="opt-desc">見積・請求・入金管理</div>
+      </div>
+      <div class="opt-item" data-val="hr" onclick="pick1('sysType','hr')">
+        <span class="opt-icon">📋</span>
+        <div class="opt-name">勤怠・人事管理</div>
+        <div class="opt-desc">勤怠・シフト・給与計算</div>
+      </div>
+      <div class="opt-item" data-val="maintenance" onclick="pick1('sysType','maintenance')">
+        <span class="opt-icon">🔧</span>
+        <div class="opt-name">設備・点検管理</div>
+        <div class="opt-desc">機器・保守・点検記録</div>
+      </div>
+      <div class="opt-item" data-val="analytics" onclick="pick1('sysType','analytics')">
+        <span class="opt-icon">📊</span>
+        <div class="opt-name">分析・レポート</div>
+        <div class="opt-desc">データ集計・ダッシュボード</div>
+      </div>
+      <div class="opt-item" data-val="api" onclick="pick1('sysType','api')">
+        <span class="opt-icon">🔗</span>
+        <div class="opt-name">API・連携ツール</div>
+        <div class="opt-desc">外部サービス連携・自動化</div>
+      </div>
+      <div class="opt-item" data-val="custom" onclick="pick1('sysType','custom')">
+        <span class="opt-icon">⚙️</span>
+        <div class="opt-name">カスタム業務システム</div>
+        <div class="opt-desc">独自業務フロー・ワークフロー</div>
+      </div>
+    </div>
+
+    <div class="form-divider">ステータス</div>
+    <div class="opt-grid cols3" id="grid_sitestatus">
+      <div class="opt-item" data-val="new" onclick="pick1('sitestatus','new')">
+        <span class="opt-icon">🆕</span>
+        <div class="opt-name">新規開発</div>
+      </div>
+      <div class="opt-item" data-val="remake" onclick="pick1('sitestatus','remake')">
+        <span class="opt-icon">🔄</span>
+        <div class="opt-name">既存システムの刷新</div>
+      </div>
+      <div class="opt-item" data-val="partial" onclick="pick1('sitestatus','partial')">
+        <span class="opt-icon">🔧</span>
+        <div class="opt-name">機能追加・改修</div>
+      </div>
+    </div>
+
+    <div class="form-divider">スケジュール・予算</div>
+    <div class="form-grid">
+      <div class="form-row">
+        <label class="form-label">希望稼働開始日</label>
+        <input class="finput" type="date" id="f_deadline" oninput="sv('deadline',this.value)">
+      </div>
+      <div class="form-row">
+        <label class="form-label">ご予算感</label>
+        <select class="fselect" id="f_budget" onchange="sv('budget',this.value)">
+          <option value="">選択してください</option>
+          <option>〜30万円</option>
+          <option>30〜60万円</option>
+          <option>60〜100万円</option>
+          <option>100〜200万円</option>
+          <option>200〜500万円</option>
+          <option>500万円〜</option>
+          <option>未定・相談したい</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label">現在お使いのシステム・ツール</label>
+        <input class="finput" type="text" id="f_currentSystem" placeholder="例）Excel / kintone / 老朽化した自社システム" oninput="sv('currentSystem',this.value)">
+      </div>
+      <div class="form-row">
+        <label class="form-label">弊社をお知りになったきっかけ</label>
+        <select class="fselect" id="f_howKnow" onchange="sv('howKnow',this.value)">
+          <option value="">選択してください（任意）</option>
+          <option>Google検索</option>
+          <option>SNS（Instagram / X など）</option>
+          <option>知人・紹介</option>
+          <option>見積もりシミュレーターから</option>
+          <option>その他</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row" style="margin-top:14px;">
+      <label class="form-label">補足・背景・メモ</label>
+      <textarea class="ftextarea" id="f_projectMemo" placeholder="例）来期から新部門を立ち上げる予定でシステム化を急いでいる。" oninput="sv('projectMemo',this.value)"></textarea>
+    </div>
+
+    <div class="step-nav">
+      <span class="nav-reset-link" onclick="resetAll()">リセット</span>
+      <button class="btn btn-next" onclick="goStep(2)">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────────────────────── -->
+  <!-- STEP 2: システムの仕様 -->
+  <!-- ───────────────────────────────────────────── -->
+  <div class="step-panel" id="step2">
+    <div class="step-head">
+      <div class="step-eyebrow">Step 2 of 4</div>
+      <div class="step-title">システムの仕様</div>
+      <div class="step-sub">利用者と必要な機能を教えてください。</div>
+    </div>
+
+    <div class="form-divider">利用者</div>
+    <div class="opt-grid cols3" id="grid_userType">
+      <div class="opt-item" data-val="internal" onclick="pick1('userType','internal')">
+        <span class="opt-icon">🏢</span>
+        <div class="opt-name">社内ユーザーのみ</div>
+        <div class="opt-desc">従業員・スタッフ</div>
+      </div>
+      <div class="opt-item" data-val="external" onclick="pick1('userType','external')">
+        <span class="opt-icon">🌐</span>
+        <div class="opt-name">社外ユーザーも含む</div>
+        <div class="opt-desc">顧客・パートナー・加盟店</div>
+      </div>
+      <div class="opt-item" data-val="both" onclick="pick1('userType','both')">
+        <span class="opt-icon">🔀</span>
+        <div class="opt-name">両方</div>
+        <div class="opt-desc">社内＋社外</div>
+      </div>
+    </div>
+
+    <div class="form-row" style="margin-top:14px;">
+      <label class="form-label">想定ユーザー数</label>
+      <input class="finput" id="f_userCount" placeholder="例）社員50名 / パートナー企業100社" oninput="sv('userCount',this.value)">
+    </div>
+
+    <div class="form-divider">必要な機能（複数選択可）</div>
+    <div class="opt-grid" id="grid_features">
+      <div class="opt-item" data-val="auth" onclick="pickM('features','auth')">
+        <span class="opt-icon">👤</span>
+        <div class="opt-name">ログイン・権限管理</div>
+        <div class="opt-desc">役割別アクセス制御</div>
+      </div>
+      <div class="opt-item" data-val="search" onclick="pickM('features','search')">
+        <span class="opt-icon">🔍</span>
+        <div class="opt-name">検索・絞り込み</div>
+      </div>
+      <div class="opt-item" data-val="form" onclick="pickM('features','form')">
+        <span class="opt-icon">📝</span>
+        <div class="opt-name">登録・編集フォーム</div>
+      </div>
+      <div class="opt-item" data-val="report" onclick="pickM('features','report')">
+        <span class="opt-icon">📊</span>
+        <div class="opt-name">集計・レポート</div>
+        <div class="opt-desc">グラフ・CSV出力</div>
+      </div>
+      <div class="opt-item" data-val="approval" onclick="pickM('features','approval')">
+        <span class="opt-icon">✅</span>
+        <div class="opt-name">承認・ワークフロー</div>
+        <div class="opt-desc">申請〜承認フロー</div>
+      </div>
+      <div class="opt-item" data-val="notify" onclick="pickM('features','notify')">
+        <span class="opt-icon">🔔</span>
+        <div class="opt-name">通知・アラート</div>
+        <div class="opt-desc">メール・Slack通知</div>
+      </div>
+      <div class="opt-item" data-val="import" onclick="pickM('features','import')">
+        <span class="opt-icon">📤</span>
+        <div class="opt-name">インポート・エクスポート</div>
+        <div class="opt-desc">Excel・CSV連携</div>
+      </div>
+      <div class="opt-item" data-val="api" onclick="pickM('features','api')">
+        <span class="opt-icon">🔗</span>
+        <div class="opt-name">外部API連携</div>
+        <div class="opt-desc">会計ソフト・Salesforce等</div>
+      </div>
+      <div class="opt-item" data-val="mobile" onclick="pickM('features','mobile')">
+        <span class="opt-icon">📱</span>
+        <div class="opt-name">スマートフォン対応</div>
+        <div class="opt-desc">外出先でも使用可能</div>
+      </div>
+      <div class="opt-item" data-val="calendar" onclick="pickM('features','calendar')">
+        <span class="opt-icon">📅</span>
+        <div class="opt-name">スケジュール・カレンダー</div>
+      </div>
+      <div class="opt-item" data-val="comment" onclick="pickM('features','comment')">
+        <span class="opt-icon">💬</span>
+        <div class="opt-name">コメント・メモ機能</div>
+      </div>
+      <div class="opt-item" data-val="email" onclick="pickM('features','email')">
+        <span class="opt-icon">📧</span>
+        <div class="opt-name">メール送信機能</div>
+      </div>
+    </div>
+
+    <div class="form-divider">使用頻度・規模</div>
+    <div class="opt-grid cols3" id="grid_usage">
+      <div class="opt-item" data-val="realtime" onclick="pick1('usage','realtime')">
+        <span class="opt-icon">⚡</span>
+        <div class="opt-name">リアルタイム（常時使用）</div>
+        <div class="opt-desc">販売・在庫など即時性が必要</div>
+      </div>
+      <div class="opt-item" data-val="daily" onclick="pick1('usage','daily')">
+        <span class="opt-icon">🕐</span>
+        <div class="opt-name">日次・週次更新</div>
+        <div class="opt-desc">日報・週次集計など</div>
+      </div>
+      <div class="opt-item" data-val="monthly" onclick="pick1('usage','monthly')">
+        <span class="opt-icon">📆</span>
+        <div class="opt-name">月次・都度利用</div>
+        <div class="opt-desc">請求・申請など</div>
+      </div>
+    </div>
+
+    <div class="form-row" style="margin-top:14px;">
+      <label class="form-label">機能の詳細・補足</label>
+      <textarea class="ftextarea" id="f_featureDetail" placeholder="例）入力者と承認者でメニューを分けたい。Slack通知も必要。CSVで一括登録できると良い。" oninput="sv('featureDetail',this.value)"></textarea>
+    </div>
+
+    <div class="step-nav">
+      <div style="display:flex;align-items:center;gap:12px;"><button class="btn btn-back" onclick="goStep(1)">← 戻る</button><span class="nav-reset-link" onclick="resetAll()">リセット</span></div>
+      <button class="btn btn-next" onclick="goStep(3)">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────────────────────── -->
+  <!-- STEP 3: 技術・データ -->
+  <!-- ───────────────────────────────────────────── -->
+  <div class="step-panel" id="step3">
+    <div class="step-head">
+      <div class="step-eyebrow">Step 3 of 4</div>
+      <div class="step-title">技術・データ</div>
+      <div class="step-sub">インフラ・セキュリティ・データ移行の要件を教えてください。</div>
+    </div>
+
+    <div class="form-divider">ホスティング・インフラ</div>
+    <div class="opt-grid cols3" id="grid_hosting">
+      <div class="opt-item" data-val="cloud" onclick="pick1('hosting','cloud')">
+        <span class="opt-icon">☁️</span>
+        <div class="opt-name">クラウド（AWS/GCP/Azure）</div>
+        <div class="opt-desc">スケーラブル・コスト最適</div>
+      </div>
+      <div class="opt-item" data-val="onprem" onclick="pick1('hosting','onprem')">
+        <span class="opt-icon">🖥️</span>
+        <div class="opt-name">オンプレミス（自社サーバー）</div>
+        <div class="opt-desc">社内設置・ネットワーク内</div>
+      </div>
+      <div class="opt-item" data-val="shared" onclick="pick1('hosting','shared')">
+        <span class="opt-icon">🌐</span>
+        <div class="opt-name">レンタルサーバー</div>
+        <div class="opt-desc">コスト重視</div>
+      </div>
+      <div class="opt-item" data-val="ask" onclick="pick1('hosting','ask')">
+        <span class="opt-icon">🤔</span>
+        <div class="opt-name">おまかせ・要相談</div>
+      </div>
+    </div>
+
+    <div class="form-divider">セキュリティ要件</div>
+    <div class="opt-grid cols3" id="grid_security">
+      <div class="opt-item" data-val="standard" onclick="pick1('security','standard')">
+        <span class="opt-icon">🔒</span>
+        <div class="opt-name">標準（HTTPS・認証）</div>
+        <div class="opt-desc">一般的な業務システム</div>
+      </div>
+      <div class="opt-item" data-val="strict" onclick="pick1('security','strict')">
+        <span class="opt-icon">🛡️</span>
+        <div class="opt-name">厳格（個人情報・金融）</div>
+        <div class="opt-desc">暗号化・ログ管理強化</div>
+      </div>
+      <div class="opt-item" data-val="compliance" onclick="pick1('security','compliance')">
+        <span class="opt-icon">📋</span>
+        <div class="opt-name">コンプライアンス対応</div>
+        <div class="opt-desc">ISO・PCI DSS など</div>
+      </div>
+    </div>
+
+    <div class="form-divider">既存システム・データ</div>
+    <div class="opt-grid cols3" id="grid_integration">
+      <div class="opt-item" data-val="yes" onclick="pick1('integration','yes')">
+        <span class="opt-icon">🔗</span>
+        <div class="opt-name">既存システムと連携が必要</div>
+        <div class="opt-desc">API・DB接続</div>
+      </div>
+      <div class="opt-item" data-val="migration" onclick="pick1('integration','migration')">
+        <span class="opt-icon">📥</span>
+        <div class="opt-name">データ移行が必要</div>
+        <div class="opt-desc">既存データを引き継ぎ</div>
+      </div>
+      <div class="opt-item" data-val="none" onclick="pick1('integration','none')">
+        <span class="opt-icon">🆕</span>
+        <div class="opt-name">連携・移行なし</div>
+      </div>
+    </div>
+
+    <div class="form-row" style="margin-top:14px;">
+      <label class="form-label">連携先・移行元の詳細</label>
+      <textarea class="ftextarea" id="f_integrationDetail" placeholder="例）現在kintoneを使用。製品マスターデータ約5,000件を移行したい。会計ソフト（弥生）とのCSV連携も必要。" oninput="sv('integrationDetail',this.value)"></textarea>
+    </div>
+    <div class="form-row">
+      <label class="form-label">技術仕様へのご要望</label>
+      <textarea class="ftextarea" id="f_techNote" placeholder="例）将来的にAPI公開も視野に入れたい。モバイルアプリとの連携も将来検討。" oninput="sv('techNote',this.value)"></textarea>
+    </div>
+
+    <div class="step-nav">
+      <div style="display:flex;align-items:center;gap:12px;"><button class="btn btn-back" onclick="goStep(2)">← 戻る</button><span class="nav-reset-link" onclick="resetAll()">リセット</span></div>
+      <button class="btn btn-next" onclick="goStep(4)">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────────────────────── -->
+  <!-- STEP 4: 運用・サポート -->
+  <!-- ───────────────────────────────────────────── -->
+  <div class="step-panel" id="step4">
+    <div class="step-head">
+      <div class="step-eyebrow">Step 4 of 4</div>
+      <div class="step-title">運用・サポート</div>
+      <div class="step-sub">本稼働後のサポート体制について確認します。</div>
+    </div>
+
+    <div class="form-divider">保守・運用サポート</div>
+    <div class="opt-grid cols3" id="grid_maintenance">
+      <div class="opt-item" data-val="contract" onclick="pick1('maintenance','contract')">
+        <span class="opt-icon">🔁</span>
+        <div class="opt-name">月額保守契約を希望</div>
+        <div class="opt-desc">障害対応・機能改善含む</div>
+      </div>
+      <div class="opt-item" data-val="ondemand" onclick="pick1('maintenance','ondemand')">
+        <span class="opt-icon">🔔</span>
+        <div class="opt-name">スポットで依頼</div>
+        <div class="opt-desc">都度見積もり</div>
+      </div>
+      <div class="opt-item" data-val="inhouse" onclick="pick1('maintenance','inhouse')">
+        <span class="opt-icon">📦</span>
+        <div class="opt-name">ソース納品・自社運用</div>
+        <div class="opt-desc">引き継ぎ後は自社対応</div>
+      </div>
+    </div>
+
+    <div class="form-divider">導入サポート</div>
+    <div class="opt-grid cols3" id="grid_training">
+      <div class="opt-item" data-val="manual" onclick="pick1('training','manual')">
+        <span class="opt-icon">📖</span>
+        <div class="opt-name">マニュアル作成を依頼</div>
+        <div class="opt-desc">操作手順書を作成してほしい</div>
+      </div>
+      <div class="opt-item" data-val="training" onclick="pick1('training','training')">
+        <span class="opt-icon">👨‍🏫</span>
+        <div class="opt-name">操作研修・レクチャーを依頼</div>
+        <div class="opt-desc">オンラインまたは対面</div>
+      </div>
+      <div class="opt-item" data-val="none" onclick="pick1('training','none')">
+        <span class="opt-icon">🙅</span>
+        <div class="opt-name">不要（自社で対応）</div>
+      </div>
+    </div>
+
+    <div class="form-divider">素材・データの準備</div>
+    <div class="opt-grid cols3" id="grid_assets">
+      <div class="opt-item" data-val="all" onclick="pick1('assets','all')">
+        <span class="opt-icon">✅</span>
+        <div class="opt-name">すべて準備済み</div>
+        <div class="opt-desc">マスターデータ・仕様書など</div>
+      </div>
+      <div class="opt-item" data-val="partly" onclick="pick1('assets','partly')">
+        <span class="opt-icon">🔶</span>
+        <div class="opt-name">一部準備済み</div>
+      </div>
+      <div class="opt-item" data-val="none" onclick="pick1('assets','none')">
+        <span class="opt-icon">📝</span>
+        <div class="opt-name">整理・ヒアリングから依頼</div>
+      </div>
+    </div>
+
+    <div class="form-row" style="margin-top:14px;">
+      <label class="form-label">その他ご要望・質問</label>
+      <textarea class="ftextarea" id="f_other" placeholder="例）フェーズ1として基本機能を先にリリースし、フェーズ2で拡張機能を追加したい。テスト環境も別途用意してほしい。" style="min-height:100px;" oninput="sv('other',this.value)"></textarea>
+    </div>
+
+    <div class="step-nav">
+      <div style="display:flex;align-items:center;gap:12px;"><button class="btn btn-back" onclick="goStep(3)">← 戻る</button><span class="nav-reset-link" onclick="resetAll()">リセット</span></div>
+      <button class="btn btn-next" style="background:linear-gradient(90deg,var(--accent),var(--accent2));box-shadow:0 4px 18px rgba(232,56,13,.3);" onclick="showResult()">送信する →</button>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────────────────────── -->
+  <!-- RESULT -->
+  <!-- ───────────────────────────────────────────── -->
+  <div class="result-panel" id="resultPanel">
+    <div class="print-header">
+      <div class="print-header-left">
+        <h1>詳細ヒアリングシート（システム開発）</h1>
+        <p>入力内容サマリー</p>
+      </div>
+    </div>
+    <div class="result-hero">
+      <div>
+        <div class="result-hero-label">Hearing Sheet — システム開発</div>
+        <div class="result-hero-amount">ヒアリング完了</div>
+        <div class="result-hero-sub">入力内容を確認後、担当者より2営業日以内にご連絡いたします</div>
+      </div>
+      <div>
+        <div class="result-cat-badge">✓ 受付済み</div>
+      </div>
+    </div>
+
+    <div class="sec-title">入力内容サマリー</div>
+    <table class="bk-tbl" id="resultTable"></table>
+
+    <div class="result-actions">
+      <button class="act-btn act-pdf" onclick="window.print()">
+        🖨️ PDF保存
+      </button>
+      <button class="act-btn act-copy" id="btnCopy" onclick="copyResult()">
+        📋 テキストコピー
+      </button>
+      <button class="act-btn act-reset" onclick="resetAll()">
+        最初からやり直す
+      </button>
+    </div>
+    <div class="result-edit-btn" onclick="goStep(1)">← 入力内容を修正する</div>
+  </div>
+
+  <div class="disclaimer">
+    ※ 送信内容はブラウザに保存されます。機密情報の取り扱いにご注意ください。
+  </div>
+
+    </div><!-- /.main-col -->
+    <aside class="side-panel" id="sidePanel">
+      <div class="side-section" id="sideQuoteSection" style="display:none;">
+        <div class="side-label">見積もり内容</div>
+        <span class="side-quote-filled">✓ 引き継ぎ済み</span>
+        <div class="side-quote-cat" id="sideQCat"></div>
+        <div class="side-quote-amount" id="sideQAmount"></div>
+        <div class="side-quote-items" id="sideQItems"></div>
+      </div>
+      <div class="side-section">
+        <div class="side-label">入力進捗</div>
+        <div id="sideStepProg"></div>
+      </div>
+      <div class="side-section">
+        <div class="side-label">入力済みの内容</div>
+        <div id="sidePreview"></div>
+      </div>
+      <div class="side-section">
+        <button class="side-reset-btn" onclick="resetAll()">🔄 最初からやり直す</button>
+      </div>
+    </aside>
+  </div><!-- /.page-layout -->
+
+</div>
+
+<button class="reset-float" id="resetFloat" onclick="resetAll()">🔄 リセット</button>
+<div class="toast" id="toast"></div>
+
+<script>
+const SK = 'ty_hearing_system_v1';
+let D = {};
+let currentStep = 1;
+const TOTAL = 4;
+const STEPS = ['事業・ご依頼の概要','システムの仕様','技術・データ','運用・サポート'];
+
+// ── ストレージ ───────────────────────────────────
+function load(){ try{ D = JSON.parse(localStorage.getItem(SK)||'{}'); }catch(e){ D={}; } }
+function save(){ try{ localStorage.setItem(SK, JSON.stringify(D)); }catch(e){} }
+let _spTimer=null;
+function sv(k,v){ D[k]=v; save(); clearTimeout(_spTimer); _spTimer=setTimeout(updateSidePanel,250); }
+function gv(k,fb){ return D[k]!==undefined ? D[k] : (fb!==undefined?fb:''); }
+
+// ── 選択 ─────────────────────────────────────────
+function pick1(key, val){
+  const g = document.getElementById('grid_'+key);
+  if(!g) return;
+  g.querySelectorAll('.opt-item').forEach(el=>el.classList.remove('selected'));
+  g.querySelector('[data-val="'+val+'"]')?.classList.add('selected');
+  sv(key, val);
+}
+function pickM(key, val){
+  const arr = gv(key,[]).slice();
+  const i = arr.indexOf(val);
+  if(i>-1) arr.splice(i,1); else arr.push(val);
+  sv(key, arr);
+  const g = document.getElementById('grid_'+key);
+  if(!g) return;
+  g.querySelectorAll('.opt-item').forEach(el=>{
+    el.classList.toggle('selected', arr.includes(el.dataset.val));
+  });
+}
+
+// ── プログレス ────────────────────────────────────
+function buildProgress(){
+  const wrap = document.getElementById('progressWrap');
+  let html = '';
+  for(let i=1;i<=TOTAL;i++){
+    const done = i<currentStep, active = i===currentStep;
+    const cls = done?'done':(active?'active':'locked');
+    const onclick = i<=currentStep ? `onclick="goStep(${i})"` : '';
+    html += `<div class="prog-step ${cls}" ${onclick}>
+      <div class="prog-circle">${done?'✓':i}</div>
+      <div class="prog-info">
+        <div class="prog-num">Step ${i}</div>
+        <div class="prog-label">${STEPS[i-1]}</div>
+      </div>
+    </div>`;
+    if(i<TOTAL) html += `<div class="prog-line${done?' done':''}"></div>`;
+  }
+  wrap.innerHTML = html;
+  document.getElementById('headerStep').textContent = `Step ${currentStep} / ${TOTAL}`;
+}
+
+// ── ステップ遷移 ──────────────────────────────────
+function goStep(n){
+  currentStep = n;
+  for(let i=1;i<=TOTAL;i++){
+    const el = document.getElementById('step'+i);
+    if(el) el.classList.toggle('active', i===n);
+  }
+  document.getElementById('resultPanel').classList.remove('active');
+  buildProgress();
+  restore(n);
+  updateSidePanel();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restore(n){
+  // テキスト / セレクト / date
+  const TM = {
+    1:['clientName','contactName','contactEmail','contactTel','business','challenge','currentSystem','deadline','projectMemo'],
+    2:['userCount','featureDetail'],
+    3:['integrationDetail','techNote'],
+    4:['other'],
+  };
+  (TM[n]||[]).forEach(k=>{
+    const el=document.getElementById('f_'+k);
+    if(el && gv(k)) el.value=gv(k);
+  });
+  // budget / howKnow selects (step 1)
+  if(n===1){
+    const bEl=document.getElementById('f_budget');
+    if(bEl && gv('budget')) bEl.value=gv('budget');
+    const hEl=document.getElementById('f_howKnow');
+    if(hEl && gv('howKnow')) hEl.value=gv('howKnow');
+  }
+  // 単一選択グリッド
+  const S1 = {
+    1:['sysType','sitestatus','budget','howKnow'],
+    2:['userType','usage'],
+    3:['hosting','security','integration'],
+    4:['maintenance','training','assets'],
+  };
+  (S1[n]||[]).forEach(k=>{
+    const v=gv(k); if(!v) return;
+    document.querySelectorAll(`#grid_${k} .opt-item`).forEach(el=>{
+      el.classList.toggle('selected', el.dataset.val===v);
+    });
+  });
+  // 複数選択グリッド
+  const SM = {
+    2:['features'],
+    3:[],
+    4:[],
+  };
+  (SM[n]||[]).forEach(k=>{
+    const arr=gv(k,[]);
+    document.querySelectorAll(`#grid_${k} .opt-item`).forEach(el=>{
+      el.classList.toggle('selected', arr.includes(el.dataset.val));
+    });
+  });
+}
+
+// ── 結果表示 ──────────────────────────────────────
+const LABELS = {
+  sysType: {order:'受発注・在庫管理',crm:'顧客管理（CRM）',billing:'販売・請求管理',hr:'勤怠・人事管理',maintenance:'設備・点検管理',analytics:'分析・レポート',api:'API・連携ツール',custom:'カスタム業務システム'},
+  sitestatus: {new:'新規開発',remake:'既存システムの刷新',partial:'機能追加・改修'},
+  userType: {internal:'社内ユーザーのみ',external:'社外ユーザーも含む',both:'両方'},
+  features: {auth:'ログイン・権限管理',search:'検索・絞り込み',form:'登録・編集フォーム',report:'集計・レポート',approval:'承認・ワークフロー',notify:'通知・アラート',import:'インポート・エクスポート',api:'外部API連携',mobile:'スマートフォン対応',calendar:'スケジュール・カレンダー',comment:'コメント・メモ',email:'メール送信'},
+  usage: {realtime:'リアルタイム（常時使用）',daily:'日次・週次更新',monthly:'月次・都度利用'},
+  hosting: {cloud:'クラウド',onprem:'オンプレミス',shared:'レンタルサーバー',ask:'おまかせ'},
+  security: {standard:'標準（HTTPS・認証）',strict:'厳格（個人情報・金融）',compliance:'コンプライアンス対応'},
+  integration: {yes:'既存システムと連携',migration:'データ移行が必要',none:'連携・移行なし'},
+  maintenance: {contract:'月額保守契約',ondemand:'スポット依頼',inhouse:'自社運用（ソース納品）'},
+  training: {manual:'マニュアル作成',training:'操作研修・レクチャー',none:'不要'},
+  assets: {all:'すべて準備済み',partly:'一部準備済み',none:'整理・ヒアリングから依頼'},
+};
+
+function labelOf(k,v){
+  if(Array.isArray(v)) return v.map(x=>(LABELS[k]&&LABELS[k][x])||x).join('、')||'—';
+  return (LABELS[k]&&LABELS[k][v])||v||'—';
+}
+
+const ROWS = [
+  {head:'見積もりシミュレーター'},
+  {key:'_quoteData', label:'概算金額', fmt: d => d ? '¥ '+Number(d.t||0).toLocaleString()+'（税込）' : ''},
+  {key:'_quoteData', label:'見積もり内容', fmt: d => d && d.items ? d.items.map(it=>it.n+(it.q>1?' ×'+it.q:'')).join(' / ') : ''},
+  {head:'お客様情報'},
+  {key:'clientName',label:'会社名・屋号'},
+  {key:'contactName',label:'担当者名'},
+  {key:'contactEmail',label:'メールアドレス'},
+  {key:'contactTel',label:'電話番号'},
+  {head:'事業・ご依頼の概要'},
+  {key:'sysType',label:'システムの種別'},
+  {key:'sitestatus',label:'制作ステータス'},
+  {key:'deadline',label:'希望稼働開始日'},
+  {key:'budget',label:'ご予算感'},
+  {key:'currentSystem',label:'現在のシステム'},
+  {key:'business',label:'主な事業内容'},
+  {key:'challenge',label:'現状の課題'},
+  {key:'projectMemo',label:'補足・背景'},
+  {head:'システムの仕様'},
+  {key:'userType',label:'利用者'},
+  {key:'userCount',label:'想定ユーザー数'},
+  {key:'features',label:'必要な機能'},
+  {key:'usage',label:'使用頻度'},
+  {key:'featureDetail',label:'機能詳細'},
+  {head:'技術・データ'},
+  {key:'hosting',label:'インフラ'},
+  {key:'security',label:'セキュリティ'},
+  {key:'integration',label:'既存連携・移行'},
+  {key:'integrationDetail',label:'連携詳細'},
+  {key:'techNote',label:'技術要望'},
+  {head:'運用・サポート'},
+  {key:'maintenance',label:'保守・運用'},
+  {key:'training',label:'導入サポート'},
+  {key:'assets',label:'素材・データの準備'},
+  {key:'other',label:'その他要望'},
+  {key:'howKnow',label:'お知りになったきっかけ'},
+];
+
+function showResult(){
+  document.querySelectorAll('.step-panel').forEach(el=>el.classList.remove('active'));
+  document.getElementById('resultPanel').classList.add('active');
+  const tbl = document.getElementById('resultTable');
+  let html = '<thead><tr><th>項目</th><th>内容</th></tr></thead><tbody>';
+  ROWS.forEach(row=>{
+    if(row.head){ html+=`<tr class="row-sub"><td colspan="2">${row.head}</td></tr>`; return; }
+    const raw = gv(row.key,'');
+    const empty = !raw || (Array.isArray(raw)&&!raw.filter(Boolean).length);
+    if(empty) return;
+    const display = row.fmt ? row.fmt(raw) : labelOf(row.key, raw);
+    html+=`<tr><td>${row.label}</td><td style="text-align:right;white-space:pre-wrap;">${esc(display)}</td></tr>`;
+  });
+  html+='</tbody>';
+  tbl.innerHTML = html;
+  buildProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function copyResult(){
+  let t='【詳細ヒアリングシート — システム開発】\n\n';
+  ROWS.forEach(row=>{
+    if(row.head){ t+=`\n■ ${row.head}\n`; return; }
+    const raw=gv(row.key,'');
+    const empty=!raw||(Array.isArray(raw)&&!raw.filter(Boolean).length);
+    if(!empty){
+      const d = row.fmt?row.fmt(raw):labelOf(row.key,raw);
+      t+=`${row.label}：${d}\n`;
+    }
+  });
+  navigator.clipboard.writeText(t).then(()=>showToast('コピーしました'));
+}
+
+function resetAll(){
+  if(!confirm('入力内容をすべてリセットしますか？'))return;
+  D={};save();
+  document.getElementById('resultPanel').classList.remove('active');
+  document.getElementById('resetFloat')?.classList.remove('show');
+  document.getElementById('progressWrap').style.display='none';
+  document.getElementById('codePanel').style.display='block';
+  document.getElementById('quoteBanner').classList.remove('show');
+  const qs=document.getElementById('sideQuoteSection');
+  if(qs)qs.style.display='none';
+  updateSidePanel();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+function esc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── コード読み込み ────────────────────────────────
+const CAT_TO_KEY = {
+  web:'web', video:'video', app:'app', design:'design', system:'system'
+};
+
+function decodeCode(raw) {
+  try {
+    const b64 = raw.trim().replace(/^TYE-/i, '');
+    const json = decodeURIComponent(escape(atob(b64)));
+    const d = JSON.parse(json);
+    if (d.v !== 1 || !d.c) return null;
+    return d;
+  } catch(e) { return null; }
+}
+
+function loadCode() {
+  const raw = document.getElementById('codeInput').value.trim();
+  const err = document.getElementById('codeError');
+  err.classList.remove('show');
+
+  const d = decodeCode(raw);
+  if (!d) { err.classList.add('show'); return; }
+
+  // バナー表示
+  applyQuoteData(d);
+  // コードパネル非表示
+  document.getElementById('codePanel').style.display = 'none';
+  // ステップ開始
+  startHearing();
+}
+
+function skipCode() {
+  document.getElementById('codePanel').style.display = 'none';
+  startHearing();
+}
+
+function applyQuoteData(d) {
+  // バナー
+  const banner = document.getElementById('quoteBanner');
+  document.getElementById('qbCat').textContent    = (d.ci || '') + ' ' + (d.cl || '');
+  document.getElementById('qbAmount').textContent = '¥ ' + Number(d.t || 0).toLocaleString() + '（税込）';
+  document.getElementById('qbDate').textContent   = '見積もり発行日：' + (d.dt || '');
+  if (d.items && d.items.length) {
+    document.getElementById('qbItems').textContent =
+      d.items.map(it => '・' + it.n + (it.q && it.q > 1 ? ' ×'+it.q : '')).join('　');
+  }
+  banner.classList.add('show');
+
+  // フォームに引き継ぎ
+  if (d.c && CAT_TO_KEY[d.c]) {
+    sv('category', CAT_TO_KEY[d.c]);
+  }
+  // 予算を概算から逆引き
+  const t = d.t || 0;
+  let budget = '';
+  if      (t < 300000)  budget = '〜30万円';
+  else if (t < 600000)  budget = '30〜60万円';
+  else if (t < 1000000) budget = '60〜100万円';
+  else if (t < 2000000) budget = '100〜200万円';
+  else if (t < 5000000) budget = '200〜500万円';
+  else                  budget = '500万円〜';
+  if (!gv('budget') && budget) sv('budget', budget);
+
+  // 見積もり内訳をメモとして保存（任意で参照）
+  sv('_quoteData', d);
+  updateSidePanel();
+}
+
+function startHearing(){
+  document.getElementById('progressWrap').style.display='flex';
+  document.getElementById('resetFloat')?.classList.add('show');
+  updateSidePanel();
+  goStep(1);
+}
+
+const SIDE_PREVIEW_FIELDS=[
+  {key:'clientName',label:'会社名'},
+  {key:'sysType',label:'システム種別'},
+  {key:'sitestatus',label:'ステータス'},
+  {key:'budget',label:'ご予算'},
+  {key:'deadline',label:'希望稼働日'},
+  {key:'userType',label:'利用者'},
+  {key:'hosting',label:'インフラ'},
+];
+function updateSidePanel(){
+  const qd=gv('_quoteData',null);
+  const qs=document.getElementById('sideQuoteSection');
+  if(qs&&qd){qs.style.display='block';const c=document.getElementById('sideQCat');const a=document.getElementById('sideQAmount');const it=document.getElementById('sideQItems');if(c)c.textContent=(qd.ci||'')+' '+(qd.cl||'');if(a)a.textContent='¥ '+Number(qd.t||0).toLocaleString();if(it&&qd.items)it.textContent=qd.items.map(x=>'・'+x.n+(x.q>1?' ×'+x.q:'')).join('\n');}
+  const sp=document.getElementById('sideStepProg');
+  if(sp){let h='';for(let i=1;i<=TOTAL;i++){const done=i<currentStep,active=i===currentStep;h+=`<div class="side-prog-item"><div class="side-prog-dot ${done?'done':active?'active':''}"></div><div class="side-prog-name ${done?'done':active?'active':''}">${STEPS[i-1]}</div></div>`;}sp.innerHTML=h;}
+  const pv=document.getElementById('sidePreview');
+  if(pv){let h='',cnt=0;for(const {key,label} of SIDE_PREVIEW_FIELDS){if(cnt>=6)break;const val=gv(key,'');if(!val||(Array.isArray(val)&&!val.filter(Boolean).length))continue;const disp=Array.isArray(val)?val.filter(Boolean).slice(0,3).join('、')+(val.length>3?'…':''):labelOf(key,val)||val;if(!disp||disp==='—')continue;h+=`<div class="side-field"><div class="side-field-key">${label}</div><div class="side-field-val">${esc(String(disp).slice(0,40))}</div></div>`;cnt++;}pv.innerHTML=h||'<div class="side-empty">まだ入力されていません</div>';}
+}
+
+// URLパラメータにコードがあれば自動読み込み
+function loadFromUrl() {
+  const p = new URLSearchParams(location.search);
+  const code = p.get('code');
+  if (code) {
+    const d = decodeCode(decodeURIComponent(code));
+    if (d) {
+      document.getElementById('codeInput').value = decodeURIComponent(code);
+      applyQuoteData(d);
+      document.getElementById('codePanel').style.display = 'none';
+      startHearing();
+      return true;
+    }
+  }
+  return false;
+}
+
+load();
+if (!loadFromUrl()) {
+  // コード入力待ち（パネルはデフォルト表示）
+}
+</script>
+</body>
+</html>

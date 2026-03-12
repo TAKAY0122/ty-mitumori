@@ -603,6 +603,46 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
   .adm-input-sm{width:100%;}
   .delivery-grid{grid-template-columns:1fr 1fr;}
 }
+
+/* ─── HEARING CODE BOX ─── */
+.hearing-block{margin-top:20px;padding-top:20px;border-top:1px solid var(--line);}
+.hearing-block-title{
+  font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);font-weight:700;margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+}
+.hearing-block-title::before,.hearing-block-title::after{content:'';flex:1;height:1px;background:var(--line);}
+.hearing-code-wrap{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg);border:2px solid var(--line);border-radius:9px;
+  padding:10px 14px;margin-bottom:9px;
+}
+.hearing-code-val{
+  flex:1;font-family:var(--mono);font-size:.75rem;font-weight:600;
+  color:var(--ink);word-break:break-all;letter-spacing:.03em;
+}
+.hearing-copy-btn{
+  flex-shrink:0;padding:6px 12px;border-radius:7px;
+  border:2px solid var(--line);background:#fff;color:var(--muted);
+  font-size:.72rem;font-weight:700;cursor:pointer;font-family:var(--gothic);
+  transition:all .15s;white-space:nowrap;
+}
+.hearing-copy-btn:hover{border-color:var(--accent);color:var(--accent);}
+.hearing-open-btn{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  width:100%;padding:11px 14px;border-radius:10px;border:none;
+  background:var(--ink);color:#fff;font-size:.82rem;font-weight:700;
+  cursor:pointer;font-family:var(--gothic);transition:all .18s;
+}
+.hearing-open-btn:hover{background:var(--ink2);transform:translateY(-2px);}
+.hearing-admin-btn{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  width:100%;padding:9px 14px;border-radius:10px;margin-top:8px;
+  background:transparent;border:2px solid var(--line);
+  color:var(--muted);font-size:.78rem;font-weight:700;
+  cursor:pointer;font-family:var(--gothic);transition:all .18s;
+}
+.hearing-admin-btn:hover{border-color:var(--accent2);color:var(--accent2);}
 </style>
 <script>
 // =============================================
@@ -1410,6 +1450,81 @@ function appendResultActions(panel) {
     <button class="act-btn act-contact" onclick="openModal()">✉️ この内容で相談</button>
     <button class="act-btn act-reset" onclick="resetCat()">↺ リセット</button>`;
   panel.appendChild(div);
+
+  // ── ヒアリングシートコード ──────────────────────
+  const code = generateHearingCode();
+  const hb = document.createElement('div'); hb.className='hearing-block';
+  hb.innerHTML=`
+    <div class="hearing-block-title">ヒアリングシートで引き継ぐ</div>
+    <div class="hearing-code-wrap">
+      <div class="hearing-code-val" id="hearingCodeVal">${code}</div>
+      <button class="hearing-copy-btn" id="hearingCopyBtn" onclick="copyHearingCode()">コピー</button>
+    </div>
+    <button class="hearing-open-btn" onclick="openHearingSheet()">
+      📋 このコードでヒアリングシートを開く →
+    </button>
+    <button class="hearing-admin-btn" onclick="window.open('hearing_admin.html','_blank')">
+      📊 ヒアリング管理画面を開く
+    </button>`;
+  panel.appendChild(hb);
+}
+
+function generateHearingCode() {
+  const cat = CATS[ST.cat];
+  // STの選択内容からアイテムリストを組み立てる
+  const items = [];
+  if (ST.setPlan) {
+    const plan = cat.sets.find(s => s.id === ST.setPlan);
+    if (plan) plan.chips.forEach(c => items.push({ n: c }));
+  } else {
+    cat.steps.forEach(step => {
+      const sel = ST.sel[step.id]; if (!sel) return;
+      if (step.type === 'single') {
+        const opt = step.options.find(o => o.id === sel.value);
+        if (opt && opt.price > 0) items.push({ n: opt.name, q: 1, p: opt.price });
+      } else {
+        Object.entries(sel).forEach(([id, qty]) => {
+          const opt = step.options.find(o => o.id === id);
+          if (opt && opt.price > 0) items.push({ n: opt.name, q: qty, p: opt.price });
+        });
+      }
+    });
+  }
+  const { total, saleTotal } = calcTotal ? calcTotal() : { total: 0, saleTotal: 0 };
+  const data = {
+    v: 1,
+    c:  ST.cat,
+    cl: cat.label,
+    ci: cat.icon,
+    t:  saleTotal,
+    to: total,
+    items,
+    dt: new Date().toLocaleDateString('ja-JP')
+  };
+  try {
+    return 'TYE-' + btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  } catch(e) { return ''; }
+}
+
+function copyHearingCode() {
+  const val = document.getElementById('hearingCodeVal')?.textContent || '';
+  navigator.clipboard.writeText(val).then(() => {
+    const btn = document.getElementById('hearingCopyBtn');
+    if (btn) { btn.textContent = 'コピー済み'; setTimeout(() => btn.textContent = 'コピー', 2000); }
+  });
+}
+
+function openHearingSheet() {
+  const code = document.getElementById('hearingCodeVal')?.textContent || '';
+  const CAT_FILES = {
+    web: 'hearing.html',
+    video: 'hearing_video.html',
+    app: 'hearing_app.html',
+    system: 'hearing_system.html',
+    design: 'hearing_design.html',
+  };
+  const file = CAT_FILES[ST.cat] || 'hearing.html';
+  window.open(file + '?code=' + encodeURIComponent(code), '_blank');
 }
 
 // =============================================

@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>詳細ヒアリングシート（動画編集・映像編集） — 見積書作成</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=BIZ+UDPGothic:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ─── index.html と共通のスタイル（完全一致） ─── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+
+:root {
+  --gothic: 'BIZ UDPGothic','Noto Sans JP',sans-serif;
+  --mono: 'IBM Plex Mono',monospace;
+  --ink: #111118;
+  --ink2: #282835;
+  --muted: #6a6a7a;
+  --line: #e2e0da;
+  --bg: #f5f4f0;
+  --card: #ffffff;
+  --accent: #e8380d;
+  --accent-light: #fff1ee;
+  --accent2: #f0a500;
+  --green: #0d9e6a;
+  --shadow: 0 4px 28px rgba(0,0,0,.08);
+  --step-color: #e8380d;
+}
+
+html{scroll-behavior:smooth;}
+body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:100vh;overflow-x:hidden;}
+
+.header{
+  position:sticky;top:0;z-index:300;
+  background:var(--ink);height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;
+  box-shadow:0 2px 16px rgba(0,0,0,.3);
+}
+.header-brand{
+  font-family:var(--gothic);font-size:1.05rem;font-weight:700;
+  color:#fff;letter-spacing:.05em;cursor:pointer;
+  display:flex;align-items:center;gap:8px;
+  user-select:none;transition:opacity .2s;text-decoration:none;
+}
+.header-brand:hover{opacity:.75;}
+.header-brand-accent{color:var(--accent);}
+.header-total-wrap{text-align:right;}
+.header-total-label{font-size:.58rem;color:rgba(255,255,255,.45);letter-spacing:.1em;text-transform:uppercase;}
+.header-total-num{font-family:var(--mono);font-size:1.1rem;font-weight:600;color:var(--accent2);}
+
+.container{max-width:960px;margin:0 auto;padding:36px 18px 100px;}
+
+.breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.bc-item{font-size:.76rem;color:var(--muted);cursor:pointer;transition:color .15s;}
+.bc-item:hover{color:var(--step-color);}
+.bc-item.active{color:var(--ink);font-weight:700;pointer-events:none;}
+.bc-sep{color:var(--line);font-size:.8rem;}
+
+.progress-wrap{
+  background:var(--card);border-radius:14px;
+  padding:18px 24px;margin-bottom:24px;
+  display:flex;align-items:center;gap:0;
+  box-shadow:var(--shadow);
+}
+.prog-step{display:flex;align-items:center;flex:1;cursor:pointer;transition:opacity .18s;min-width:0;}
+.prog-step:hover:not(.locked){opacity:.72;}
+.prog-step.locked{cursor:default;}
+.prog-circle{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:700;
+  background:var(--line);color:var(--muted);transition:all .28s;
+}
+.prog-step.active .prog-circle{background:var(--step-color);color:#fff;box-shadow:0 0 0 4px color-mix(in srgb,var(--step-color) 22%,transparent);}
+.prog-step.done .prog-circle{background:var(--green);color:#fff;}
+.prog-info{padding-left:8px;overflow:hidden;}
+.prog-num{font-size:.58rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+.prog-label{font-size:.76rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.prog-line{flex:0 0 18px;height:2px;background:var(--line);margin:0 5px;transition:background .28s;}
+.prog-line.done{background:var(--green);}
+
+.step-panel{background:var(--card);border-radius:18px;padding:32px 36px;box-shadow:var(--shadow);display:none;}
+.step-panel.active{display:block;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+.step-head{margin-bottom:24px;}
+.step-eyebrow{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px;color:var(--step-color);}
+.step-title{font-family:var(--gothic);font-size:1.55rem;font-weight:900;line-height:1.3;letter-spacing:.02em;}
+.step-sub{font-size:.82rem;color:var(--muted);margin-top:5px;line-height:1.75;}
+
+.or-divider{display:flex;align-items:center;gap:10px;margin:22px 0 16px;color:var(--muted);font-size:.78rem;}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--line);}
+
+.opt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:11px;margin-bottom:8px;}
+.opt-grid.cols3{grid-template-columns:repeat(auto-fill,minmax(145px,1fr));}
+.opt-item{
+  border:2px solid var(--line);border-radius:12px;padding:15px;
+  cursor:pointer;background:var(--bg);transition:all .18s;
+  position:relative;user-select:none;
+}
+.opt-item:hover{border-color:var(--step-color);transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.09);}
+.opt-item.selected{border-color:var(--step-color);background:color-mix(in srgb,var(--step-color) 7%,white);}
+.opt-item.selected::after{
+  content:'✓';position:absolute;top:8px;right:9px;
+  width:19px;height:19px;border-radius:50%;
+  background:var(--step-color);color:#fff;
+  font-size:.68rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.opt-icon{font-size:1.5rem;margin-bottom:7px;display:block;}
+.opt-name{font-size:.83rem;font-weight:700;margin-bottom:3px;line-height:1.4;letter-spacing:.01em;}
+.opt-desc{font-size:.7rem;color:var(--muted);line-height:1.55;}
+
+/* delivery-item を流用：カラーパレット選択 */
+.delivery-section{margin:0 0 10px;padding:18px;background:var(--bg);border-radius:14px;border:2px solid var(--line);}
+.delivery-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:6px;}
+.delivery-title{font-weight:900;font-size:.92rem;letter-spacing:.02em;}
+.delivery-note{font-size:.72rem;color:var(--muted);}
+.delivery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:9px;}
+.delivery-item{border:2px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer;background:#fff;transition:all .18s;}
+.delivery-item:hover{border-color:var(--step-color);transform:translateY(-2px);}
+.delivery-item.selected{border-color:var(--step-color);background:color-mix(in srgb,var(--step-color) 6%,white);}
+.delivery-label{font-size:.75rem;font-weight:700;text-align:center;padding:6px 4px 4px;}
+.color-bar{height:32px;}
+.color-sub{height:14px;}
+
+.step-nav{display:flex;justify-content:space-between;align-items:center;padding-top:22px;margin-top:6px;border-top:1px solid var(--line);}
+.btn{padding:10px 24px;border-radius:50px;font-size:.84rem;font-weight:700;cursor:pointer;border:none;font-family:var(--gothic);transition:all .18s;}
+.btn-next{background:var(--step-color);color:#fff;box-shadow:0 4px 14px color-mix(in srgb,var(--step-color) 32%,transparent);}
+.btn-next:hover{transform:translateY(-2px);filter:brightness(1.07);}
+.btn-back{background:transparent;color:var(--muted);border:2px solid var(--line);}
+.btn-back:hover{border-color:var(--muted);color:var(--ink);}
+
+.form-row{margin-bottom:14px;}
+.form-row:last-child{margin-bottom:0;}
+.form-label{display:block;font-size:.76rem;font-weight:700;margin-bottom:4px;}
+.form-label sup{color:var(--accent);}
+.finput,.ftextarea,.fselect{
+  width:100%;padding:10px 13px;
+  border:2px solid var(--line);border-radius:9px;
+  font-size:.84rem;font-family:var(--gothic);
+  background:var(--bg);color:var(--ink);
+  outline:none;transition:border-color .18s;
+  -webkit-appearance:none;appearance:none;
+}
+.finput:focus,.ftextarea:focus,.fselect:focus{border-color:var(--accent);background:#fff;}
+.ftextarea{min-height:85px;resize:vertical;}
+.fselect{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236a6a7a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;
+  padding-right:36px;cursor:pointer;
+}
+::placeholder{color:#a8a8b0;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-divider{
+  font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin:18px 0 12px;
+  display:flex;align-items:center;gap:10px;
+}
+.form-divider::before,.form-divider::after{content:'';flex:1;height:1px;background:var(--line);}
+
+/* URLリスト */
+.url-list{display:grid;gap:7px;margin-bottom:6px;}
+.url-row{display:flex;gap:8px;align-items:center;}
+.url-row .finput{flex:1;margin-bottom:0;}
+.url-del{
+  flex-shrink:0;width:34px;height:34px;border-radius:8px;
+  border:2px solid var(--line);background:var(--bg);
+  color:var(--muted);font-size:1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;font-family:var(--gothic);
+}
+.url-del:hover{background:#fee2e2;border-color:#ffc0c0;color:#c00;}
+.url-add{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:100%;padding:9px 14px;border-radius:9px;
+  border:2px dashed var(--line);background:transparent;
+  color:var(--muted);font-size:.8rem;font-weight:700;
+  cursor:pointer;font-family:var(--gothic);transition:all .15s;
+  margin-top:6px;
+}
+.url-add:hover{border-color:var(--accent);color:var(--accent);}
+
+/* 結果パネル */
+.result-panel{background:var(--card);border-radius:18px;padding:36px;box-shadow:var(--shadow);display:none;}
+.result-panel.active{display:block;animation:fadeUp .32s ease;}
+.result-hero{
+  background:var(--ink);border-radius:14px;padding:26px 30px;
+  margin-bottom:24px;display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:14px;
+}
+.result-hero-label{font-size:.68rem;color:rgba(255,255,255,.45);letter-spacing:.1em;margin-bottom:3px;}
+.result-hero-amount{font-family:var(--mono);font-size:2rem;font-weight:600;color:var(--accent2);}
+.result-hero-sub{font-size:.76rem;color:rgba(255,255,255,.55);margin-top:3px;}
+.result-cat-badge{display:inline-block;background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);font-size:.72rem;padding:3px 10px;border-radius:5px;margin-bottom:5px;}
+.sec-title{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px;}
+.bk-tbl{width:100%;border-collapse:collapse;font-size:.84rem;margin-bottom:18px;}
+.bk-tbl th{text-align:left;padding:8px 11px;background:var(--bg);color:var(--muted);font-size:.7rem;letter-spacing:.04em;}
+.bk-tbl td{padding:10px 11px;border-bottom:1px solid var(--line);}
+.bk-tbl tr:last-child td{border-bottom:none;}
+.bk-tbl td.num-col{text-align:right;}
+.row-sub td{background:var(--bg);font-weight:700;font-size:.78rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+.result-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px;padding-top:20px;border-top:1px solid var(--line);}
+.act-btn{flex:1;min-width:120px;padding:12px 14px;border-radius:10px;border:none;font-size:.8rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:var(--gothic);transition:all .18s;}
+.act-btn:hover{transform:translateY(-2px);}
+.act-pdf{background:var(--ink);color:#fff;}
+.act-copy{background:var(--bg);color:var(--ink);border:2px solid var(--line);}
+.act-copy:hover{border-color:var(--accent);}
+.act-reset{background:var(--bg);color:var(--muted);border:2px solid var(--line);}
+.result-edit-btn{display:block;text-align:center;margin-top:14px;font-size:.78rem;color:var(--muted);cursor:pointer;text-decoration:underline;}
+.result-edit-btn:hover{color:var(--accent);}
+
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--ink);color:#fff;padding:10px 20px;border-radius:50px;font-size:.8rem;font-weight:600;opacity:0;pointer-events:none;z-index:999;transition:all .26s;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.disclaimer{text-align:center;font-size:.7rem;color:var(--muted);margin-top:36px;line-height:2;}
+
+/* ─── QUOTE BANNER (コード読み込み後) ─── */
+.quote-banner{
+  background:var(--ink);border-radius:14px;padding:20px 24px;
+  margin-bottom:24px;display:none;
+  animation:fadeUp .3s ease both;
+}
+.quote-banner.show{display:block;}
+.quote-banner-label{font-size:.65rem;color:rgba(255,255,255,.45);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
+.quote-banner-amount{font-family:var(--mono);font-size:1.8rem;font-weight:600;color:var(--accent2);margin-bottom:2px;}
+.quote-banner-cat{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);font-size:.72rem;padding:3px 10px;border-radius:5px;margin-bottom:8px;}
+.quote-banner-items{font-size:.75rem;color:rgba(255,255,255,.6);line-height:1.9;}
+.quote-banner-date{font-size:.68rem;color:rgba(255,255,255,.35);margin-top:6px;}
+
+/* コード入力パネル */
+.code-panel{
+  background:var(--card);border-radius:18px;padding:28px 32px;
+  box-shadow:var(--shadow);margin-bottom:24px;
+  border:2px solid var(--line);
+}
+.code-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+.code-panel-title{font-size:1rem;font-weight:900;color:var(--ink);}
+.code-panel-sub{font-size:.78rem;color:var(--muted);margin-top:2px;}
+.code-input-row{display:flex;gap:8px;align-items:stretch;}
+.code-input-row .finput{flex:1;font-family:var(--mono);font-size:.82rem;letter-spacing:.03em;}
+.code-load-btn{
+  flex-shrink:0;padding:0 20px;border-radius:9px;border:none;
+  background:var(--step-color);color:#fff;font-size:.84rem;font-weight:700;
+  cursor:pointer;font-family:var(--gothic);transition:all .18s;
+  box-shadow:0 4px 14px color-mix(in srgb,var(--step-color) 28%,transparent);
+}
+.code-load-btn:hover{transform:translateY(-2px);filter:brightness(1.07);}
+.code-error{font-size:.76rem;color:var(--accent);margin-top:8px;display:none;}
+.code-error.show{display:block;}
+.code-skip{font-size:.75rem;color:var(--muted);text-align:center;margin-top:12px;cursor:pointer;text-decoration:underline;}
+.code-skip:hover{color:var(--ink);}
+
+/* ─── サイドパネル ─── */
+.page-layout{display:grid;grid-template-columns:1fr 272px;gap:22px;align-items:start;}
+.main-col{min-width:0;}
+.side-panel{position:sticky;top:76px;max-height:calc(100vh - 96px);overflow-y:auto;background:var(--card);border-radius:18px;padding:20px 18px;box-shadow:var(--shadow);scrollbar-width:thin;}
+.side-section{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--line);}
+.side-section:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.side-label{font-size:.6rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;}
+.side-quote-filled{display:inline-block;padding:2px 7px;border-radius:4px;font-size:.63rem;font-weight:700;background:color-mix(in srgb,var(--green) 14%,white);color:var(--green);margin-bottom:8px;}
+.side-quote-cat{font-size:.76rem;color:var(--ink);font-weight:700;margin-bottom:3px;}
+.side-quote-amount{font-family:var(--mono);font-size:1.35rem;font-weight:600;color:var(--accent2);margin-bottom:5px;}
+.side-quote-items{font-size:.68rem;color:var(--muted);line-height:1.85;white-space:pre-line;}
+.side-field{display:flex;flex-direction:column;gap:2px;margin-bottom:9px;}
+.side-field:last-child{margin-bottom:0;}
+.side-field-key{font-size:.6rem;color:var(--muted);font-weight:700;}
+.side-field-val{font-size:.75rem;color:var(--ink);font-weight:700;line-height:1.45;overflow-wrap:break-word;}
+.side-empty{font-size:.7rem;color:var(--muted);font-style:italic;}
+.side-prog-item{display:flex;align-items:center;gap:7px;margin-bottom:7px;}
+.side-prog-item:last-child{margin-bottom:0;}
+.side-prog-dot{width:7px;height:7px;border-radius:50%;background:var(--line);flex-shrink:0;transition:background .22s;}
+.side-prog-dot.done{background:var(--green);}
+.side-prog-dot.active{background:var(--step-color);box-shadow:0 0 0 3px color-mix(in srgb,var(--step-color) 20%,transparent);}
+.side-prog-name{font-size:.71rem;color:var(--muted);}
+.side-prog-name.active{color:var(--ink);font-weight:700;}
+.side-prog-name.done{color:var(--green);}
+.side-reset-btn{width:100%;padding:9px;border-radius:9px;border:2px solid var(--line);background:transparent;color:var(--muted);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--gothic);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.side-reset-btn:hover{border-color:#f87171;color:#dc2626;background:#fff5f5;}
+.client-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.nav-reset-link{font-size:.7rem;color:var(--muted);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+.nav-reset-link:hover{color:var(--accent);}
+.reset-float{position:fixed;bottom:22px;right:22px;z-index:199;padding:10px 16px;border-radius:50px;background:var(--card);border:2px solid var(--line);color:var(--muted);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--gothic);box-shadow:0 4px 18px rgba(0,0,0,.13);transition:all .18s;display:none;align-items:center;gap:6px;}
+.reset-float.show{display:flex;}
+.reset-float:hover{border-color:#f87171;color:#dc2626;}
+@media(max-width:900px){.page-layout{grid-template-columns:1fr;}.side-panel{display:none;}.reset-float.show{display:flex;}}
+@media(max-width:620px){.reset-float{bottom:80px;}}
+
+@media print{
+  .code-panel,.quote-banner{display:none!important;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  .header,.breadcrumb,.progress-wrap,.step-panel,.result-actions,.result-edit-btn,.disclaimer,.toast{display:none!important;}
+  body{background:#fff!important;}
+  .container{padding:0!important;max-width:100%!important;}
+  .result-panel{display:block!important;box-shadow:none!important;border-radius:0!important;padding:0!important;}
+  .print-header{display:flex!important;background:#111118!important;color:#fff!important;padding:18px 24px!important;justify-content:space-between!important;align-items:center!important;margin-bottom:0!important;}
+  .print-header-left h1{font-size:1.1rem;font-weight:900;color:#fff;}
+  .print-header-left p{font-size:.72rem;color:rgba(255,255,255,.6);margin-top:2px;}
+}
+.print-header{display:none;}
+
+@media(max-width:620px){
+  .header{padding:0 14px;}
+  .container{padding:20px 12px 80px;}
+  .step-panel,.result-panel{padding:20px 16px;}
+  .opt-grid{grid-template-columns:1fr 1fr;gap:9px;}
+  .progress-wrap{padding:14px 16px;}
+  .prog-info{display:none;}
+  .result-hero{flex-direction:column;}
+  .result-actions{flex-direction:column;}
+  .form-grid{grid-template-columns:1fr;}
+  .delivery-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr));}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a class="header-brand" href="https://ty-mitumori.t-yoshizaki-taka.workers.dev/" onclick="return confirm('見積もりページに戻りますか？')">
+    <span class="header-brand-accent">見積書</span>作成
+    <span style="font-size:.65rem;color:rgba(255,255,255,.35);font-weight:400;">かんたん概算見積書</span>
+  </a>
+  <div class="header-total-wrap">
+    <div class="header-total-label">Video Editing Hearing</div>
+    <div class="header-total-num" id="headerStep">Step 1 / 4</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="breadcrumb">
+    <span class="bc-item" onclick="location.href='https://ty-mitumori.t-yoshizaki-taka.workers.dev/'">見積もり</span>
+    <span class="bc-sep">›</span>
+    <span class="bc-item active">詳細ヒアリング（動画編集）</span>
+  </div>
+
+  <div class="page-layout">
+    <div class="main-col">
+
+      <!-- コード入力パネル -->
+      <div class="code-panel" id="codePanel">
+        <div class="code-panel-head">
+          <div>
+            <div class="code-panel-title">見積もりコードを入力</div>
+            <div class="code-panel-sub">見積もりシミュレーターで発行されたコードを貼り付けると、見積もり内容を自動引き継ぎします</div>
+          </div>
+        </div>
+        <div class="code-input-row">
+          <input class="finput" type="text" id="codeInput" placeholder="TYE-XXXXXXXX..." autocomplete="off" spellcheck="false">
+          <button class="code-load-btn" onclick="loadCode()">読み込む</button>
+        </div>
+        <div class="code-error" id="codeError">コードが正しくありません。見積もりページで発行されたコードを入力してください。</div>
+        <div class="code-skip" onclick="skipCode()">コードなしで入力する →</div>
+      </div>
+
+      <!-- 見積もり引き継ぎバナー -->
+      <div class="quote-banner" id="quoteBanner">
+        <div class="quote-banner-label">見積もりシミュレーター 引き継ぎ済み</div>
+        <div id="qbCat" class="quote-banner-cat"></div>
+        <div class="quote-banner-amount" id="qbAmount"></div>
+        <div class="quote-banner-items" id="qbItems"></div>
+        <div class="quote-banner-date" id="qbDate"></div>
+      </div>
+
+      <div class="progress-wrap" id="progressWrap" style="display:none;"></div>
+
+      <!-- ───────────────────────────────────────────── -->
+      <!-- STEP 1: 事業・ご依頼の概要 -->
+      <!-- ───────────────────────────────────────────── -->
+      <div class="step-panel" id="step1">
+        <div class="step-head">
+          <div class="step-eyebrow">Step 1 of 4</div>
+          <div class="step-title">事業・ご依頼の概要</div>
+          <div class="step-sub">貴社の事業内容とご依頼の背景を教えてください。</div>
+        </div>
+
+        <div class="form-divider">お客様情報</div>
+        <div class="client-info-grid">
+          <div class="form-row"><label class="form-label">会社名・屋号</label><input class="finput" type="text" id="f_clientName" placeholder="例）株式会社〇〇 / フリーランス 山田太郎" oninput="sv('clientName',this.value)"></div>
+          <div class="form-row"><label class="form-label">担当者名</label><input class="finput" type="text" id="f_contactName" placeholder="例）山田 太郎" oninput="sv('contactName',this.value)"></div>
+          <div class="form-row"><label class="form-label">メールアドレス</label><input class="finput" type="email" id="f_contactEmail" placeholder="例）yamada@example.com" oninput="sv('contactEmail',this.value)"></div>
+          <div class="form-row"><label class="form-label">電話番号</label><input class="finput" type="tel" id="f_contactTel" placeholder="例）03-1234-5678" oninput="sv('contactTel',this.value)"></div>
+        </div>
+
+        <div class="form-divider">会社・事業について</div>
+        <div class="form-row">
+          <label class="form-label">主な事業内容</label>
+          <textarea class="ftextarea" id="f_business" placeholder="例）県内を中心に住宅・店舗のリフォームを手がける建設会社です。" oninput="sv('business',this.value)"></textarea>
+        </div>
+        <div class="form-row">
+          <label class="form-label">他社に負けない強み・推しポイント</label>
+          <textarea class="ftextarea" id="f_usp" placeholder="例）創業30年の地元密着の信頼感。現場担当者が直接ヒアリングするので細かい要望に応えられます。" oninput="sv('usp',this.value)"></textarea>
+        </div>
+
+        <div class="form-divider">編集の種別</div>
+        <div class="opt-grid" id="grid_videoType">
+          <div class="opt-item" data-val="edit" onclick="pick1('videoType','edit')">
+            <span class="opt-icon">✂️</span>
+            <div class="opt-name">動画編集・カット編集</div>
+            <div class="opt-desc">BGM・テロップ・カット</div>
+          </div>
+          <div class="opt-item" data-val="caption" onclick="pick1('videoType','caption')">
+            <span class="opt-icon">💬</span>
+            <div class="opt-name">テロップ・字幕制作</div>
+            <div class="opt-desc">テロップデザイン・字幕起こし</div>
+          </div>
+          <div class="opt-item" data-val="motion" onclick="pick1('videoType','motion')">
+            <span class="opt-icon">🎨</span>
+            <div class="opt-name">モーショングラフィックス</div>
+            <div class="opt-desc">アニメーション・エフェクト</div>
+          </div>
+          <div class="opt-item" data-val="corporate" onclick="pick1('videoType','corporate')">
+            <span class="opt-icon">🎬</span>
+            <div class="opt-name">企業PR・プロモ編集</div>
+            <div class="opt-desc">企業PR・採用動画</div>
+          </div>
+          <div class="opt-item" data-val="social" onclick="pick1('videoType','social')">
+            <span class="opt-icon">📱</span>
+            <div class="opt-name">SNS・YouTube用編集</div>
+            <div class="opt-desc">縦型・ショート動画</div>
+          </div>
+          <div class="opt-item" data-val="event" onclick="pick1('videoType','event')">
+            <span class="opt-icon">🎞️</span>
+            <div class="opt-name">イベント・式典映像</div>
+            <div class="opt-desc">記念映像・ダイジェスト</div>
+          </div>
+          <div class="opt-item" data-val="training" onclick="pick1('videoType','training')">
+            <span class="opt-icon">🎓</span>
+            <div class="opt-name">研修・教育動画編集</div>
+            <div class="opt-desc">解説・チュートリアル動画</div>
+          </div>
+          <div class="opt-item" data-val="oped" onclick="pick1('videoType','oped')">
+            <span class="opt-icon">🖥️</span>
+            <div class="opt-name">オープニング・エンディング</div>
+            <div class="opt-desc">ロゴアニメ・エンドロール</div>
+          </div>
+        </div>
+
+        <div class="form-divider">ステータス</div>
+        <div class="opt-grid cols3" id="grid_sitestatus">
+          <div class="opt-item" data-val="new" onclick="pick1('sitestatus','new')">
+            <span class="opt-icon">🆕</span>
+            <div class="opt-name">新規制作</div>
+          </div>
+          <div class="opt-item" data-val="series" onclick="pick1('sitestatus','series')">
+            <span class="opt-icon">🔄</span>
+            <div class="opt-name">シリーズ継続</div>
+            <div class="opt-desc">既存シリーズの続編</div>
+          </div>
+          <div class="opt-item" data-val="remake" onclick="pick1('sitestatus','remake')">
+            <span class="opt-icon">🔧</span>
+            <div class="opt-name">リメイク・改訂</div>
+          </div>
+        </div>
+
+        <div class="form-divider">スケジュール・予算</div>
+        <div class="form-grid">
+          <div class="form-row">
+            <label class="form-label">希望納品日</label>
+            <input class="finput" type="date" id="f_deadline" oninput="sv('deadline',this.value)">
+          </div>
+          <div class="form-row">
+            <label class="form-label">ご予算感</label>
+            <select class="fselect" id="f_budget" onchange="sv('budget',this.value)">
+              <option value="">選択してください</option>
+              <option>〜30万円</option>
+              <option>30〜60万円</option>
+              <option>60〜100万円</option>
+              <option>100〜200万円</option>
+              <option>200〜500万円</option>
+              <option>500万円〜</option>
+              <option>未定・相談したい</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label">公開先・媒体</label>
+            <input class="finput" type="text" id="f_publishWhere" placeholder="例）YouTube / Instagram / 社内研修用" oninput="sv('publishWhere',this.value)">
+          </div>
+          <div class="form-row">
+            <label class="form-label">弊社をお知りになったきっかけ</label>
+            <select class="fselect" id="f_howKnow" onchange="sv('howKnow',this.value)">
+              <option value="">選択してください（任意）</option>
+              <option>Google検索</option>
+              <option>SNS（Instagram / X など）</option>
+              <option>知人・紹介</option>
+              <option>見積もりシミュレーターから</option>
+              <option>その他</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row" style="margin-top:14px;">
+          <label class="form-label">補足・背景・メモ</label>
+          <textarea class="ftextarea" id="f_projectMemo" placeholder="例）競合他社がリニューアルしたので自社の動画も整えたい。問い合わせにつながる映像にしたい。" oninput="sv('projectMemo',this.value)"></textarea>
+        </div>
+
+        <div class="step-nav">
+          <span class="nav-reset-link" onclick="resetAll()">リセット</span>
+          <button class="btn btn-next" onclick="goStep(2)">次へ →</button>
+        </div>
+      </div>
+
+      <!-- ───────────────────────────────────────────── -->
+      <!-- STEP 2: 動画の仕様 -->
+      <!-- ───────────────────────────────────────────── -->
+      <div class="step-panel" id="step2">
+        <div class="step-head">
+          <div class="step-eyebrow">Step 2 of 4</div>
+          <div class="step-title">動画の仕様</div>
+          <div class="step-sub">編集する映像の仕様と素材の受け渡し方法を教えてください。</div>
+        </div>
+
+        <div class="form-divider">尺・本数</div>
+        <div class="opt-grid cols3" id="grid_duration">
+          <div class="opt-item" data-val="15s" onclick="pick1('duration','15s')">
+            <div class="opt-name">15秒以内</div>
+          </div>
+          <div class="opt-item" data-val="30s" onclick="pick1('duration','30s')">
+            <div class="opt-name">30秒</div>
+          </div>
+          <div class="opt-item" data-val="1-2m" onclick="pick1('duration','1-2m')">
+            <div class="opt-name">60秒〜2分</div>
+          </div>
+          <div class="opt-item" data-val="3-5m" onclick="pick1('duration','3-5m')">
+            <div class="opt-name">3〜5分</div>
+          </div>
+          <div class="opt-item" data-val="5-15m" onclick="pick1('duration','5-15m')">
+            <div class="opt-name">5〜15分</div>
+          </div>
+          <div class="opt-item" data-val="15m+" onclick="pick1('duration','15m+')">
+            <div class="opt-name">15分以上</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">制作本数</label>
+          <input class="finput" type="text" id="f_videoCount" placeholder="例）1本 / 月3本のシリーズ" oninput="sv('videoCount',this.value)">
+        </div>
+
+        <div class="form-divider">字幕・テロップ</div>
+        <div class="form-row">
+          <div class="opt-grid cols3" id="grid_caption">
+            <div class="opt-item" data-val="ja" onclick="pickM('caption','ja')">
+              <div class="opt-name">日本語字幕</div>
+            </div>
+            <div class="opt-item" data-val="en" onclick="pickM('caption','en')">
+              <div class="opt-name">英語字幕</div>
+            </div>
+            <div class="opt-item" data-val="effect" onclick="pickM('caption','effect')">
+              <div class="opt-name">テロップ演出あり</div>
+            </div>
+            <div class="opt-item" data-val="none" onclick="pickM('caption','none')">
+              <div class="opt-name">不要</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-divider">素材の受け取り方法</div>
+        <div class="opt-grid cols3" id="grid_delivery">
+          <div class="opt-item" data-val="cloud" onclick="pick1('delivery','cloud')">
+            <span class="opt-icon">☁️</span>
+            <div class="opt-name">クラウド（Dropbox/Drive等）</div>
+          </div>
+          <div class="opt-item" data-val="transfer" onclick="pick1('delivery','transfer')">
+            <span class="opt-icon">💾</span>
+            <div class="opt-name">データ便・ファイル転送</div>
+          </div>
+          <div class="opt-item" data-val="bring" onclick="pick1('delivery','bring')">
+            <span class="opt-icon">🖥️</span>
+            <div class="opt-name">持ち込み・郵送</div>
+          </div>
+          <div class="opt-item" data-val="direct" onclick="pick1('delivery','direct')">
+            <span class="opt-icon">🔗</span>
+            <div class="opt-name">撮影データを直接受領</div>
+          </div>
+        </div>
+
+        <div class="form-divider">使用編集ソフト</div>
+        <div class="opt-grid cols3" id="grid_software">
+          <div class="opt-item" data-val="premiere" onclick="pick1('software','premiere')">
+            <div class="opt-name">Premiere Pro</div>
+          </div>
+          <div class="opt-item" data-val="aftereffects" onclick="pick1('software','aftereffects')">
+            <div class="opt-name">After Effects</div>
+          </div>
+          <div class="opt-item" data-val="davinci" onclick="pick1('software','davinci')">
+            <div class="opt-name">DaVinci Resolve</div>
+          </div>
+          <div class="opt-item" data-val="finalcut" onclick="pick1('software','finalcut')">
+            <div class="opt-name">Final Cut Pro</div>
+          </div>
+          <div class="opt-item" data-val="ask" onclick="pick1('software','ask')">
+            <div class="opt-name">おまかせ</div>
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-top:14px;">
+          <label class="form-label">素材について（任意）</label>
+          <textarea class="ftextarea" id="f_rawDetail" placeholder="例）iPhoneで撮影した素材が5本あります。総尺は約30分。Googleドライブで共有します。" oninput="sv('rawDetail',this.value)"></textarea>
+        </div>
+
+        <div class="step-nav">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <button class="btn btn-back" onclick="goStep(1)">← 戻る</button>
+            <span class="nav-reset-link" onclick="resetAll()">リセット</span>
+          </div>
+          <button class="btn btn-next" onclick="goStep(3)">次へ →</button>
+        </div>
+      </div>
+
+      <!-- ───────────────────────────────────────────── -->
+      <!-- STEP 3: 映像スタイル・素材 -->
+      <!-- ───────────────────────────────────────────── -->
+      <div class="step-panel" id="step3">
+        <div class="step-head">
+          <div class="step-eyebrow">Step 3 of 4</div>
+          <div class="step-title">映像スタイル・素材</div>
+          <div class="step-sub">ご希望のテイストと素材の準備状況を教えてください。</div>
+        </div>
+
+        <div class="form-divider">映像のテイスト</div>
+        <div class="opt-grid" id="grid_mood">
+          <div class="opt-item" data-val="clean" onclick="pick1('mood','clean')">
+            <span class="opt-icon">⬜</span>
+            <div class="opt-name">クリーン・信頼感</div>
+            <div class="opt-desc">シンプルで誠実な雰囲気</div>
+          </div>
+          <div class="opt-item" data-val="cool" onclick="pick1('mood','cool')">
+            <span class="opt-icon">🌑</span>
+            <div class="opt-name">クール・スタイリッシュ</div>
+            <div class="opt-desc">モノトーン・スタイリッシュ</div>
+          </div>
+          <div class="opt-item" data-val="dynamic" onclick="pick1('mood','dynamic')">
+            <span class="opt-icon">🔥</span>
+            <div class="opt-name">インパクト・ダイナミック</div>
+            <div class="opt-desc">迫力・エネルギッシュ</div>
+          </div>
+          <div class="opt-item" data-val="warm" onclick="pick1('mood','warm')">
+            <span class="opt-icon">🍃</span>
+            <div class="opt-name">ナチュラル・温かみ</div>
+            <div class="opt-desc">ゆったり・心地よい</div>
+          </div>
+          <div class="opt-item" data-val="cute" onclick="pick1('mood','cute')">
+            <span class="opt-icon">🌸</span>
+            <div class="opt-name">かわいい・ポップ</div>
+            <div class="opt-desc">カラフル・元気</div>
+          </div>
+          <div class="opt-item" data-val="luxury" onclick="pick1('mood','luxury')">
+            <span class="opt-icon">💎</span>
+            <div class="opt-name">高級感・洗練</div>
+            <div class="opt-desc">上品・プレミアム</div>
+          </div>
+        </div>
+
+        <div class="form-divider">カラーイメージ</div>
+        <div class="delivery-section">
+          <div class="delivery-head">
+            <div class="delivery-title">カラーパレット</div>
+            <div class="delivery-note">近いものを選んでください</div>
+          </div>
+          <div class="delivery-grid" id="grid_colorPreset">
+            <div class="delivery-item" data-val="navy" onclick="pickColor('navy','#0B1B3A','#3B5BDB')">
+              <div class="color-bar" style="background:#0B1B3A;"></div>
+              <div class="color-sub" style="background:#3B5BDB;"></div>
+              <div class="delivery-label">ネイビー</div>
+            </div>
+            <div class="delivery-item" data-val="red" onclick="pickColor('red','#C92B09','#F03E3E')">
+              <div class="color-bar" style="background:#C92B09;"></div>
+              <div class="color-sub" style="background:#F03E3E;"></div>
+              <div class="delivery-label">レッド</div>
+            </div>
+            <div class="delivery-item" data-val="green" onclick="pickColor('green','#1A6B4A','#40C057')">
+              <div class="color-bar" style="background:#1A6B4A;"></div>
+              <div class="color-sub" style="background:#40C057;"></div>
+              <div class="delivery-label">グリーン</div>
+            </div>
+            <div class="delivery-item" data-val="teal" onclick="pickColor('teal','#0B7285','#22B8CF')">
+              <div class="color-bar" style="background:#0B7285;"></div>
+              <div class="color-sub" style="background:#22B8CF;"></div>
+              <div class="delivery-label">ティール</div>
+            </div>
+            <div class="delivery-item" data-val="purple" onclick="pickColor('purple','#5F3DC4','#9775FA')">
+              <div class="color-bar" style="background:#5F3DC4;"></div>
+              <div class="color-sub" style="background:#9775FA;"></div>
+              <div class="delivery-label">パープル</div>
+            </div>
+            <div class="delivery-item" data-val="pink" onclick="pickColor('pink','#A61E4D','#F06595')">
+              <div class="color-bar" style="background:#A61E4D;"></div>
+              <div class="color-sub" style="background:#F06595;"></div>
+              <div class="delivery-label">ピンク</div>
+            </div>
+            <div class="delivery-item" data-val="orange" onclick="pickColor('orange','#C04F00','#FF922B')">
+              <div class="color-bar" style="background:#C04F00;"></div>
+              <div class="color-sub" style="background:#FF922B;"></div>
+              <div class="delivery-label">オレンジ</div>
+            </div>
+            <div class="delivery-item" data-val="gold" onclick="pickColor('gold','#7D5A00','#F0A500')">
+              <div class="color-bar" style="background:#7D5A00;"></div>
+              <div class="color-sub" style="background:#F0A500;"></div>
+              <div class="delivery-label">ゴールド</div>
+            </div>
+            <div class="delivery-item" data-val="mono" onclick="pickColor('mono','#1a1a1a','#888')">
+              <div class="color-bar" style="background:#1a1a1a;"></div>
+              <div class="color-sub" style="background:#888;"></div>
+              <div class="delivery-label">モノトーン</div>
+            </div>
+            <div class="delivery-item" data-val="earth" onclick="pickColor('earth','#6B4C3B','#B8956A')">
+              <div class="color-bar" style="background:#6B4C3B;"></div>
+              <div class="color-sub" style="background:#B8956A;"></div>
+              <div class="delivery-label">アース</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-divider">参考動画・コンテンツ</div>
+        <div class="form-row">
+          <label class="form-label">参考にしてほしい動画・サイト（URL）</label>
+          <div class="url-list" id="urlList_refUrls"></div>
+          <button class="url-add" type="button" onclick="addUrl()">＋ URL を追加</button>
+        </div>
+        <div class="form-row" style="margin-top:14px;">
+          <label class="form-label">スタイルへのコメント・こだわり</label>
+          <textarea class="ftextarea" id="f_designNote" placeholder="例）スタイリッシュな雰囲気で。テロップはシンプルに。BGMはおしゃれなJazz系で。" oninput="sv('designNote',this.value)"></textarea>
+        </div>
+
+        <div class="form-divider">素材の準備状況</div>
+        <div class="opt-grid cols3" id="grid_assets">
+          <div class="opt-item" data-val="all" onclick="pick1('assets','all')">
+            <span class="opt-icon">✅</span>
+            <div class="opt-name">素材はすべて準備済み</div>
+            <div class="opt-desc">動画・音声・画像など</div>
+          </div>
+          <div class="opt-item" data-val="partly" onclick="pick1('assets','partly')">
+            <span class="opt-icon">🔶</span>
+            <div class="opt-name">一部準備中</div>
+          </div>
+          <div class="opt-item" data-val="none" onclick="pick1('assets','none')">
+            <span class="opt-icon">📝</span>
+            <div class="opt-name">素材選定から依頼</div>
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-top:14px;">
+          <label class="form-label">素材メモ</label>
+          <textarea class="ftextarea" id="f_assetNote" placeholder="例）BGMは著作権フリーのものを用意してほしい。ロゴデータはPNG形式で提供できます。" oninput="sv('assetNote',this.value)"></textarea>
+        </div>
+
+        <div class="step-nav">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <button class="btn btn-back" onclick="goStep(2)">← 戻る</button>
+            <span class="nav-reset-link" onclick="resetAll()">リセット</span>
+          </div>
+          <button class="btn btn-next" onclick="goStep(4)">次へ →</button>
+        </div>
+      </div>
+
+      <!-- ───────────────────────────────────────────── -->
+      <!-- STEP 4: 納品・運用 -->
+      <!-- ───────────────────────────────────────────── -->
+      <div class="step-panel" id="step4">
+        <div class="step-head">
+          <div class="step-eyebrow">Step 4 of 4</div>
+          <div class="step-title">納品・運用</div>
+          <div class="step-sub">納品形式と修正対応について確認します。</div>
+        </div>
+
+        <div class="form-divider">納品形式（複数選択可）</div>
+        <div class="opt-grid cols3" id="grid_format">
+          <div class="opt-item" data-val="mp4" onclick="pickM('format','mp4')">
+            <div class="opt-name">MP4（Web用）</div>
+          </div>
+          <div class="opt-item" data-val="prores" onclick="pickM('format','prores')">
+            <div class="opt-name">MOV / ProRes（高画質）</div>
+          </div>
+          <div class="opt-item" data-val="youtube" onclick="pickM('format','youtube')">
+            <div class="opt-name">YouTube直接入稿</div>
+          </div>
+          <div class="opt-item" data-val="vertical" onclick="pickM('format','vertical')">
+            <div class="opt-name">SNS用縦型</div>
+          </div>
+          <div class="opt-item" data-val="broadcast" onclick="pickM('format','broadcast')">
+            <div class="opt-name">テレビ放送用</div>
+          </div>
+          <div class="opt-item" data-val="other" onclick="pickM('format','other')">
+            <div class="opt-name">その他</div>
+          </div>
+        </div>
+
+        <div class="form-divider">修正対応</div>
+        <div class="opt-grid cols3" id="grid_revisions">
+          <div class="opt-item" data-val="1" onclick="pick1('revisions','1')">
+            <div class="opt-name">1回</div>
+          </div>
+          <div class="opt-item" data-val="2-3" onclick="pick1('revisions','2-3')">
+            <div class="opt-name">2〜3回</div>
+          </div>
+          <div class="opt-item" data-val="unlimited" onclick="pick1('revisions','unlimited')">
+            <div class="opt-name">無制限（契約内）</div>
+          </div>
+          <div class="opt-item" data-val="ask" onclick="pick1('revisions','ask')">
+            <div class="opt-name">要相談</div>
+          </div>
+        </div>
+
+        <div class="form-divider">BGM・音楽</div>
+        <div class="opt-grid cols3" id="grid_bgm">
+          <div class="opt-item" data-val="need" onclick="pick1('bgm','need')">
+            <span class="opt-icon">🎵</span>
+            <div class="opt-name">著作権フリー音楽を用意してほしい</div>
+          </div>
+          <div class="opt-item" data-val="provide" onclick="pick1('bgm','provide')">
+            <span class="opt-icon">📀</span>
+            <div class="opt-name">素材を提供する</div>
+          </div>
+          <div class="opt-item" data-val="none" onclick="pick1('bgm','none')">
+            <span class="opt-icon">🔇</span>
+            <div class="opt-name">BGMなし</div>
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-top:14px;">
+          <label class="form-label">その他のご要望・質問</label>
+          <textarea class="ftextarea" id="f_other" placeholder="例）公開前に社内確認フローがあります。納品後の修正も対応してほしい。" style="min-height:100px;" oninput="sv('other',this.value)"></textarea>
+        </div>
+
+        <div class="step-nav">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <button class="btn btn-back" onclick="goStep(3)">← 戻る</button>
+            <span class="nav-reset-link" onclick="resetAll()">リセット</span>
+          </div>
+          <button class="btn btn-next" style="background:linear-gradient(90deg,var(--accent),var(--accent2));box-shadow:0 4px 18px rgba(232,56,13,.3);" onclick="showResult()">送信する →</button>
+        </div>
+      </div>
+
+      <!-- ───────────────────────────────────────────── -->
+      <!-- RESULT -->
+      <!-- ───────────────────────────────────────────── -->
+      <div class="result-panel" id="resultPanel">
+        <div class="print-header">
+          <div class="print-header-left">
+            <h1>詳細ヒアリングシート（動画編集・映像編集）</h1>
+            <p>入力内容サマリー</p>
+          </div>
+        </div>
+        <div class="result-hero">
+          <div>
+            <div class="result-hero-label">Hearing Sheet — 動画編集・映像編集</div>
+            <div class="result-hero-amount">ヒアリング完了</div>
+            <div class="result-hero-sub">入力内容を確認後、担当者より2営業日以内にご連絡いたします</div>
+          </div>
+          <div>
+            <div class="result-cat-badge">✓ 受付済み</div>
+          </div>
+        </div>
+
+        <div class="sec-title">入力内容サマリー</div>
+        <table class="bk-tbl" id="resultTable"></table>
+
+        <div class="result-actions">
+          <button class="act-btn act-pdf" onclick="window.print()">
+            🖨️ PDF保存
+          </button>
+          <button class="act-btn act-copy" id="btnCopy" onclick="copyResult()">
+            📋 テキストコピー
+          </button>
+          <button class="act-btn act-reset" onclick="resetAll()">
+            最初からやり直す
+          </button>
+        </div>
+        <div class="result-edit-btn" onclick="goStep(1)">← 入力内容を修正する</div>
+      </div>
+
+      <div class="disclaimer">
+        ※ 送信内容はブラウザに保存されます。機密情報の取り扱いにご注意ください。
+      </div>
+
+    </div><!-- /.main-col -->
+
+    <aside class="side-panel" id="sidePanel">
+      <div class="side-section" id="sideQuoteSection" style="display:none;">
+        <div class="side-label">見積もり内容</div>
+        <span class="side-quote-filled">✓ 引き継ぎ済み</span>
+        <div class="side-quote-cat" id="sideQCat"></div>
+        <div class="side-quote-amount" id="sideQAmount"></div>
+        <div class="side-quote-items" id="sideQItems"></div>
+      </div>
+      <div class="side-section">
+        <div class="side-label">入力進捗</div>
+        <div id="sideStepProg"></div>
+      </div>
+      <div class="side-section">
+        <div class="side-label">入力済みの内容</div>
+        <div id="sidePreview"></div>
+      </div>
+      <div class="side-section">
+        <button class="side-reset-btn" onclick="resetAll()">🔄 最初からやり直す</button>
+      </div>
+    </aside>
+
+  </div><!-- /.page-layout -->
+
+</div>
+
+<button class="reset-float" id="resetFloat" onclick="resetAll()">🔄 リセット</button>
+<div class="toast" id="toast"></div>
+
+<script>
+const SK = 'ty_hearing_video_v1';
+let D = {};
+let currentStep = 1;
+const TOTAL = 4;
+const STEPS = ['事業・ご依頼の概要','動画の仕様','映像スタイル・素材','納品・運用'];
+
+// ── ストレージ ───────────────────────────────────
+function load(){ try{ D = JSON.parse(localStorage.getItem(SK)||'{}'); }catch(e){ D={}; } }
+function save(){ try{ localStorage.setItem(SK, JSON.stringify(D)); }catch(e){} }
+let _spTimer=null;
+function sv(k,v){ D[k]=v; save(); clearTimeout(_spTimer); _spTimer=setTimeout(updateSidePanel,250); }
+function gv(k,fb){ return D[k]!==undefined ? D[k] : (fb!==undefined?fb:''); }
+
+// ── 選択 ─────────────────────────────────────────
+function pick1(key, val){
+  const g = document.getElementById('grid_'+key);
+  if(!g) return;
+  g.querySelectorAll('.opt-item').forEach(el=>el.classList.remove('selected'));
+  g.querySelector('[data-val="'+val+'"]')?.classList.add('selected');
+  sv(key, val);
+}
+function pickM(key, val){
+  const arr = gv(key,[]).slice();
+  const i = arr.indexOf(val);
+  if(i>-1) arr.splice(i,1); else arr.push(val);
+  sv(key, arr);
+  const g = document.getElementById('grid_'+key);
+  if(!g) return;
+  g.querySelectorAll('.opt-item').forEach(el=>{
+    el.classList.toggle('selected', arr.includes(el.dataset.val));
+  });
+}
+function pickColor(name, main, sub){
+  document.querySelectorAll('#grid_colorPreset .delivery-item').forEach(el=>el.classList.remove('selected'));
+  document.querySelector('#grid_colorPreset [data-val="'+name+'"]')?.classList.add('selected');
+  sv('colorPreset', name); sv('colorMain', main); sv('colorSub', sub);
+}
+
+// ── URLリスト ─────────────────────────────────────
+function renderUrls(){
+  const urls = gv('refUrls',['']);
+  const el = document.getElementById('urlList_refUrls');
+  if(!el) return;
+  el.innerHTML = urls.map((u,i)=>`
+    <div class="url-row">
+      <input class="finput" type="text" placeholder="https://example.com" value="${esc(u)}" oninput="updateUrl(${i},this.value)">
+      <button class="url-del" type="button" onclick="removeUrl(${i})">×</button>
+    </div>`).join('');
+}
+function addUrl(){ const a=gv('refUrls',['']); a.push(''); sv('refUrls',a); renderUrls(); }
+function removeUrl(i){ const a=gv('refUrls',['']); a.splice(i,1); if(!a.length)a.push(''); sv('refUrls',a); renderUrls(); }
+function updateUrl(i,v){ const a=gv('refUrls',['']); a[i]=v; sv('refUrls',a); }
+
+// ── プログレス ────────────────────────────────────
+function buildProgress(){
+  const wrap = document.getElementById('progressWrap');
+  let html = '';
+  for(let i=1;i<=TOTAL;i++){
+    const done = i<currentStep, active = i===currentStep;
+    const cls = done?'done':(active?'active':'locked');
+    const onclick = i<=currentStep ? `onclick="goStep(${i})"` : '';
+    html += `<div class="prog-step ${cls}" ${onclick}>
+      <div class="prog-circle">${done?'✓':i}</div>
+      <div class="prog-info">
+        <div class="prog-num">Step ${i}</div>
+        <div class="prog-label">${STEPS[i-1]}</div>
+      </div>
+    </div>`;
+    if(i<TOTAL) html += `<div class="prog-line${done?' done':''}"></div>`;
+  }
+  wrap.innerHTML = html;
+  document.getElementById('headerStep').textContent = `Step ${currentStep} / ${TOTAL}`;
+}
+
+// ── ステップ遷移 ──────────────────────────────────
+function goStep(n){
+  currentStep = n;
+  for(let i=1;i<=TOTAL;i++){
+    const el = document.getElementById('step'+i);
+    if(el) el.classList.toggle('active', i===n);
+  }
+  document.getElementById('resultPanel').classList.remove('active');
+  buildProgress();
+  restore(n);
+  updateSidePanel();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restore(n){
+  // テキスト / セレクト
+  const TM = {
+    1:['clientName','contactName','contactEmail','contactTel','business','usp','deadline','publishWhere','projectMemo'],
+    2:['videoCount','rawDetail'],
+    3:['designNote','assetNote'],
+    4:['other'],
+  };
+  (TM[n]||[]).forEach(k=>{
+    const el=document.getElementById('f_'+k);
+    if(el && gv(k)) el.value=gv(k);
+  });
+  // 単一選択グリッド
+  const S1 = {
+    1:['videoType','sitestatus','budget','howKnow'],
+    2:['duration','delivery','software'],
+    3:['mood','assets'],
+    4:['revisions','bgm'],
+  };
+  (S1[n]||[]).forEach(k=>{
+    const v=gv(k); if(!v) return;
+    document.querySelectorAll(`#grid_${k} .opt-item`).forEach(el=>{
+      el.classList.toggle('selected', el.dataset.val===v);
+    });
+  });
+  // 複数選択グリッド
+  const SM = {
+    2:['caption'],
+    3:[],
+    4:['format'],
+  };
+  (SM[n]||[]).forEach(k=>{
+    const arr=gv(k,[]);
+    document.querySelectorAll(`#grid_${k} .opt-item`).forEach(el=>{
+      el.classList.toggle('selected', arr.includes(el.dataset.val));
+    });
+  });
+  // カラー
+  if(n===3){
+    const cp=gv('colorPreset');
+    if(cp) document.querySelectorAll('#grid_colorPreset .delivery-item').forEach(el=>{
+      el.classList.toggle('selected', el.dataset.val===cp);
+    });
+    renderUrls();
+  }
+}
+
+// ── 結果表示 ──────────────────────────────────────
+const LABELS = {
+  videoType: {edit:'動画編集・カット編集',caption:'テロップ・字幕制作',motion:'モーショングラフィックス',corporate:'企業PR・プロモ編集',social:'SNS・YouTube用編集',event:'イベント・式典映像',training:'研修・教育動画編集',oped:'オープニング・エンディング'},
+  sitestatus: {new:'新規制作',series:'シリーズ継続',remake:'リメイク・改訂'},
+  duration: {'15s':'15秒以内','30s':'30秒','1-2m':'60秒〜2分','3-5m':'3〜5分','5-15m':'5〜15分','15m+':'15分以上'},
+  delivery: {cloud:'クラウド',transfer:'データ便・ファイル転送',bring:'持ち込み・郵送',direct:'撮影データ直接受領'},
+  software: {premiere:'Premiere Pro',aftereffects:'After Effects',davinci:'DaVinci Resolve',finalcut:'Final Cut Pro',ask:'おまかせ'},
+  caption: {ja:'日本語字幕',en:'英語字幕',effect:'テロップ演出あり',none:'不要'},
+  mood: {clean:'クリーン・信頼感',cool:'クール・スタイリッシュ',dynamic:'インパクト・ダイナミック',warm:'ナチュラル・温かみ',cute:'かわいい・ポップ',luxury:'高級感・洗練'},
+  assets: {all:'素材はすべて準備済み',partly:'一部準備中',none:'素材選定から依頼'},
+  format: {mp4:'MP4（Web用）',prores:'MOV/ProRes',youtube:'YouTube直接入稿',vertical:'SNS用縦型',broadcast:'テレビ放送用',other:'その他'},
+  revisions: {'1':'1回','2-3':'2〜3回',unlimited:'無制限（契約内）',ask:'要相談'},
+  bgm: {need:'著作権フリー音楽希望',provide:'素材を提供',none:'BGMなし'},
+};
+
+function labelOf(k,v){
+  if(Array.isArray(v)) return v.map(x=>(LABELS[k]&&LABELS[k][x])||x).join('、')||'—';
+  return (LABELS[k]&&LABELS[k][v])||v||'—';
+}
+
+const ROWS = [
+  {head:'見積もりシミュレーター'},
+  {key:'_quoteData', label:'概算金額', fmt: d => d ? '¥ '+Number(d.t||0).toLocaleString()+'（税込）' : ''},
+  {key:'_quoteData', label:'見積もり内容', fmt: d => d && d.items ? d.items.map(it=>it.n+(it.q>1?' ×'+it.q:'')).join(' / ') : ''},
+  {head:'お客様情報'},
+  {key:'clientName',label:'会社名・屋号'},
+  {key:'contactName',label:'担当者名'},
+  {key:'contactEmail',label:'メールアドレス'},
+  {key:'contactTel',label:'電話番号'},
+  {head:'事業・ご依頼の概要'},
+  {key:'videoType',label:'編集の種別'},
+  {key:'sitestatus',label:'制作ステータス'},
+  {key:'deadline',label:'希望納品日'},
+  {key:'budget',label:'ご予算感'},
+  {key:'publishWhere',label:'公開先・媒体'},
+  {key:'business',label:'主な事業内容'},
+  {key:'usp',label:'強み・推しポイント'},
+  {key:'projectMemo',label:'補足・背景'},
+  {head:'動画の仕様'},
+  {key:'duration',label:'尺'},
+  {key:'videoCount',label:'制作本数'},
+  {key:'delivery',label:'素材の受け取り方法'},
+  {key:'software',label:'編集ソフト'},
+  {key:'caption',label:'字幕・テロップ'},
+  {key:'rawDetail',label:'素材について'},
+  {head:'映像スタイル・素材'},
+  {key:'mood',label:'テイスト'},
+  {key:'colorPreset',label:'カラーイメージ',fmt:v=>v?v+'系':'—'},
+  {key:'refUrls',label:'参考URL',fmt:v=>(v||[]).filter(Boolean).join('\n')||'—'},
+  {key:'designNote',label:'スタイルコメント'},
+  {key:'assets',label:'素材の準備'},
+  {key:'assetNote',label:'素材メモ'},
+  {head:'納品・運用'},
+  {key:'format',label:'納品形式'},
+  {key:'revisions',label:'修正対応'},
+  {key:'bgm',label:'BGM・音楽'},
+  {key:'other',label:'その他要望'},
+  {key:'howKnow',label:'お知りになったきっかけ'},
+];
+
+function showResult(){
+  document.querySelectorAll('.step-panel').forEach(el=>el.classList.remove('active'));
+  document.getElementById('resultPanel').classList.add('active');
+  const tbl = document.getElementById('resultTable');
+  let html = '<thead><tr><th>項目</th><th>内容</th></tr></thead><tbody>';
+  ROWS.forEach(row=>{
+    if(row.head){ html+=`<tr class="row-sub"><td colspan="2">${row.head}</td></tr>`; return; }
+    const raw = gv(row.key,'');
+    const empty = !raw || (Array.isArray(raw)&&!raw.filter(Boolean).length);
+    if(empty) return;
+    const display = row.fmt ? row.fmt(raw) : labelOf(row.key, raw);
+    html+=`<tr><td>${row.label}</td><td style="text-align:right;white-space:pre-wrap;">${esc(display)}</td></tr>`;
+  });
+  html+='</tbody>';
+  tbl.innerHTML = html;
+  buildProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function copyResult(){
+  let t='【詳細ヒアリングシート — 動画編集・映像編集】\n\n';
+  ROWS.forEach(row=>{
+    if(row.head){ t+=`\n■ ${row.head}\n`; return; }
+    const raw=gv(row.key,'');
+    const empty=!raw||(Array.isArray(raw)&&!raw.filter(Boolean).length);
+    if(!empty){
+      const d = row.fmt?row.fmt(raw):labelOf(row.key,raw);
+      t+=`${row.label}：${d}\n`;
+    }
+  });
+  navigator.clipboard.writeText(t).then(()=>showToast('コピーしました'));
+}
+
+function resetAll(){
+  if(!confirm('入力内容をすべてリセットしますか？'))return;
+  D={};save();
+  document.getElementById('resultPanel').classList.remove('active');
+  document.getElementById('resetFloat')?.classList.remove('show');
+  document.getElementById('progressWrap').style.display='none';
+  document.getElementById('codePanel').style.display='block';
+  document.getElementById('quoteBanner').classList.remove('show');
+  const qs=document.getElementById('sideQuoteSection');if(qs)qs.style.display='none';
+  updateSidePanel();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+function esc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── コード読み込み ────────────────────────────────
+const CAT_TO_KEY = {
+  web:'web', video:'video', app:'app', design:'design', system:'system'
+};
+
+function decodeCode(raw) {
+  try {
+    const b64 = raw.trim().replace(/^TYE-/i, '');
+    const json = decodeURIComponent(escape(atob(b64)));
+    const d = JSON.parse(json);
+    if (d.v !== 1 || !d.c) return null;
+    return d;
+  } catch(e) { return null; }
+}
+
+function loadCode() {
+  const raw = document.getElementById('codeInput').value.trim();
+  const err = document.getElementById('codeError');
+  err.classList.remove('show');
+
+  const d = decodeCode(raw);
+  if (!d) { err.classList.add('show'); return; }
+
+  // バナー表示
+  applyQuoteData(d);
+  // コードパネル非表示
+  document.getElementById('codePanel').style.display = 'none';
+  // ステップ開始
+  startHearing();
+}
+
+function skipCode() {
+  document.getElementById('codePanel').style.display = 'none';
+  startHearing();
+}
+
+function applyQuoteData(d) {
+  // バナー
+  const banner = document.getElementById('quoteBanner');
+  document.getElementById('qbCat').textContent    = (d.ci || '') + ' ' + (d.cl || '');
+  document.getElementById('qbAmount').textContent = '¥ ' + Number(d.t || 0).toLocaleString() + '（税込）';
+  document.getElementById('qbDate').textContent   = '見積もり発行日：' + (d.dt || '');
+  if (d.items && d.items.length) {
+    document.getElementById('qbItems').textContent =
+      d.items.map(it => '・' + it.n + (it.q && it.q > 1 ? ' ×'+it.q : '')).join('　');
+  }
+  banner.classList.add('show');
+
+  // 予算を概算から逆引き
+  const t = d.t || 0;
+  let budget = '';
+  if      (t < 300000)  budget = '〜30万円';
+  else if (t < 600000)  budget = '30〜60万円';
+  else if (t < 1000000) budget = '60〜100万円';
+  else if (t < 2000000) budget = '100〜200万円';
+  else if (t < 5000000) budget = '200〜500万円';
+  else                  budget = '500万円〜';
+  if (!gv('budget') && budget) sv('budget', budget);
+
+  // 見積もり内訳をメモとして保存（任意で参照）
+  sv('_quoteData', d);
+  updateSidePanel();
+}
+
+// ── サイドパネル ──────────────────────────────────
+const SIDE_PREVIEW_FIELDS=[
+  {key:'clientName',label:'会社名'},
+  {key:'videoType',label:'編集種別'},
+  {key:'sitestatus',label:'ステータス'},
+  {key:'budget',label:'ご予算'},
+  {key:'deadline',label:'希望納品日'},
+  {key:'duration',label:'尺'},
+  {key:'mood',label:'テイスト'},
+];
+function updateSidePanel(){
+  const qd=gv('_quoteData',null);const qs=document.getElementById('sideQuoteSection');if(qs&&qd){qs.style.display='block';const c=document.getElementById('sideQCat');const a=document.getElementById('sideQAmount');const it=document.getElementById('sideQItems');if(c)c.textContent=(qd.ci||'')+' '+(qd.cl||'');if(a)a.textContent='¥ '+Number(qd.t||0).toLocaleString();if(it&&qd.items)it.textContent=qd.items.map(x=>'・'+x.n+(x.q>1?' ×'+x.q:'')).join('\n');}
+  const sp=document.getElementById('sideStepProg');if(sp){let h='';for(let i=1;i<=TOTAL;i++){const done=i<currentStep,active=i===currentStep;h+=`<div class="side-prog-item"><div class="side-prog-dot ${done?'done':active?'active':''}"></div><div class="side-prog-name ${done?'done':active?'active':''}">${STEPS[i-1]}</div></div>`;}sp.innerHTML=h;}
+  const pv=document.getElementById('sidePreview');if(pv){let h='',cnt=0;for(const {key,label} of SIDE_PREVIEW_FIELDS){if(cnt>=6)break;const val=gv(key,'');if(!val||(Array.isArray(val)&&!val.filter(Boolean).length))continue;const disp=Array.isArray(val)?val.filter(Boolean).slice(0,3).join('、')+(val.length>3?'…':''):labelOf(key,val)||val;if(!disp||disp==='—')continue;h+=`<div class="side-field"><div class="side-field-key">${label}</div><div class="side-field-val">${esc(String(disp).slice(0,40))}</div></div>`;cnt++;}pv.innerHTML=h||'<div class="side-empty">まだ入力されていません</div>';}
+}
+
+function startHearing(){document.getElementById('progressWrap').style.display='flex';document.getElementById('resetFloat')?.classList.add('show');updateSidePanel();goStep(1);}
+
+// URLパラメータにコードがあれば自動読み込み
+function loadFromUrl() {
+  const p = new URLSearchParams(location.search);
+  const code = p.get('code');
+  if (code) {
+    const d = decodeCode(decodeURIComponent(code));
+    if (d) {
+      document.getElementById('codeInput').value = decodeURIComponent(code);
+      applyQuoteData(d);
+      document.getElementById('codePanel').style.display = 'none';
+      startHearing();
+      return true;
+    }
+  }
+  return false;
+}
+
+load();
+if (!loadFromUrl()) {
+  // コード入力待ち（パネルはデフォルト表示）
+}
+</script>
+</body>
+</html>

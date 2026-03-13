@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理者ページ — YOSHIZAKI STUDIO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=BIZ+UDPGothic:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gothic:'BIZ UDPGothic','Noto Sans JP',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --ink:#111118;--ink2:#282835;--muted:#6a6a7a;--line:#e2e0da;
+  --bg:#f5f4f0;--card:#ffffff;
+  --accent:#e8380d;--accent-light:#fff1ee;
+  --accent2:#f0a500;--green:#0d9e6a;
+  --shadow:0 4px 28px rgba(0,0,0,.08);
+  --shadow-lg:0 12px 48px rgba(0,0,0,.14);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:100vh;}
+
+/* ── Header ── */
+.header{
+  position:sticky;top:0;z-index:300;
+  background:var(--ink);height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;box-shadow:0 2px 16px rgba(0,0,0,.3);
+}
+.header-brand{font-size:1.05rem;font-weight:700;color:#fff;letter-spacing:.05em;display:flex;align-items:center;gap:8px;text-decoration:none;}
+.header-brand-accent{color:var(--accent);}
+.header-right{display:flex;align-items:center;gap:10px;}
+.header-badge{background:rgba(255,255,255,.12);color:rgba(255,255,255,.7);font-size:.65rem;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:.06em;}
+.back-btn{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);border:1.5px solid rgba(255,255,255,.2);border-radius:6px;padding:4px 11px;font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--gothic);transition:all .15s;letter-spacing:.06em;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+.back-btn:hover{background:rgba(255,255,255,.2);color:#fff;}
+
+/* ── Hero ── */
+.hero{
+  background:var(--ink);
+  padding:44px 28px 40px;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 20% 50%, rgba(232,56,13,.2) 0%, transparent 60%),
+             radial-gradient(ellipse at 80% 30%, rgba(240,165,0,.12) 0%, transparent 55%);
+}
+.hero-content{position:relative;z-index:1;}
+.hero-eyebrow{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px;}
+.hero-title{font-size:1.8rem;font-weight:900;color:#fff;letter-spacing:-.01em;line-height:1.2;margin-bottom:6px;}
+.hero-title span{color:var(--accent);}
+.hero-sub{font-size:.84rem;color:rgba(255,255,255,.5);max-width:400px;margin:0 auto;}
+
+/* ── Container ── */
+.container{max-width:800px;margin:0 auto;padding:44px 18px 80px;}
+
+/* ── Login card ── */
+.login-card{
+  background:var(--card);border-radius:20px;overflow:hidden;
+  box-shadow:var(--shadow);max-width:420px;margin:0 auto;
+}
+.login-inner{padding:40px 32px;text-align:center;}
+.login-icon{font-size:2.4rem;margin-bottom:16px;}
+.login-title{font-size:1.1rem;font-weight:900;margin-bottom:6px;}
+.login-sub{font-size:.8rem;color:var(--muted);margin-bottom:24px;}
+.pin-row{display:flex;gap:8px;justify-content:center;}
+.pin-input{
+  flex:1;padding:12px 14px;border:2px solid var(--line);border-radius:10px;
+  font-size:1rem;font-family:var(--mono);text-align:center;letter-spacing:.18em;
+  outline:none;transition:border-color .18s;
+}
+.pin-input:focus{border-color:var(--accent);}
+.pin-input.shake{animation:shake .35s ease;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-8px);}40%,80%{transform:translateX(8px);}}
+.pin-btn{
+  padding:12px 20px;border:none;border-radius:10px;background:var(--accent);
+  color:#fff;font-size:.88rem;font-weight:700;cursor:pointer;
+  font-family:var(--gothic);transition:all .18s;white-space:nowrap;
+}
+.pin-btn:hover{background:#c02d0a;}
+.pin-err{font-size:.76rem;color:var(--accent);margin-top:10px;height:16px;text-align:center;}
+
+/* ── Admin panel ── */
+.admin-panel{display:none;}
+.admin-top-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:28px;flex-wrap:wrap;gap:10px;
+}
+.admin-bar-title{font-size:1rem;font-weight:900;display:flex;align-items:center;gap:8px;}
+.admin-bar-badge{background:var(--accent);color:#fff;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:20px;}
+.admin-logout{background:transparent;border:2px solid var(--line);color:var(--muted);padding:6px 14px;border-radius:8px;font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--gothic);transition:all .18s;}
+.admin-logout:hover{border-color:var(--accent);color:var(--accent);}
+
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;}
+.admin-card{background:var(--card);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow);}
+.admin-card-title{font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;}
+
+.admin-link-btn{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--ink);color:#fff;border:none;border-radius:10px;
+  padding:14px 16px;width:100%;cursor:pointer;font-family:var(--gothic);
+  font-size:.88rem;font-weight:700;transition:all .18s;text-decoration:none;
+}
+.admin-link-btn:hover{background:var(--ink2);transform:translateY(-1px);}
+.admin-link-btn.amber{background:var(--accent2);color:var(--ink);}
+.admin-link-btn.amber:hover{background:#d4920a;}
+.btn-right{display:flex;align-items:center;gap:8px;font-family:var(--mono);}
+.new-pill{background:var(--accent);color:#fff;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:20px;}
+
+.field-row{display:flex;gap:8px;margin-bottom:8px;}
+.field-input{
+  flex:1;padding:10px 12px;border:2px solid var(--line);border-radius:9px;
+  font-size:.84rem;font-family:var(--gothic);outline:none;transition:border-color .18s;
+}
+.field-input:focus{border-color:var(--accent);}
+.save-btn{
+  padding:10px 14px;border:none;border-radius:9px;background:var(--green);
+  color:#fff;font-size:.78rem;font-weight:700;cursor:pointer;font-family:var(--gothic);
+  transition:all .18s;white-space:nowrap;
+}
+.save-btn:hover{background:#0a8459;}
+.field-note{font-size:.72rem;color:var(--muted);}
+
+/* ── Recent submissions ── */
+.recent-sec{background:var(--card);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow);}
+.recent-title{font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;}
+.recent-list{display:flex;flex-direction:column;gap:8px;}
+.recent-item{
+  background:var(--bg);border-radius:10px;padding:12px 14px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  cursor:pointer;transition:all .18s;border:2px solid transparent;
+}
+.recent-item:hover{border-color:var(--line);}
+.recent-item-left{min-width:0;}
+.recent-name{font-size:.84rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.recent-meta{font-size:.72rem;color:var(--muted);display:flex;gap:8px;margin-top:2px;flex-wrap:wrap;}
+.recent-date{font-family:var(--mono);font-size:.68rem;color:var(--muted);white-space:nowrap;}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:.66rem;font-weight:700;}
+.badge-new{background:var(--accent-light);color:var(--accent);}
+.badge-web{background:#e8f4ff;color:#2563eb;}
+.badge-video{background:#f3e8ff;color:#7c3aed;}
+.badge-app{background:#e8fff4;color:#059669;}
+.badge-system{background:#fff3e8;color:#d97706;}
+.badge-design{background:#ffe8f4;color:#db2777;}
+.no-submissions{text-align:center;padding:20px;color:var(--muted);font-size:.82rem;}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 20px;border-radius:30px;font-size:.82rem;opacity:0;transition:all .28s;pointer-events:none;z-index:9999;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media(max-width:640px){
+  .admin-grid{grid-template-columns:1fr;}
+  .hero-title{font-size:1.4rem;}
+}
+@media(max-width:420px){
+  .pin-row{flex-direction:column;}
+  .login-inner{padding:28px 20px;}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a class="header-brand" href="portal.html">
+    <span class="header-brand-accent">YOSHIZAKI</span> STUDIO
+  </a>
+  <div class="header-right">
+    <span class="header-badge">ADMIN</span>
+    <a class="back-btn" href="portal.html">← ポータルへ</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Administrator Access</div>
+    <h1 class="hero-title"><span>管理者</span>ページ</h1>
+    <p class="hero-sub">PINコードを入力して管理機能にアクセスしてください</p>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- Login card -->
+  <div class="login-card" id="loginCard">
+    <div class="login-inner">
+      <div class="login-icon">🔐</div>
+      <div class="login-title">管理者ログイン</div>
+      <div class="login-sub">PINコードを入力してください</div>
+      <div class="pin-row">
+        <input class="pin-input" id="pinInput" type="password" maxlength="20"
+          placeholder="PIN"
+          onkeydown="if(event.key==='Enter')checkPin()"
+          oninput="document.getElementById('pinErr').textContent=''">
+        <button class="pin-btn" onclick="checkPin()">ログイン</button>
+      </div>
+      <div class="pin-err" id="pinErr"></div>
+    </div>
+  </div>
+
+  <!-- Admin panel (shown after PIN) -->
+  <div class="admin-panel" id="adminPanel">
+
+    <div class="admin-top-bar">
+      <div class="admin-bar-title">
+        🔓 管理者モード
+        <span class="admin-bar-badge" id="adminNewBadge" style="display:none;"></span>
+      </div>
+      <button class="admin-logout" onclick="doLogout()">ログアウト</button>
+    </div>
+
+    <div class="admin-grid">
+
+      <!-- Hearing list -->
+      <div class="admin-card">
+        <div class="admin-card-title">ヒアリング一覧</div>
+        <a class="admin-link-btn" href="hearing_list.html" target="_blank">
+          <span>送信一覧・ステータス管理</span>
+          <span class="btn-right">
+            <span class="new-pill" id="listNewCount" style="display:none;"></span>
+            →
+          </span>
+        </a>
+      </div>
+
+      <!-- Price management -->
+      <div class="admin-card">
+        <div class="admin-card-title">見積もり料金変更</div>
+        <a class="admin-link-btn amber" href="index.html?admin=1" target="_blank">
+          <span>料金・プラン・ステップ編集</span>
+          <span class="btn-right">→</span>
+        </a>
+      </div>
+
+      <!-- Admin email -->
+      <div class="admin-card">
+        <div class="admin-card-title">管理者メールアドレス</div>
+        <div class="field-row">
+          <input class="field-input" id="adminEmailInput" type="email" placeholder="your@email.com">
+          <button class="save-btn" onclick="saveAdminEmail()">保存</button>
+        </div>
+        <div class="field-note" id="emailCurrent"></div>
+      </div>
+
+      <!-- Password change -->
+      <div class="admin-card">
+        <div class="admin-card-title">パスワード変更</div>
+        <div class="field-row">
+          <input class="field-input" id="newPinInput" type="password" placeholder="新しいPIN" maxlength="30">
+          <button class="save-btn" onclick="changePin()">変更</button>
+        </div>
+        <div class="field-note" id="pinCurrent">現在のPIN：設定済み</div>
+      </div>
+
+    </div>
+
+    <!-- Recent submissions -->
+    <div class="recent-sec">
+      <div class="recent-title">最近の送信（最新5件）</div>
+      <div class="recent-list" id="recentList"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DEFAULT_PIN = 'admin1234';
+const SK_PIN = 'ty_admin_pin';
+const SK_SUBS = 'ty_submissions';
+const SK_EMAIL = 'ty_admin_email';
+const DEFAULT_EMAIL = 't.yoshizaki.taka@gmail.com';
+
+function getPin(){ return localStorage.getItem(SK_PIN) || DEFAULT_PIN; }
+function getSubmissions(){ try{ return JSON.parse(localStorage.getItem(SK_SUBS)||'[]'); }catch(e){ return []; } }
+
+const TYPE_LABEL = {web:'Web制作',video:'動画編集',app:'アプリ開発',system:'システム開発',design:'デザイン'};
+const STATUS_LABEL = {new:'新着',contacted:'連絡済み',inprogress:'対応中',done:'完了'};
+
+function fmtDate(ts){
+  const d = new Date(ts);
+  return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+// ── Auth ──
+function checkPin(){
+  const val = document.getElementById('pinInput').value;
+  if(val === getPin()){
+    sessionStorage.setItem('ty_portal_admin','1');
+    openPanel();
+  } else {
+    const inp = document.getElementById('pinInput');
+    document.getElementById('pinErr').textContent = 'PINが正しくありません';
+    inp.classList.add('shake');
+    inp.value = '';
+    setTimeout(()=>inp.classList.remove('shake'), 400);
+  }
+}
+
+function openPanel(){
+  document.getElementById('loginCard').style.display = 'none';
+  const panel = document.getElementById('adminPanel');
+  panel.style.display = 'block';
+  renderPanel();
+}
+
+function doLogout(){
+  sessionStorage.removeItem('ty_portal_admin');
+  document.getElementById('loginCard').style.display = 'block';
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('pinInput').value = '';
+  setTimeout(()=>document.getElementById('pinInput').focus(), 100);
+}
+
+// ── Render panel ──
+function renderPanel(){
+  const subs = getSubmissions();
+  const newCount = subs.filter(s=>s.status==='new').length;
+
+  const nb = document.getElementById('adminNewBadge');
+  if(newCount > 0){ nb.textContent=`新着 ${newCount}件`; nb.style.display='inline-block'; } else { nb.style.display='none'; }
+
+  const lnc = document.getElementById('listNewCount');
+  if(newCount > 0){ lnc.textContent=`新着 ${newCount}`; lnc.style.display='inline-block'; } else { lnc.style.display='none'; }
+
+  const currentEmail = localStorage.getItem(SK_EMAIL) || DEFAULT_EMAIL;
+  document.getElementById('adminEmailInput').value = currentEmail;
+  document.getElementById('emailCurrent').textContent = `現在の設定：${currentEmail}`;
+
+  const recent = subs.slice(0,5);
+  const list = document.getElementById('recentList');
+  if(!recent.length){
+    list.innerHTML = '<div class="no-submissions">まだ送信はありません</div>';
+    return;
+  }
+  list.innerHTML = recent.map(s=>{
+    const typeClass = 'badge-'+(s.type||'web');
+    const isNew = s.status === 'new';
+    return `<div class="recent-item" onclick="window.open('hearing_list.html','_blank')">
+      <div class="recent-item-left">
+        <div class="recent-name">${esc(s.clientName||'（名称未入力）')}</div>
+        <div class="recent-meta">
+          <span class="badge ${typeClass}">${TYPE_LABEL[s.type]||s.type}</span>
+          ${isNew ? '<span class="badge badge-new">新着</span>' : `<span>${STATUS_LABEL[s.status]||s.status}</span>`}
+          ${s.email ? `<span>${esc(s.email)}</span>` : ''}
+        </div>
+      </div>
+      <div class="recent-date">${fmtDate(s.timestamp)}</div>
+    </div>`;
+  }).join('');
+}
+
+function saveAdminEmail(){
+  const val = document.getElementById('adminEmailInput').value.trim();
+  if(!val){ showToast('メールアドレスを入力してください'); return; }
+  localStorage.setItem(SK_EMAIL, val);
+  document.getElementById('emailCurrent').textContent = `現在の設定：${val}`;
+  showToast('メールアドレスを保存しました');
+}
+
+function changePin(){
+  const val = document.getElementById('newPinInput').value.trim();
+  if(!val){ showToast('新しいPINを入力してください'); return; }
+  if(val.length < 4){ showToast('4文字以上で設定してください'); return; }
+  localStorage.setItem(SK_PIN, val);
+  document.getElementById('newPinInput').value = '';
+  document.getElementById('pinCurrent').textContent = '現在のPIN：変更済み（新しいPINが適用されました）';
+  showToast('PINを変更しました');
+}
+
+// ── Init ──
+if(sessionStorage.getItem('ty_portal_admin') === '1'){
+  openPanel();
+} else {
+  setTimeout(()=>document.getElementById('pinInput').focus(), 200);
+}
+</script>
+</body>
+</html>

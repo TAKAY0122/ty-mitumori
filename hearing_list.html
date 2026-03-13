@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ヒアリング一覧 — YOSHIZAKI STUDIO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=BIZ+UDPGothic:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gothic:'BIZ UDPGothic','Noto Sans JP',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --ink:#111118;--ink2:#282835;--muted:#6a6a7a;--line:#e2e0da;
+  --bg:#f5f4f0;--card:#ffffff;
+  --accent:#e8380d;--accent-light:#fff1ee;--accent2:#f0a500;
+  --green:#0d9e6a;--shadow:0 4px 28px rgba(0,0,0,.08);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:100vh;}
+
+/* ── Header ── */
+.header{position:sticky;top:0;z-index:300;background:var(--ink);height:60px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px;
+  box-shadow:0 2px 16px rgba(0,0,0,.3);}
+.header-brand{font-size:1.05rem;font-weight:700;color:#fff;letter-spacing:.05em;
+  display:flex;align-items:center;gap:8px;text-decoration:none;}
+.header-brand-accent{color:var(--accent);}
+.header-badge{background:var(--accent2);color:#fff;font-size:.65rem;font-weight:700;
+  padding:2px 8px;border-radius:20px;letter-spacing:.06em;}
+
+/* ── PIN overlay ── */
+.pin-overlay{position:fixed;inset:0;background:rgba(17,17,24,.92);z-index:1000;
+  display:flex;align-items:center;justify-content:center;}
+.pin-box{background:var(--card);border-radius:20px;padding:40px 36px;width:340px;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);text-align:center;}
+.pin-icon{font-size:2.4rem;margin-bottom:14px;}
+.pin-title{font-size:1.1rem;font-weight:900;margin-bottom:6px;}
+.pin-sub{font-size:.78rem;color:var(--muted);margin-bottom:24px;}
+.pin-input{width:100%;padding:12px 16px;border:2px solid var(--line);border-radius:10px;
+  font-size:1.1rem;font-family:var(--mono);text-align:center;letter-spacing:.2em;
+  outline:none;transition:border-color .18s;}
+.pin-input:focus{border-color:var(--accent);}
+.pin-input.shake{animation:shake .35s ease;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-8px);}40%,80%{transform:translateX(8px);}}
+.pin-btn{margin-top:12px;width:100%;padding:13px;border:none;border-radius:10px;
+  background:var(--accent);color:#fff;font-size:.9rem;font-weight:700;
+  cursor:pointer;font-family:var(--gothic);transition:all .18s;}
+.pin-btn:hover{background:#c02d0a;}
+.pin-err{font-size:.78rem;color:var(--accent);margin-top:8px;height:18px;}
+
+/* ── Container ── */
+.container{max-width:1100px;margin:0 auto;padding:32px 18px 80px;}
+
+/* ── Page header ── */
+.page-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.page-title{font-size:1.4rem;font-weight:900;}
+.page-title-sub{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.page-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-sm{padding:8px 14px;border-radius:8px;border:none;font-size:.78rem;font-weight:700;
+  cursor:pointer;font-family:var(--gothic);transition:all .18s;display:flex;align-items:center;gap:5px;}
+.btn-outline{background:transparent;border:2px solid var(--line);color:var(--muted);}
+.btn-outline:hover{border-color:var(--accent2);color:var(--accent2);}
+.btn-danger{background:var(--accent-light);color:var(--accent);border:2px solid transparent;}
+.btn-danger:hover{border-color:var(--accent);}
+.btn-primary{background:var(--ink);color:#fff;}
+.btn-primary:hover{background:var(--ink2);}
+
+/* ── Stats row ── */
+.stats-row{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+.stat-card{background:var(--card);border-radius:12px;padding:14px 18px;flex:1;min-width:120px;
+  box-shadow:var(--shadow);}
+.stat-num{font-family:var(--mono);font-size:1.5rem;font-weight:600;}
+.stat-label{font-size:.72rem;color:var(--muted);margin-top:2px;}
+.stat-new .stat-num{color:var(--accent);}
+.stat-contact .stat-num{color:#4a90d9;}
+.stat-inprog .stat-num{color:var(--accent2);}
+.stat-done .stat-num{color:var(--green);}
+
+/* ── Filter bar ── */
+.filter-bar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;}
+.filter-label{font-size:.72rem;color:var(--muted);font-weight:700;letter-spacing:.06em;}
+.filter-group{display:flex;gap:4px;flex-wrap:wrap;}
+.filter-btn{padding:6px 12px;border-radius:20px;border:2px solid var(--line);
+  background:transparent;color:var(--muted);font-size:.74rem;font-weight:700;
+  cursor:pointer;font-family:var(--gothic);transition:all .18s;}
+.filter-btn.active{background:var(--ink);border-color:var(--ink);color:#fff;}
+.filter-sep{width:1px;height:24px;background:var(--line);margin:0 4px;}
+
+/* ── Submission cards ── */
+.cards-grid{display:flex;flex-direction:column;gap:10px;}
+.sub-card{background:var(--card);border-radius:14px;padding:18px 20px;
+  box-shadow:var(--shadow);cursor:pointer;transition:all .2s;
+  border:2px solid transparent;display:flex;gap:16px;align-items:flex-start;}
+.sub-card:hover{border-color:var(--line);transform:translateY(-1px);}
+.sub-card.selected{border-color:var(--accent);}
+.sub-card-left{flex:1;min-width:0;}
+.sub-card-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+.sub-card-name{font-size:.98rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sub-card-company{font-size:.8rem;color:var(--muted);}
+.sub-card-meta{font-size:.74rem;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap;}
+.sub-card-meta span{display:flex;align-items:center;gap:3px;}
+.sub-card-note{font-size:.74rem;color:var(--muted);margin-top:6px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:500px;}
+.sub-card-right{text-align:right;flex-shrink:0;}
+.sub-card-date{font-size:.72rem;color:var(--muted);font-family:var(--mono);}
+.sub-card-new-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);
+  display:inline-block;margin-right:4px;}
+
+/* ── Type / Status badges ── */
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;
+  font-size:.68rem;font-weight:700;letter-spacing:.04em;}
+.badge-web{background:#e8f4ff;color:#2563eb;}
+.badge-video{background:#f3e8ff;color:#7c3aed;}
+.badge-app{background:#e8fff4;color:#059669;}
+.badge-system{background:#fff3e8;color:#d97706;}
+.badge-design{background:#ffe8f4;color:#db2777;}
+.badge-new{background:var(--accent-light);color:var(--accent);}
+.badge-contacted{background:#e8f0ff;color:#2563eb;}
+.badge-inprogress{background:#fff8e1;color:#b45309;}
+.badge-done{background:#e8fff4;color:var(--green);}
+
+/* ── Empty state ── */
+.empty{text-align:center;padding:60px 20px;color:var(--muted);}
+.empty-icon{font-size:3rem;margin-bottom:16px;}
+.empty-title{font-size:1rem;font-weight:700;margin-bottom:8px;}
+.empty-sub{font-size:.82rem;}
+
+/* ── Detail modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(17,17,24,.5);z-index:500;
+  display:none;align-items:flex-start;justify-content:flex-end;}
+.modal-overlay.open{display:flex;}
+.modal-panel{width:min(560px,100vw);height:100vh;background:var(--card);
+  box-shadow:-8px 0 40px rgba(0,0,0,.18);overflow-y:auto;
+  animation:slideIn .25s ease;}
+@keyframes slideIn{from{transform:translateX(100%);}to{transform:translateX(0);}}
+.modal-head{position:sticky;top:0;background:var(--ink);padding:16px 20px;
+  display:flex;align-items:center;justify-content:space-between;z-index:10;}
+.modal-title{font-size:.95rem;font-weight:700;color:#fff;}
+.modal-close{background:none;border:none;color:rgba(255,255,255,.6);font-size:1.3rem;
+  cursor:pointer;line-height:1;padding:4px;transition:color .15s;}
+.modal-close:hover{color:#fff;}
+.modal-body{padding:20px;}
+
+.modal-hero{background:var(--bg);border-radius:12px;padding:16px 18px;margin-bottom:20px;}
+.modal-hero-name{font-size:1.05rem;font-weight:900;margin-bottom:4px;}
+.modal-hero-meta{font-size:.78rem;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap;}
+
+.modal-section{margin-bottom:20px;}
+.modal-section-title{font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.08em;
+  text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--line);}
+
+.status-select{width:100%;padding:10px 12px;border:2px solid var(--line);border-radius:10px;
+  font-size:.85rem;font-family:var(--gothic);font-weight:700;background:var(--card);
+  cursor:pointer;outline:none;transition:border-color .18s;}
+.status-select:focus{border-color:var(--accent);}
+
+.note-area{width:100%;min-height:80px;padding:10px 12px;border:2px solid var(--line);
+  border-radius:10px;font-size:.84rem;font-family:var(--gothic);resize:vertical;
+  outline:none;transition:border-color .18s;}
+.note-area:focus{border-color:var(--accent);}
+.note-save-btn{margin-top:6px;padding:7px 14px;border:none;border-radius:8px;
+  background:var(--green);color:#fff;font-size:.78rem;font-weight:700;
+  cursor:pointer;font-family:var(--gothic);transition:all .18s;}
+.note-save-btn:hover{background:#0a8459;}
+
+.data-table{width:100%;border-collapse:collapse;font-size:.82rem;}
+.data-table tr{border-bottom:1px solid var(--line);}
+.data-table tr:last-child{border-bottom:none;}
+.data-table td{padding:8px 4px;vertical-align:top;}
+.data-table td:first-child{color:var(--muted);width:42%;padding-right:12px;}
+.data-table td:last-child{font-weight:500;text-align:right;word-break:break-all;}
+.data-table .group-row td{background:var(--bg);font-weight:700;font-size:.72rem;
+  color:var(--muted);letter-spacing:.06em;padding:8px 4px;}
+
+.modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
+.modal-action-btn{flex:1;padding:10px 12px;border-radius:10px;border:none;
+  font-size:.8rem;font-weight:700;cursor:pointer;font-family:var(--gothic);
+  transition:all .18s;display:flex;align-items:center;justify-content:center;gap:5px;}
+.modal-action-btn:hover{transform:translateY(-1px);}
+.action-email{background:var(--ink);color:#fff;}
+.action-delete{background:var(--accent-light);color:var(--accent);}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:#fff;padding:10px 20px;border-radius:30px;
+  font-size:.82rem;opacity:0;transition:all .28s;pointer-events:none;z-index:9999;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media(max-width:620px){
+  .container{padding:20px 12px 60px;}
+  .stats-row{gap:8px;}
+  .stat-card{padding:10px 14px;}
+  .sub-card{flex-direction:column;gap:8px;}
+  .modal-panel{width:100vw;}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a class="header-brand" href="portal.html">
+    <span class="header-brand-accent">YOSHIZAKI</span> STUDIO
+  </a>
+  <span class="header-badge">ADMIN</span>
+</header>
+
+<!-- PIN overlay -->
+<div class="pin-overlay" id="pinOverlay">
+  <div class="pin-box">
+    <div class="pin-icon">🔐</div>
+    <div class="pin-title">管理者ログイン</div>
+    <div class="pin-sub">PINコードを入力してください</div>
+    <input class="pin-input" id="pinInput" type="password" maxlength="20"
+      placeholder="PIN"
+      onkeydown="if(event.key==='Enter')checkPin()"
+      oninput="document.getElementById('pinErr').textContent=''">
+    <button class="pin-btn" onclick="checkPin()">ログイン</button>
+    <div class="pin-err" id="pinErr"></div>
+  </div>
+</div>
+
+<!-- Main content (hidden until logged in) -->
+<div class="container" id="mainContent" style="display:none;">
+
+  <div class="page-head">
+    <div>
+      <div class="page-title">ヒアリング一覧</div>
+      <div class="page-title-sub">依頼者からのヒアリング送信履歴</div>
+    </div>
+    <div class="page-actions">
+      <button class="btn-sm btn-outline" onclick="exportCSV()">📥 CSV出力</button>
+      <button class="btn-sm btn-danger" onclick="clearAll()">🗑 全件削除</button>
+      <button class="btn-sm btn-outline" onclick="logout()">ログアウト</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card stat-new"><div class="stat-num" id="statNew">0</div><div class="stat-label">新着</div></div>
+    <div class="stat-card stat-contact"><div class="stat-num" id="statContacted">0</div><div class="stat-label">連絡済み</div></div>
+    <div class="stat-card stat-inprog"><div class="stat-num" id="statInprog">0</div><div class="stat-label">対応中</div></div>
+    <div class="stat-card stat-done"><div class="stat-num" id="statDone">0</div><div class="stat-label">完了</div></div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <span class="filter-label">種別</span>
+    <div class="filter-group" id="typeFilters">
+      <button class="filter-btn active" data-type="all" onclick="setTypeFilter('all')">すべて</button>
+      <button class="filter-btn" data-type="web" onclick="setTypeFilter('web')">Web</button>
+      <button class="filter-btn" data-type="video" onclick="setTypeFilter('video')">動画</button>
+      <button class="filter-btn" data-type="app" onclick="setTypeFilter('app')">アプリ</button>
+      <button class="filter-btn" data-type="system" onclick="setTypeFilter('system')">システム</button>
+      <button class="filter-btn" data-type="design" onclick="setTypeFilter('design')">デザイン</button>
+    </div>
+    <div class="filter-sep"></div>
+    <span class="filter-label">状態</span>
+    <div class="filter-group" id="statusFilters">
+      <button class="filter-btn active" data-status="all" onclick="setStatusFilter('all')">すべて</button>
+      <button class="filter-btn" data-status="new" onclick="setStatusFilter('new')">新着</button>
+      <button class="filter-btn" data-status="contacted" onclick="setStatusFilter('contacted')">連絡済み</button>
+      <button class="filter-btn" data-status="inprogress" onclick="setStatusFilter('inprogress')">対応中</button>
+      <button class="filter-btn" data-status="done" onclick="setStatusFilter('done')">完了</button>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="cards-grid" id="cardsGrid"></div>
+
+</div>
+
+<!-- Detail modal (slide-in from right) -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal-panel" id="modalPanel">
+    <div class="modal-head">
+      <span class="modal-title" id="modalTitle">詳細</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const ADMIN_PIN = localStorage.getItem('ty_admin_pin') || 'admin1234';
+const SK = 'ty_submissions';
+let submissions = [];
+let filterType = 'all';
+let filterStatus = 'all';
+let selectedId = null;
+
+// ── Auth ──────────────────────────────────────
+function checkPin() {
+  const val = document.getElementById('pinInput').value;
+  if (val === ADMIN_PIN) {
+    sessionStorage.setItem('ty_admin_ok', '1');
+    document.getElementById('pinOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+    loadAndRender();
+  } else {
+    const inp = document.getElementById('pinInput');
+    document.getElementById('pinErr').textContent = 'PINが正しくありません';
+    inp.classList.add('shake');
+    inp.value = '';
+    setTimeout(() => inp.classList.remove('shake'), 400);
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('ty_admin_ok');
+  location.reload();
+}
+
+// ── Data ──────────────────────────────────────
+function loadAndRender() {
+  try { submissions = JSON.parse(localStorage.getItem(SK) || '[]'); } catch(e) { submissions = []; }
+  updateStats();
+  renderCards();
+}
+
+function save() {
+  localStorage.setItem(SK, JSON.stringify(submissions));
+}
+
+function getFiltered() {
+  return submissions.filter(s => {
+    if (filterType !== 'all' && s.type !== filterType) return false;
+    if (filterStatus !== 'all' && s.status !== filterStatus) return false;
+    return true;
+  });
+}
+
+// ── Stats ─────────────────────────────────────
+function updateStats() {
+  document.getElementById('statNew').textContent = submissions.filter(s=>s.status==='new').length;
+  document.getElementById('statContacted').textContent = submissions.filter(s=>s.status==='contacted').length;
+  document.getElementById('statInprog').textContent = submissions.filter(s=>s.status==='inprogress').length;
+  document.getElementById('statDone').textContent = submissions.filter(s=>s.status==='done').length;
+}
+
+// ── Filter ────────────────────────────────────
+function setTypeFilter(type) {
+  filterType = type;
+  document.querySelectorAll('#typeFilters .filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.type === type);
+  });
+  renderCards();
+}
+
+function setStatusFilter(status) {
+  filterStatus = status;
+  document.querySelectorAll('#statusFilters .filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.status === status);
+  });
+  renderCards();
+}
+
+// ── Render cards ──────────────────────────────
+const TYPE_LABEL = {web:'Web制作',video:'動画編集',app:'アプリ開発',system:'システム開発',design:'デザイン'};
+const STATUS_LABEL = {new:'新着',contacted:'連絡済み',inprogress:'対応中',done:'完了'};
+
+function fmtDate(ts) {
+  const d = new Date(ts);
+  return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function renderCards() {
+  const list = getFiltered();
+  const grid = document.getElementById('cardsGrid');
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty"><div class="empty-icon">📭</div><div class="empty-title">ヒアリングがありません</div><div class="empty-sub">フィルター条件を変えるか、ヒアリングシートからデータが送信されると表示されます</div></div>`;
+    return;
+  }
+  grid.innerHTML = list.map(s => {
+    const typeClass = 'badge-' + (s.type || 'web');
+    const statusClass = 'badge-' + (s.status || 'new');
+    const dot = s.status === 'new' ? '<span class="sub-card-new-dot"></span>' : '';
+    const note = s.adminNote ? `<div class="sub-card-note">📝 ${esc(s.adminNote)}</div>` : '';
+    return `<div class="sub-card${selectedId===s.id?' selected':''}" onclick="openModal('${s.id}')">
+      <div class="sub-card-left">
+        <div class="sub-card-top">
+          ${dot}<span class="sub-card-name">${esc(s.clientName||'（名称未入力）')}</span>
+          <span class="badge ${typeClass}">${TYPE_LABEL[s.type]||s.type}</span>
+          <span class="badge ${statusClass}">${STATUS_LABEL[s.status]||s.status}</span>
+        </div>
+        ${s.company ? `<div class="sub-card-company">${esc(s.company)}</div>` : ''}
+        <div class="sub-card-meta">
+          ${s.email ? `<span>✉ ${esc(s.email)}</span>` : ''}
+          ${s.tel ? `<span>📞 ${esc(s.tel)}</span>` : ''}
+        </div>
+        ${note}
+      </div>
+      <div class="sub-card-right">
+        <div class="sub-card-date">${fmtDate(s.timestamp)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Detail modal ──────────────────────────────
+function openModal(id) {
+  const s = submissions.find(x => x.id === id);
+  if (!s) return;
+  selectedId = id;
+  renderCards();
+
+  document.getElementById('modalTitle').textContent = s.clientName || '詳細';
+
+  const typeClass = 'badge-' + (s.type || 'web');
+  const statusClass = 'badge-' + (s.status || 'new');
+
+  // Build data rows from submission data object
+  const data = s.data || {};
+  const skip = ['_quoteData','category'];
+  const dataRows = Object.entries(data)
+    .filter(([k]) => !skip.includes(k) && k[0] !== '_')
+    .map(([k,v]) => {
+      const val = Array.isArray(v) ? v.filter(Boolean).join('、') : String(v||'');
+      if (!val) return '';
+      return `<tr><td>${esc(k)}</td><td>${esc(val)}</td></tr>`;
+    }).filter(Boolean).join('');
+
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-hero">
+      <div class="modal-hero-name">${esc(s.clientName||'（未入力）')}</div>
+      <div class="modal-hero-meta">
+        <span class="badge ${typeClass}">${TYPE_LABEL[s.type]||s.type}</span>
+        <span>${s.company ? esc(s.company) : ''}</span>
+        <span style="font-family:var(--mono);font-size:.72rem;">${fmtDate(s.timestamp)}</span>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">連絡先</div>
+      <table class="data-table">
+        ${s.email ? `<tr><td>メール</td><td>${esc(s.email)}</td></tr>` : ''}
+        ${s.tel ? `<tr><td>電話</td><td>${esc(s.tel)}</td></tr>` : ''}
+        ${s.company ? `<tr><td>会社名・屋号</td><td>${esc(s.company)}</td></tr>` : ''}
+      </table>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">ステータス</div>
+      <select class="status-select" onchange="updateStatus('${s.id}', this.value)">
+        <option value="new"${s.status==='new'?' selected':''}>新着</option>
+        <option value="contacted"${s.status==='contacted'?' selected':''}>連絡済み</option>
+        <option value="inprogress"${s.status==='inprogress'?' selected':''}>対応中</option>
+        <option value="done"${s.status==='done'?' selected':''}>完了</option>
+      </select>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">管理者メモ</div>
+      <textarea class="note-area" id="noteArea" placeholder="社内メモ（保存されます）">${esc(s.adminNote||'')}</textarea>
+      <button class="note-save-btn" onclick="saveNote('${s.id}')">保存</button>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">ヒアリング内容</div>
+      <table class="data-table">${dataRows || '<tr><td colspan="2" style="color:var(--muted)">データなし</td></tr>'}</table>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-actions">
+        ${s.email ? `<button class="modal-action-btn action-email" onclick="replyEmail('${s.id}')">✉ メール返信</button>` : ''}
+        <button class="modal-action-btn action-delete" onclick="deleteSubmission('${s.id}')">🗑 削除</button>
+      </div>
+    </div>`;
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  selectedId = null;
+  renderCards();
+}
+
+function closeModalOnBg(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+// ── Status / Note ─────────────────────────────
+function updateStatus(id, status) {
+  const s = submissions.find(x => x.id === id);
+  if (s) { s.status = status; save(); updateStats(); renderCards(); showToast('ステータスを更新しました'); }
+}
+
+function saveNote(id) {
+  const s = submissions.find(x => x.id === id);
+  if (s) {
+    s.adminNote = document.getElementById('noteArea').value;
+    save();
+    renderCards();
+    showToast('メモを保存しました');
+  }
+}
+
+// ── Actions ───────────────────────────────────
+function replyEmail(id) {
+  const s = submissions.find(x => x.id === id);
+  if (!s || !s.email) return;
+  const subject = encodeURIComponent(`Re: 【ヒアリング】${s.typeName||TYPE_LABEL[s.type]} - ${s.clientName}`);
+  window.open(`mailto:${s.email}?subject=${subject}`, '_blank');
+}
+
+function deleteSubmission(id) {
+  if (!confirm('この送信データを削除しますか？')) return;
+  submissions = submissions.filter(x => x.id !== id);
+  save();
+  closeModal();
+  updateStats();
+  renderCards();
+  showToast('削除しました');
+}
+
+function clearAll() {
+  if (!confirm('すべてのヒアリングデータを削除しますか？この操作は取り消せません。')) return;
+  submissions = [];
+  save();
+  updateStats();
+  renderCards();
+  showToast('全件削除しました');
+}
+
+// ── CSV Export ────────────────────────────────
+function exportCSV() {
+  if (!submissions.length) { showToast('データがありません'); return; }
+  const headers = ['ID','種別','会社名','担当者','メール','電話','ステータス','送信日時','管理者メモ'];
+  const rows = submissions.map(s => [
+    s.id, TYPE_LABEL[s.type]||s.type,
+    s.company||'', s.clientName||'', s.email||'', s.tel||'',
+    STATUS_LABEL[s.status]||s.status,
+    fmtDate(s.timestamp), s.adminNote||''
+  ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+  const csv = '\uFEFF' + [headers.join(','), ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'}));
+  a.download = `hearing_list_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  showToast('CSVを出力しました');
+}
+
+// ── Utils ─────────────────────────────────────
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ── Init ──────────────────────────────────────
+if (sessionStorage.getItem('ty_admin_ok') === '1') {
+  document.getElementById('pinOverlay').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'block';
+  loadAndRender();
+} else {
+  setTimeout(() => document.getElementById('pinInput').focus(), 100);
+}
+</script>
+</body>
+</html>

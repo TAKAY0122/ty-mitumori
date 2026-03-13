@@ -376,7 +376,7 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
     <span style="font-size:.65rem;color:rgba(255,255,255,.35);font-weight:400;">かんたん概算見積書</span>
   </div>
   <div style="display:flex;align-items:center;gap:16px;">
-    <button class="header-admin-btn" onclick="openAdmin()">⚙ 管理</button>
+    <button class="header-admin-btn" onclick="window.location.href='portal.html?admin=1'">⚙ 管理</button>
     <div class="header-total-wrap">
       <div class="header-total-label">通常価格 → <span id="headerAmtOriginal" style="text-decoration:line-through;color:rgba(255,255,255,.35);font-family:var(--mono)">¥ 0</span></div>
       <div style="display:flex;align-items:center;gap:7px;">
@@ -654,57 +654,61 @@ const CATS_DEFAULT = {
     label:'Webサイト制作', icon:'🌐', color:'#2563eb',
     sets:[
       { id:'ws1', tag:'スタートアップ向け', name:'LP スターターパック', popular:false,
-        chips:['LP（1P）','お問い合わせ','SEO基本'],
-        original:330000, price:264000, saving:66000, presets:{} },
+        chips:['LP（1P）','レスポンシブ','お問い合わせ','SEO内部対策'],
+        original:297000, price:247500, saving:49500, presets:{} },
       { id:'ws2', popular:true, tag:'中小企業向け', name:'コーポレート スタンダード',
-        chips:['コーポレート（小）','5P構成','CMS','SEO','お問い合わせ'],
-        original:770000, price:616000, saving:154000, presets:{} },
+        chips:['コーポレート（小）','CMS','SEO内部対策','GA4','レスポンシブ'],
+        original:522000, price:435000, saving:87000, presets:{} },
       { id:'ws3', tag:'EC・ショップ向け', name:'ECサイト スタンダード',
-        chips:['ECサイト基盤','決済連携','CMS','SEO','保守ライト'],
-        original:1320000, price:1056000, saving:264000, presets:{} },
+        chips:['ECサイト','CMS','SEO','GA4','月額保守'],
+        original:792000, price:660000, saving:132000, presets:{} },
     ],
     steps:[
       { id:'step-w1', label:'Step 1', title:'サイトタイプを選択', sub:'最も近いものを1つ選んでください。', type:'single', options:[
-        {id:'lp',         icon:'🎯', name:'ランディングページ（LP）',    desc:'1ページで訴求・CV重視',              price:200000},
-        {id:'web-small',  icon:'🏢', name:'コーポレートサイト（小規模）', desc:'5〜8ページの企業サイト',              price:450000},
-        {id:'web-medium', icon:'🌐', name:'コーポレートサイト（中規模）', desc:'10〜25ページ、ブログ・採用含む',       price:750000},
-        {id:'ec-site',    icon:'🛒', name:'ECサイト',                    desc:'商品販売・カート・決済付き',           price:900000},
-        {id:'service-st', icon:'⚙️', name:'サービスサイト',              desc:'会員・予約・業務フロー',               price:650000},
-        {id:'renewal',    icon:'🔄', name:'リニューアル',                desc:'既存サイトをリデザイン・再構築',        price:350000},
+        {id:'lp',         icon:'🎯', name:'ランディングページ（LP）',    desc:'1ページで訴求・CV重視',              price:135000},
+        {id:'web-small',  icon:'🏢', name:'コーポレートサイト（5P前後）', desc:'5〜8ページの企業サイト',              price:180000},
+        {id:'web-medium', icon:'🌐', name:'コーポレートサイト（中規模）', desc:'10〜25ページ、ブログ・採用含む',       price:360000},
+        {id:'ec-site',    icon:'🛒', name:'ECサイト（Shopify等）',        desc:'商品販売・カート・決済付き',           price:540000},
+        {id:'service-st', icon:'⚙️', name:'サービスサイト',              desc:'会員・予約・業務フロー',               price:270000},
+        {id:'renewal',    icon:'🔄', name:'リニューアル',                desc:'既存サイトをリデザイン・再構築',        price:180000},
       ]},
       { id:'step-w2', label:'Step 2', title:'ページ構成を選択', sub:'必要なページを複数選択。数量指定可。', type:'multi', options:[
-        {id:'top',       icon:'🏠', name:'トップページ',         desc:'FV・メインビジュアル含む',    price:90000},
-        {id:'about',     icon:'👤', name:'会社概要・About',      desc:'企業情報・ミッション・沿革',   price:40000},
-        {id:'service-p', icon:'📋', name:'サービス紹介ページ',   desc:'各サービスの説明ページ',       price:45000, qty:true},
-        {id:'blog',      icon:'✍️', name:'ブログ・お知らせ',     desc:'一覧＋詳細ページセット',       price:60000},
-        {id:'works',     icon:'💼', name:'実績・事例紹介',       desc:'ポートフォリオ・事例一覧',     price:55000},
-        {id:'recruit',   icon:'🙋', name:'採用ページ',          desc:'求人・インタビュー・フォーム', price:65000},
-        {id:'contact',   icon:'📩', name:'お問い合わせ',         desc:'フォーム・確認・完了',         price:30000},
-        {id:'faq',       icon:'❓', name:'FAQ',                  desc:'アコーディオン型Q&A',          price:25000},
-        {id:'lp-top',    icon:'🎯', name:'LPトップ（フル）',     desc:'スクロール型LP 1本',           price:180000},
-        {id:'product-p', icon:'🛍️', name:'商品一覧・詳細ページ', desc:'ECの商品ページ群',            price:80000, qty:true},
+        {id:'top',       icon:'🏠', name:'トップページ',         desc:'FV・メインビジュアル含む',    price:50000},
+        {id:'about',     icon:'👤', name:'会社概要・About',      desc:'企業情報・ミッション・沿革',   price:20000},
+        {id:'service-p', icon:'📋', name:'サービス紹介ページ',   desc:'各サービスの説明ページ',       price:25000, qty:true},
+        {id:'blog',      icon:'✍️', name:'ブログ・お知らせ',     desc:'一覧＋詳細ページセット',       price:35000},
+        {id:'works',     icon:'💼', name:'実績・事例紹介',       desc:'ポートフォリオ・事例一覧',     price:30000},
+        {id:'recruit',   icon:'🙋', name:'採用ページ',           desc:'求人・インタビュー・フォーム', price:35000},
+        {id:'contact',   icon:'📩', name:'お問い合わせフォーム', desc:'フォーム・確認・完了 CV率向上', price:22500},
+        {id:'faq',       icon:'❓', name:'FAQ',                   desc:'アコーディオン型Q&A',          price:15000},
+        {id:'lp-top',    icon:'🎯', name:'LPトップ（フル）',     desc:'スクロール型LP 1本',           price:120000},
+        {id:'product-p', icon:'🛍️', name:'商品一覧・詳細ページ', desc:'ECの商品ページ群',             price:50000, qty:true},
       ]},
       { id:'step-w3', label:'Step 3', title:'デザイン・機能オプション', sub:'必要なオプションを選択。複数可。', type:'multi', options:[
-        {id:'design-prem',  icon:'🎨', name:'プレミアムデザイン',               desc:'ゼロからブランドデザイン制作',       price:120000},
-        {id:'animation',    icon:'✨', name:'アニメーション演出',               desc:'スクロールアニメ・インタラクション', price:60000},
-        {id:'cms',          icon:'📝', name:'CMS導入（WordPress等）',           desc:'自社でコンテンツ更新できる管理画面', price:80000},
-        {id:'multilang',    icon:'🌍', name:'多言語対応',                       desc:'日英・日英中など複数言語',           price:150000},
-        {id:'seo-basic',    icon:'🔍', name:'SEO基本対策',                      desc:'メタ・構造化・速度最適化',           price:45000},
-        {id:'payment',      icon:'💳', name:'決済機能（Stripe/PAY.JP）',        desc:'クレカ決済・サブスク実装',           price:100000},
-        {id:'member',       icon:'🔐', name:'会員登録・マイページ',              desc:'ユーザー認証・履歴管理',             price:120000},
-        {id:'reserve',      icon:'📅', name:'予約・スケジュール機能',            desc:'カレンダー予約・空き管理',           price:80000},
-        {id:'search',       icon:'🔎', name:'サイト内検索機能',                  desc:'全文検索・フィルター',               price:50000},
-        {id:'analytics',    icon:'📈', name:'GA4・タグマネージャー設定',         desc:'計測タグ・目標設定',                 price:30000},
-        {id:'404',          icon:'🚧', name:'カスタムエラーページ（404等）',     desc:'404・500等デザインカスタマイズ',     price:20000},
-        {id:'og-seo',       icon:'📣', name:'OGP・SNSシェア最適化',             desc:'SNSシェア時の表示最適化',            price:25000},
-        {id:'perf',         icon:'⚡', name:'表示速度最適化',                   desc:'Core Web Vitals改善',               price:50000},
-        {id:'cookie',       icon:'🍪', name:'Cookie同意バナー（GDPR対応）',     desc:'同意管理・ポリシー設定',             price:20000},
+        {id:'responsive',   icon:'📱', name:'レスポンシブ対応（SP/PC）',           desc:'スマホ主流時代の事実上標準機能',      price:45000},
+        {id:'cms',          icon:'📝', name:'CMS導入（WordPress等）',              desc:'自社でコンテンツ更新できる管理画面',  price:135000},
+        {id:'seo-basic',    icon:'🔍', name:'SEO内部対策（メタ・構造化）',         desc:'検索流入に直結する内部SEO対策',       price:72000},
+        {id:'analytics',    icon:'📈', name:'GA4（アクセス解析）設定',             desc:'納品後の成果可視化・目標設定',        price:27000},
+        {id:'ssl',          icon:'🔒', name:'SSL設定',                             desc:'HTTPS化・セキュリティ必須対応',       price:13500},
+        {id:'server-setup', icon:'🖥️', name:'サーバー・ドメイン初期設定',          desc:'初心者クライアントに人気の代行設定', price:18000},
+        {id:'multilang',    icon:'🌍', name:'多言語対応（英語ページ追加）',        desc:'インバウンド・海外向け対策',          price:90000},
+        {id:'reserve',      icon:'📅', name:'予約・カレンダー機能',                desc:'飲食・サロン系に需要大',              price:72000},
+        {id:'design-prem',  icon:'🎨', name:'プレミアムデザイン',                  desc:'ゼロからブランドデザイン制作',        price:120000},
+        {id:'animation',    icon:'✨', name:'アニメーション演出',                  desc:'スクロールアニメ・インタラクション',  price:60000},
+        {id:'payment',      icon:'💳', name:'決済機能（Stripe/PAY.JP）',           desc:'クレカ決済・サブスク実装',            price:100000},
+        {id:'member',       icon:'🔐', name:'会員登録・マイページ',                desc:'ユーザー認証・履歴管理',              price:120000},
+        {id:'search',       icon:'🔎', name:'サイト内検索機能',                    desc:'全文検索・フィルター',                price:50000},
+        {id:'og-seo',       icon:'📣', name:'OGP・SNSシェア最適化',               desc:'SNSシェア時の表示最適化',             price:25000},
+        {id:'perf',         icon:'⚡', name:'表示速度最適化',                      desc:'Core Web Vitals改善',                price:50000},
+        {id:'cookie',       icon:'🍪', name:'Cookie同意バナー（GDPR対応）',        desc:'同意管理・ポリシー設定',              price:20000},
       ]},
-      { id:'step-w4', label:'Step 4', title:'保守・運用プラン', sub:'公開後のサポートプランを選択。複数可。', type:'multi', options:[
-        {id:'support-light', icon:'🛡️', name:'保守プラン ライト',        desc:'セキュリティ・バックアップ・軽微対応', price:15000, note:'月額'},
-        {id:'support-std',   icon:'⚡',  name:'保守プラン スタンダード',  desc:'ライト＋コンテンツ更新月4回',          price:30000, note:'月額'},
-        {id:'analytics-m',   icon:'📊', name:'アクセス解析・月次レポート', desc:'GA4分析・改善提案付き',               price:20000, note:'月額'},
-        {id:'no-support',    icon:'🚀', name:'保守不要（自社対応）',      desc:'納品のみ',                             price:0},
+      { id:'step-w4', label:'Step 4', title:'保守・運用プラン', sub:'公開後のサポートプランを選択。', type:'multi', options:[
+        {id:'support-light', icon:'🛡️', name:'月額保守・更新サポート',          desc:'セキュリティ・バックアップ・軽微対応', price:18000, note:'月額'},
+        {id:'support-std',   icon:'⚡',  name:'保守プラン スタンダード',         desc:'ライト＋コンテンツ更新月4回',          price:30000, note:'月額'},
+        {id:'analytics-m',   icon:'📊', name:'アクセス解析・月次レポート',       desc:'GA4分析・改善提案付き',               price:20000, note:'月額'},
+        {id:'lecture-w',     icon:'🎓', name:'納品後レクチャー（使い方説明）',   desc:'更新方法・管理画面の使い方を丁寧に説明', price:15000},
+        {id:'extra-rev-w',   icon:'🔄', name:'追加修正（+3回）',                desc:'基本修正回数を超える場合の追加分',      price:9000},
+        {id:'no-support',    icon:'🚀', name:'保守不要（自社対応）',             desc:'納品のみ',                             price:0},
       ]}
     ]
   },
@@ -713,37 +717,41 @@ const CATS_DEFAULT = {
     label:'動画・映像制作・編集', icon:'🎬', color:'#7c3aed',
     sets:[
       { id:'vs1', popular:true, tag:'YouTube運用向け', name:'YouTubeチャンネル スタートパック',
-        chips:['動画編集×4本/月','サムネ×4','概要欄・タグ最適化'],
-        original:220000, price:176000, saving:44000, presets:{} },
+        chips:['動画編集×4本','サムネ×4','テロップ','BGM'],
+        original:70000, price:57600, saving:12400, presets:{} },
       { id:'vs2', tag:'SNS・TikTok向け', name:'ショート動画 3本パック',
         chips:['60秒以内×3本','テロップ全文','BGM・SE','縦型フォーマット'],
-        original:180000, price:144000, saving:36000, presets:{} },
+        original:40500, price:33750, saving:6750, presets:{} },
       { id:'vs3', tag:'企業・法人向け', name:'企業紹介動画 スタンダード',
-        chips:['3〜5分','テロップ全文','BGM','SNS用縦型カット'],
-        original:440000, price:352000, saving:88000, presets:{} },
+        chips:['3〜5分','テロップ','BGM','SNS用縦型カット'],
+        original:180000, price:150000, saving:30000, presets:{} },
     ],
     steps:[
       { id:'step-v1', label:'Step 1', title:'動画の種類を選択', sub:'制作・編集したい動画タイプを1つ選んでください。', type:'single', options:[
-        {id:'yt-long',      icon:'▶️',  name:'YouTube 通常動画（5〜20分）',   desc:'解説・Vlog・インタビュー等',      price:80000},
-        {id:'short-tiktok', icon:'📱',  name:'ショート動画（TikTok・Reels）', desc:'60秒以内・縦型・SNS向け',         price:50000},
-        {id:'yt-short',     icon:'⚡',  name:'YouTube ショート',              desc:'60秒以内・横/縦両対応',           price:50000},
-        {id:'corporate',    icon:'🏢',  name:'企業紹介・コーポレート動画',    desc:'3〜5分、会社紹介・採用向け',      price:250000},
-        {id:'product-pr',   icon:'🛍️',  name:'商品・サービスPR動画',          desc:'1〜3分、訴求・広告用',            price:150000},
-        {id:'cm-vid',       icon:'📺',  name:'CM・Web広告動画',               desc:'15〜30秒、高品質広告',            price:300000},
+        {id:'yt-long',      icon:'▶️',  name:'YouTube 動画編集（〜15分/本）',   desc:'解説・Vlog・インタビュー等',       price:9000},
+        {id:'short-tiktok', icon:'📱',  name:'ショート動画（TikTok・Reels/本）', desc:'60秒以内・縦型・SNS向け',          price:4500},
+        {id:'yt-short',     icon:'⚡',  name:'YouTube ショート（/本）',          desc:'60秒以内・横/縦両対応',            price:4500},
+        {id:'corporate',    icon:'🏢',  name:'企業紹介・コーポレート動画',       desc:'3〜5分、会社紹介・採用向け',       price:135000},
+        {id:'product-pr',   icon:'🛍️',  name:'商品・サービスPR動画',             desc:'1〜3分、訴求・広告用',             price:135000},
+        {id:'cm-vid',       icon:'📺',  name:'CM・Web広告動画（撮影込み）',      desc:'撮影〜編集・ナレーション対応',     price:180000},
       ]},
       { id:'step-v2', label:'Step 2', title:'編集・仕上げオプション', sub:'必要な編集オプションを選択。複数可。', type:'multi', options:[
-        {id:'subtitle',      icon:'💬', name:'字幕・テロップ全文',            desc:'全文字幕挿入・タイミング調整',    price:25000},
-        {id:'bgm',           icon:'🎵', name:'BGM・効果音（商用ライセンス）', desc:'著作権フリー音源使用',            price:12000},
-        {id:'animation-vi',  icon:'✨', name:'モーショングラフィックス',      desc:'ロゴアニメ・テキストアニメ',      price:55000},
-        {id:'color-grade',   icon:'🎨', name:'カラーグレーディング',          desc:'映像の色調・雰囲気の演出',        price:30000},
-        {id:'thumbnail',     icon:'🖼️', name:'サムネイル制作',               desc:'クリック率重視のサムネデザイン', price:12000, qty:true},
-        {id:'yt-optimize',   icon:'📈', name:'YouTube概要欄・タグ最適化',    desc:'SEOに強いタイトル・説明文',       price:15000},
-        {id:'sns-format',    icon:'📱', name:'SNS用マルチフォーマット変換',   desc:'縦型・正方形・横型 全形式出力',  price:20000},
+        {id:'subtitle',     icon:'💬', name:'テロップ・字幕追加',               desc:'視聴完了率向上・全文字幕挿入',    price:4500},
+        {id:'bgm',          icon:'🎵', name:'BGM・効果音追加',                  desc:'著作権フリー音源・商用ライセンス', price:4500},
+        {id:'thumbnail',    icon:'🖼️', name:'サムネイル作成',                   desc:'再生数に直結・クリック率重視',    price:2700, qty:true},
+        {id:'ai-subtitle',  icon:'🤖', name:'AI字幕生成（多言語対応）',         desc:'アクセシビリティ・海外向け対応',  price:31500},
+        {id:'narration',    icon:'🎙️', name:'プロナレーション手配',             desc:'企業動画の品質向上・声優手配',    price:72000},
+        {id:'sns-format',   icon:'📱', name:'SNS用リサイズ（縦横変換）',        desc:'YouTube→Reels等の二次利用',       price:9000},
+        {id:'animation-vi', icon:'✨', name:'アニメーション・モーション追加',    desc:'ロゴアニメ・テキストアニメ',      price:27000},
+        {id:'color-grade',  icon:'🎨', name:'カラーグレーディング',              desc:'映像の色調・雰囲気の演出',        price:30000},
+        {id:'yt-optimize',  icon:'📈', name:'YouTube概要欄・タグ最適化',        desc:'SEOに強いタイトル・説明文',       price:15000},
       ]},
       { id:'step-v3', label:'Step 3', title:'継続・運用プラン', sub:'継続的な制作・運用をご希望の場合は選択。', type:'multi', options:[
-        {id:'monthly-yt',    icon:'📅', name:'YouTube 月次制作（4本/月）',    desc:'月4本の動画編集・サムネ込み',    price:120000, note:'月額'},
-        {id:'monthly-short', icon:'📱', name:'ショート動画 月次制作（8本）',  desc:'TikTok・Reels・YTショート',      price:80000,  note:'月額'},
-        {id:'single',        icon:'🚀', name:'単発のみ（継続なし）',          desc:'今回1本のみ',                   price:0},
+        {id:'monthly-yt',    icon:'📅', name:'月次動画制作パック（4本/月）',    desc:'SNS運用需要急増・継続収益',        price:36000, note:'月額'},
+        {id:'monthly-short', icon:'📱', name:'ショート動画 月次制作（8本/月）', desc:'TikTok・Reels・YTショート',        price:36000, note:'月額'},
+        {id:'lecture-v',     icon:'🎓', name:'納品後レクチャー（使い方説明）',  desc:'動画活用・更新方法の説明',         price:15000},
+        {id:'extra-rev-v',   icon:'🔄', name:'追加修正（+3回）',               desc:'基本修正回数を超える場合の追加分',  price:9000},
+        {id:'single',        icon:'🚀', name:'単発のみ（継続なし）',            desc:'今回1本のみ',                      price:0},
       ]}
     ]
   },
@@ -752,37 +760,40 @@ const CATS_DEFAULT = {
     label:'アプリ開発', icon:'📱', color:'#0d9e6a',
     sets:[
       { id:'as1', tag:'MVP・検証向け', name:'MVP スターターパック',
-        chips:['iOS or Android','基本画面5本','認証機能'],
-        original:1320000, price:1056000, saving:264000, presets:{} },
+        chips:['PWA・簡易Webアプリ','SNSログイン','Push通知'],
+        original:720000, price:585000, saving:135000, presets:{} },
       { id:'as2', popular:true, tag:'本格サービス向け', name:'ネイティブアプリ スタンダード',
-        chips:['iOS+Android','画面10本','決済','Push通知','管理画面'],
-        original:4400000, price:3520000, saving:880000, presets:{} },
+        chips:['iOS+Android','管理画面','Push通知','保守サポート'],
+        original:3510000, price:2835000, saving:675000, presets:{} },
       { id:'as3', tag:'業務効率化向け', name:'業務アプリ スタンダード',
-        chips:['Web+モバイル','管理画面','ユーザー管理','データ出力'],
-        original:2750000, price:2200000, saving:550000, presets:{} },
+        chips:['業務アプリ','管理画面','ユーザー認証','データ出力'],
+        original:1350000, price:1080000, saving:270000, presets:{} },
     ],
     steps:[
       { id:'step-a1', label:'Step 1', title:'アプリの種類を選択', sub:'開発したいアプリの種類を1つ選んでください。', type:'single', options:[
-        {id:'mvp',         icon:'🚀', name:'MVP・プロトタイプ',           desc:'アイデア検証・基本機能のみ',          price:800000},
-        {id:'native-ios',  icon:'🍎', name:'iOSアプリ（Swift）',          desc:'App Store公開向けネイティブ',         price:1500000},
-        {id:'native-and',  icon:'🤖', name:'Androidアプリ（Kotlin）',     desc:'Google Play公開向けネイティブ',       price:1500000},
-        {id:'native-both', icon:'📱', name:'iOS + Android 両対応',        desc:'React Nativeで同時開発',              price:2500000},
-        {id:'pwa',         icon:'🌐', name:'PWA（Webアプリ）',            desc:'ブラウザで動くスマホ対応Webアプリ',   price:800000},
-        {id:'biz-app',     icon:'💼', name:'業務システム・社内ツール',    desc:'バックオフィス・管理業務の効率化',     price:1200000},
+        {id:'pwa',         icon:'🌐', name:'PWA・簡易Webアプリ',           desc:'ブラウザで動くスマホ対応Webアプリ',   price:450000},
+        {id:'native-ios',  icon:'🍎', name:'iOSアプリ（Swift）',            desc:'App Store公開向けネイティブ',         price:1350000},
+        {id:'native-and',  icon:'🤖', name:'Androidアプリ（Kotlin）',       desc:'Google Play公開向けネイティブ',       price:1350000},
+        {id:'native-both', icon:'📱', name:'iOS + Android 両対応',          desc:'React Nativeで同時開発',              price:2700000},
+        {id:'biz-app',     icon:'💼', name:'業務アプリ（社内向け）',        desc:'バックオフィス・管理業務の効率化',     price:720000},
+        {id:'mvp',         icon:'🚀', name:'MVP・プロトタイプ',             desc:'アイデア検証・基本機能のみ',           price:450000},
       ]},
       { id:'step-a2', label:'Step 2', title:'機能を選択', sub:'必要な機能を選択。複数可。', type:'multi', options:[
-        {id:'auth',      icon:'🔐', name:'ユーザー認証',          desc:'メール・SNSログイン',             price:150000},
-        {id:'payment-a', icon:'💳', name:'決済機能（Stripe）',    desc:'課金・サブスク・定期払い',        price:200000},
-        {id:'push',      icon:'🔔', name:'プッシュ通知',          desc:'リマインド・お知らせ通知',        price:100000},
-        {id:'admin-a',   icon:'🖥️', name:'管理者ダッシュボード',  desc:'ユーザー管理・データ閲覧',        price:200000},
-        {id:'chat-a',    icon:'💬', name:'チャット機能',          desc:'リアルタイムチャット',            price:250000},
-        {id:'map-a',     icon:'🗺️', name:'地図・位置情報機能',   desc:'マップ表示・GPS・ルート案内',     price:130000},
-        {id:'camera-a',  icon:'📷', name:'カメラ・写真機能',      desc:'撮影・アップロード・加工',        price:120000},
+        {id:'sns-login',   icon:'🔑', name:'SNSログイン（Google/Apple等）', desc:'UX向上・現代アプリの標準機能',        price:135000},
+        {id:'auth',        icon:'🔐', name:'ユーザー認証・会員管理',        desc:'メール認証・マイページ・履歴管理',     price:270000},
+        {id:'push',        icon:'🔔', name:'プッシュ通知機能',              desc:'リテンション向上・お知らせ通知',       price:135000},
+        {id:'admin-a',     icon:'🖥️', name:'管理画面（ダッシュボード）',   desc:'ユーザー管理・データ閲覧',            price:360000},
+        {id:'payment-a',   icon:'💳', name:'決済機能（Stripe/Pay等）',      desc:'課金・サブスク・定期払い',            price:720000},
+        {id:'chat-a',      icon:'💬', name:'チャット・メッセージ機能',      desc:'リアルタイムチャット',                price:270000},
+        {id:'multilang-a', icon:'🌍', name:'多言語対応（i18n）',            desc:'グローバル展開・海外ユーザー向け',     price:180000},
+        {id:'map-a',       icon:'🗺️', name:'地図・位置情報機能',           desc:'マップ表示・GPS・ルート案内',         price:130000},
+        {id:'camera-a',    icon:'📷', name:'カメラ・写真機能',              desc:'撮影・アップロード・加工',            price:120000},
       ]},
       { id:'step-a3', label:'Step 3', title:'保守・運用', sub:'リリース後のサポートを選択。', type:'multi', options:[
-        {id:'app-lite', icon:'🛡️', name:'保守ライト',        desc:'バグ修正・OS対応・月1回',          price:30000, note:'月額'},
-        {id:'app-std',  icon:'⚡',  name:'保守スタンダード',  desc:'機能追加・バグ対応・優先サポート', price:80000,  note:'月額'},
-        {id:'no-app',   icon:'🚀',  name:'保守不要',          desc:'納品のみ',                        price:0},
+        {id:'app-maint',   icon:'🛡️', name:'リリース後保守サポート（月額）', desc:'アップデート必須・バグ修正・OS対応', price:72000, note:'月額'},
+        {id:'lecture-a',   icon:'🎓', name:'納品後レクチャー（使い方説明）', desc:'アプリ管理・運用方法の説明',          price:15000},
+        {id:'extra-rev-a', icon:'🔄', name:'追加修正（+3回）',              desc:'基本修正回数を超える場合の追加分',    price:9000},
+        {id:'no-app',      icon:'🚀', name:'保守不要',                       desc:'納品のみ',                           price:0},
       ]}
     ]
   },
@@ -792,35 +803,38 @@ const CATS_DEFAULT = {
     sets:[
       { id:'ds1', tag:'スタートアップ向け', name:'ブランディング スターター',
         chips:['ロゴデザイン','名刺（両面）','カラー・フォントガイド'],
-        original:220000, price:176000, saving:44000, presets:{} },
+        original:130000, price:108000, saving:22000, presets:{} },
       { id:'ds2', popular:true, tag:'企業・法人向け', name:'コーポレートブランディング',
-        chips:['ロゴ（展開込み）','名刺・封筒・レターヘッド','VIガイドライン'],
-        original:550000, price:440000, saving:110000, presets:{} },
+        chips:['ブランドVI設計','名刺・封筒','ブランドガイドライン'],
+        original:243000, price:202500, saving:40500, presets:{} },
       { id:'ds3', tag:'販促・集客向け', name:'販促物 制作パック',
-        chips:['チラシA4×2種','A1ポスター','SNSバナー×5'],
-        original:242000, price:194000, saving:48000, presets:{} },
+        chips:['チラシA4×2種','SNSバナーセット','印刷用データ'],
+        original:90000, price:75000, saving:15000, presets:{} },
     ],
     steps:[
       { id:'step-d1', label:'Step 1', title:'制作物の種類を選択', sub:'主に制作したいものを1つ選んでください。', type:'single', options:[
-        {id:'logo-simple', icon:'✏️', name:'ロゴデザイン（シンプル）',     desc:'ロゴマーク or ロゴタイプ 1案',          price:50000},
-        {id:'logo-std',    icon:'🎨', name:'ロゴデザイン（スタンダード）', desc:'3案提案→修正→最終納品',                 price:100000},
-        {id:'logo-prem',   icon:'💎', name:'ロゴデザイン（プレミアム）',   desc:'リサーチ・展開物込み・フルパッケージ',   price:250000},
-        {id:'flyer',       icon:'📄', name:'チラシ・フライヤーデザイン',   desc:'A4/A5/B5など各種サイズ',                price:30000},
-        {id:'pamphlet',    icon:'📚', name:'パンフレット・会社案内',       desc:'4P〜16Pブックレット',                   price:80000},
-        {id:'banner-web',  icon:'🖼️', name:'Webバナー・広告クリエイティブ', desc:'SNS・リスティング用バナー',             price:20000},
+        {id:'logo-simple', icon:'✏️', name:'ロゴデザイン（シンプル）',       desc:'ロゴマーク or ロゴタイプ 1案',          price:27000},
+        {id:'logo-std',    icon:'🎨', name:'ロゴデザイン（本格オリジナル）', desc:'3案提案→修正→最終納品',                 price:72000},
+        {id:'logo-prem',   icon:'💎', name:'ブランドVI設計（一式）',          desc:'ロゴ+展開物+ガイドライン フルパッケージ', price:135000},
+        {id:'flyer',       icon:'📄', name:'チラシ・フライヤー（A4）',        desc:'A4/A5/B5など各種サイズ',                price:27000},
+        {id:'pamphlet',    icon:'📚', name:'パンフレット・会社案内',          desc:'4P〜16Pブックレット',                   price:80000},
+        {id:'banner-web',  icon:'🖼️', name:'Webバナー・広告クリエイティブ',  desc:'SNS・リスティング用バナー',              price:20000},
+        {id:'card',        icon:'🃏', name:'名刺デザイン',                    desc:'表裏デザイン・高品質仕上げ',             price:18000},
       ]},
-      { id:'step-d2', label:'Step 2', title:'追加制作物を選択', sub:'セットで制作するものを選択。複数可。', type:'multi', options:[
-        {id:'card-dbl',    icon:'🃏', name:'名刺（両面）',              desc:'表裏デザイン・高品質仕上げ',       price:25000},
-        {id:'envelope',    icon:'✉️', name:'封筒デザイン',              desc:'長3・角2封筒デザイン',             price:25000},
-        {id:'brand-simple',icon:'🎨', name:'カラー・フォントガイド（簡易）', desc:'ブランドカラー・書体の定義',  price:30000},
-        {id:'brand-full',  icon:'📖', name:'VIガイドライン（フル版）',  desc:'ロゴ使用規定・各種展開ルール',     price:80000},
-        {id:'banner-sns',  icon:'📱', name:'SNSバナーセット',           desc:'Instagram・X・Facebook用',         price:30000, qty:true},
+      { id:'step-d2', label:'Step 2', title:'追加制作物・オプション', sub:'セットで制作するものを選択。複数可。', type:'multi', options:[
+        {id:'color-var',    icon:'🎨', name:'カラーバリエーション追加（+2色）', desc:'ダークモード・白抜き対応',           price:9000},
+        {id:'extra-rev',    icon:'🔄', name:'修正回数追加（+3回）',            desc:'基本修正回数を超える場合の追加分',    price:9000},
+        {id:'card-dbl',     icon:'🃏', name:'名刺（両面）',                    desc:'表裏デザイン・高品質仕上げ',          price:18000},
+        {id:'envelope',     icon:'✉️', name:'封筒・レターヘッドデザイン',      desc:'長3・角2封筒デザイン',                price:18000},
+        {id:'brand-simple', icon:'📋', name:'カラー・フォントガイド（簡易）',  desc:'ブランドカラー・書体の定義',           price:30000},
+        {id:'brand-full',   icon:'📖', name:'ブランドガイドライン作成',        desc:'VI統一・ロゴ使用規定・各種展開ルール', price:90000},
+        {id:'banner-sns',   icon:'📱', name:'SNSアイコン・バナーセット',       desc:'Instagram・X・Facebook用',             price:36000, qty:true},
+        {id:'package',      icon:'📦', name:'商品パッケージデザイン',          desc:'EC・製造業向け・印刷入稿対応',         price:31500},
       ]},
       { id:'step-d3', label:'Step 3', title:'納品・印刷対応', sub:'納品形式や印刷手配を選択。', type:'multi', options:[
-        {id:'ai-data',    icon:'💾', name:'AIデータ納品',      desc:'Illustratorデータで納品',        price:0},
-        {id:'print-pdf',  icon:'📄', name:'印刷用PDF入稿データ', desc:'トンボ・塗り足し付きPDF',       price:15000},
-        {id:'print-sup',  icon:'🖨️', name:'印刷手配サポート',   desc:'優良印刷会社への入稿代行',       price:20000},
-        {id:'extra-rev',  icon:'🔄', name:'追加修正（5回分）',  desc:'基本修正3回を超える場合',        price:30000},
+        {id:'ai-data',   icon:'💾', name:'印刷用データ入稿対応（ai/PDF）',  desc:'印刷会社への持込対応・トンボ付き',   price:13500},
+        {id:'print-sup', icon:'🖨️', name:'印刷手配サポート',               desc:'優良印刷会社への入稿代行',            price:20000},
+        {id:'lecture-d', icon:'🎓', name:'納品後レクチャー（使い方説明）',  desc:'ファイル管理・更新方法の説明',        price:15000},
       ]}
     ]
   },
@@ -829,42 +843,43 @@ const CATS_DEFAULT = {
     label:'システム開発', icon:'⚙️', color:'#e8380d',
     sets:[
       { id:'ss1', tag:'中小企業向け', name:'業務改善 スターターパック',
-        chips:['管理画面','データ管理','CSV入出力','認証'],
-        original:1320000, price:1056000, saving:264000, presets:{} },
+        chips:['業務システム','管理画面','ユーザー認証','CSV入出力'],
+        original:1350000, price:1080000, saving:270000, presets:{} },
       { id:'ss2', popular:true, tag:'SaaS・サービス向け', name:'SaaS MVP スタンダード',
-        chips:['Web SaaS','マルチテナント','決済','管理画面'],
-        original:5500000, price:4400000, saving:1100000, presets:{} },
-      { id:'ss3', tag:'EC・物販向け', name:'ECバックエンド スタンダード',
-        chips:['在庫管理','受注管理','決済連携','配送API'],
-        original:2200000, price:1760000, saving:440000, presets:{} },
+        chips:['SaaS開発','決済','管理画面','保守サポート'],
+        original:2790000, price:2232000, saving:558000, presets:{} },
+      { id:'ss3', tag:'API・自動化向け', name:'API連携・自動化パック',
+        chips:['API連携（3件）','自動化ツール','セキュリティ診断'],
+        original:990000, price:792000, saving:198000, presets:{} },
     ],
     steps:[
       { id:'step-s1', label:'Step 1', title:'システムの種類を選択', sub:'開発したいシステムの種類を1つ選んでください。', type:'single', options:[
-        {id:'internal',  icon:'🏢', name:'社内業務システム',           desc:'日次業務・データ管理の効率化',    price:800000},
-        {id:'saas',      icon:'☁️', name:'SaaSプロダクト',             desc:'Web上で提供するサービス型システム', price:3000000},
-        {id:'ec-back',   icon:'🛒', name:'ECバックエンド',             desc:'受注・在庫・決済・配送管理',      price:1200000},
-        {id:'matching',  icon:'🤝', name:'マッチングプラットフォーム', desc:'ユーザー間のマッチング機能',      price:2000000},
-        {id:'reserve-s', icon:'📅', name:'予約・スケジュール管理',     desc:'予約受付・空き管理・通知',        price:800000},
-        {id:'data-plat', icon:'📊', name:'データ分析基盤',             desc:'BIダッシュボード・データパイプライン', price:1500000},
+        {id:'internal',  icon:'🏢', name:'業務システム（小規模）',           desc:'日次業務・データ管理の効率化',         price:720000},
+        {id:'saas',      icon:'☁️', name:'SaaS・Webアプリ開発',              desc:'Web上で提供するサービス型システム',    price:1800000},
+        {id:'api-int',   icon:'🔗', name:'API連携・外部サービス接続',        desc:'Slack/kintone等との外部API連携',       price:180000},
+        {id:'automate',  icon:'⚙️', name:'自動化ツール開発',                 desc:'業務自動化・RPA・定期処理',            price:450000},
+        {id:'ec-back',   icon:'🛒', name:'ECバックエンド',                    desc:'受注・在庫・決済・配送管理',           price:1200000},
+        {id:'matching',  icon:'🤝', name:'マッチングプラットフォーム',       desc:'ユーザー間のマッチング機能',           price:1800000},
+        {id:'reserve-s', icon:'📅', name:'予約・スケジュール管理',           desc:'予約受付・空き管理・通知',             price:800000},
+        {id:'data-plat', icon:'📊', name:'データ分析基盤',                   desc:'BIダッシュボード・データパイプライン', price:1500000},
       ]},
       { id:'step-s2', label:'Step 2', title:'機能を選択', sub:'搭載する機能を複数選択できます。', type:'multi', options:[
-        {id:'auth-s',    icon:'🔐', name:'認証・権限管理',      desc:'ログイン・ロール・アクセス制御',  price:200000},
-        {id:'payment-s', icon:'💳', name:'決済・課金機能',      desc:'Stripe連携・定期課金',            price:300000},
-        {id:'admin-s',   icon:'🖥️', name:'管理者ダッシュボード', desc:'データ閲覧・ユーザー管理',       price:250000},
-        {id:'csv-s',     icon:'📊', name:'CSV入出力',           desc:'データの一括取込・出力',          price:100000},
-        {id:'api-s',     icon:'🔗', name:'REST API開発',        desc:'外部連携用のAPI設計・実装',       price:300000},
-        {id:'inventory', icon:'📦', name:'在庫・商品管理',      desc:'在庫数管理・アラート機能',        price:200000},
+        {id:'admin-s',    icon:'🖥️', name:'管理画面・ダッシュボード構築',   desc:'ほぼ必須・データ閲覧・ユーザー管理',  price:360000},
+        {id:'auth-s',     icon:'🔐', name:'ユーザー認証・会員管理機能',     desc:'ログイン・ロール・アクセス制御',       price:270000},
+        {id:'api-s',      icon:'🔗', name:'API連携（外部サービス1件）',     desc:'Slack/kintone連携需要大',             price:180000},
+        {id:'payment-s',  icon:'💳', name:'決済機能実装（Stripe等）',       desc:'SaaS収益化・定期課金に必須',           price:630000},
+        {id:'cloud-s',    icon:'☁️', name:'クラウドインフラ構築（AWS/GCP）', desc:'サーバー・DB・ストレージ設計',        price:360000},
+        {id:'cicd-s',     icon:'🔁', name:'自動テスト・CI/CD構築',          desc:'品質保証・デプロイ自動化',             price:270000},
+        {id:'sec-s',      icon:'🛡️', name:'セキュリティ診断・脆弱性対応',  desc:'需要急増・競合少ない分野',             price:180000},
+        {id:'csv-s',      icon:'📊', name:'CSV入出力',                      desc:'データの一括取込・出力',               price:100000},
+        {id:'inventory',  icon:'📦', name:'在庫・商品管理',                 desc:'在庫数管理・アラート機能',             price:200000},
+        {id:'doc-s',      icon:'📄', name:'仕様書・設計ドキュメント',       desc:'DB設計書・API仕様書',                  price:150000},
       ]},
-      { id:'step-s3', label:'Step 3', title:'インフラ・品質', sub:'インフラ環境と品質要件を選択。', type:'multi', options:[
-        {id:'cloud-s',  icon:'☁️', name:'クラウドインフラ（AWS/GCP）', desc:'サーバー・DB・ストレージ設計',   price:200000},
-        {id:'cicd-s',   icon:'🔁', name:'CI/CDパイプライン',           desc:'自動テスト・デプロイ自動化',     price:200000},
-        {id:'sec-s',    icon:'🛡️', name:'セキュリティ診断・対策',     desc:'脆弱性スキャン・テスト',         price:200000},
-        {id:'doc-s',    icon:'📄', name:'仕様書・設計ドキュメント',   desc:'DB設計書・API仕様書',            price:150000},
-      ]},
-      { id:'step-s4', label:'Step 4', title:'保守・運用', sub:'リリース後の保守プランを選択。', type:'multi', options:[
-        {id:'sys-lite', icon:'🛡️', name:'保守ライト',      desc:'バグ修正・セキュリティ対応',      price:50000, note:'月額'},
-        {id:'sys-std',  icon:'⚡',  name:'保守スタンダード', desc:'機能追加・インフラ監視・優先対応', price:120000, note:'月額'},
-        {id:'no-sys',   icon:'🚀',  name:'保守不要',        desc:'納品のみ',                        price:0},
+      { id:'step-s3', label:'Step 3', title:'保守・運用', sub:'リリース後の保守プランを選択。', type:'multi', options:[
+        {id:'sys-maint',    icon:'🛡️', name:'月額保守・障害対応サポート',   desc:'業務停止リスク対策・継続収益',         price:72000, note:'月額'},
+        {id:'lecture-s',    icon:'🎓', name:'納品後レクチャー（使い方説明）', desc:'システム操作・管理方法の説明',        price:15000},
+        {id:'extra-rev-s',  icon:'🔄', name:'追加修正（+3回）',             desc:'基本修正回数を超える場合の追加分',     price:9000},
+        {id:'no-sys',       icon:'🚀', name:'保守不要',                      desc:'納品のみ',                            price:0},
       ]}
     ]
   }
@@ -1463,8 +1478,8 @@ function appendResultActions(panel) {
     <button class="hearing-open-btn" onclick="openHearingSheet()">
       📋 このコードでヒアリングシートを開く →
     </button>
-    <button class="hearing-admin-btn" onclick="window.open('hearing_admin.html','_blank')">
-      📊 ヒアリング管理画面を開く
+    <button class="hearing-admin-btn" onclick="window.open('hearing_list.html','_blank')">
+      📋 ヒアリング一覧・管理を開く
     </button>`;
   panel.appendChild(hb);
 }
@@ -1735,8 +1750,14 @@ function showAdminLogin(){
   setTimeout(()=>document.getElementById('adminPassInput')?.focus(),100);
 }
 function doAdminLogin(){
-  if(document.getElementById('adminPassInput').value===ADMIN_PASS){ adminLoggedIn=true; showAdminPanel(); }
+  const pin = localStorage.getItem('ty_admin_pin') || ADMIN_PASS;
+  if(document.getElementById('adminPassInput').value===pin){ adminLoggedIn=true; showAdminPanel(); }
   else document.getElementById('adminLoginErr').textContent='パスワードが違います';
+}
+// URLパラメータ ?admin=1 で管理画面を自動オープン
+if(new URLSearchParams(location.search).get('admin')==='1'){
+  if(sessionStorage.getItem('ty_portal_admin')==='1') adminLoggedIn=true;
+  setTimeout(()=>{ openAdmin(); },400);
 }
 function adminLogout(){ adminLoggedIn=false; closeAdmin(); }
 

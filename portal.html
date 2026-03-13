@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>吉崎天晴依頼 | YOSHIZAKI STUDIO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=BIZ+UDPGothic:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gothic:'BIZ UDPGothic','Noto Sans JP',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --ink:#111118;--ink2:#282835;--muted:#6a6a7a;--line:#e2e0da;
+  --bg:#f5f4f0;--card:#ffffff;
+  --accent:#e8380d;--accent-light:#fff1ee;
+  --accent2:#f0a500;--green:#0d9e6a;
+  --shadow:0 4px 28px rgba(0,0,0,.08);
+  --shadow-lg:0 12px 48px rgba(0,0,0,.14);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:100vh;}
+
+/* ── Header ── */
+.header{
+  position:sticky;top:0;z-index:300;
+  background:var(--ink);height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;box-shadow:0 2px 16px rgba(0,0,0,.3);
+}
+.header-brand{font-size:1.05rem;font-weight:700;color:#fff;letter-spacing:.05em;display:flex;align-items:center;gap:8px;text-decoration:none;}
+.header-brand-accent{color:var(--accent);}
+.header-right{display:flex;align-items:center;gap:10px;}
+.header-badge{background:var(--accent2);color:#fff;font-size:.65rem;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:.06em;}
+.new-badge{background:var(--accent);color:#fff;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:20px;animation:pulse 2s infinite;}
+.header-admin-btn{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);border:1.5px solid rgba(255,255,255,.2);border-radius:6px;padding:4px 11px;font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--gothic);transition:all .15s;letter-spacing:.06em;}
+.header-admin-btn:hover{background:rgba(255,255,255,.2);color:#fff;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.65;}}
+
+/* ── Hero ── */
+.hero{
+  background:var(--ink);
+  padding:52px 28px 48px;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 50%, rgba(232,56,13,.18) 0%, transparent 60%),
+             radial-gradient(ellipse at 75% 30%, rgba(240,165,0,.12) 0%, transparent 55%);
+}
+.hero-content{position:relative;z-index:1;}
+.hero-eyebrow{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;}
+.hero-title{font-size:2.4rem;font-weight:900;color:#fff;letter-spacing:-.01em;line-height:1.15;margin-bottom:10px;}
+.hero-title span{color:var(--accent);}
+.hero-sub{font-size:.9rem;color:rgba(255,255,255,.55);max-width:460px;margin:0 auto 28px;}
+.hero-stats{display:flex;justify-content:center;gap:28px;flex-wrap:wrap;}
+.hero-stat{text-align:center;}
+.hero-stat-num{font-family:var(--mono);font-size:1.6rem;font-weight:600;color:#fff;}
+.hero-stat-num.accent{color:var(--accent);}
+.hero-stat-num.amber{color:var(--accent2);}
+.hero-stat-num.green{color:#2ee89a;}
+.hero-stat-label{font-size:.65rem;color:rgba(255,255,255,.45);letter-spacing:.08em;margin-top:2px;}
+.hero-stat-sep{width:1px;height:40px;background:rgba(255,255,255,.12);align-self:center;}
+
+/* ── Container ── */
+.container{max-width:1060px;margin:0 auto;padding:44px 18px 80px;}
+
+/* ── Section headers ── */
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:20px;}
+.sec-title{font-size:1rem;font-weight:900;letter-spacing:.03em;}
+.sec-label{font-size:.72rem;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.sec-divider{height:2px;background:var(--line);flex:1;margin-left:8px;}
+
+/* ── Tool cards grid ── */
+.tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:40px;}
+.tool-card{
+  background:var(--card);border-radius:16px;padding:22px 20px;
+  box-shadow:var(--shadow);cursor:pointer;
+  transition:all .22s;border:2px solid transparent;
+  display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;
+}
+.tool-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--line);}
+.tool-card.featured{grid-column:span 1;background:var(--ink);color:#fff;}
+.tool-card.featured:hover{border-color:var(--accent);}
+.tool-icon{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;flex-shrink:0;
+}
+.tool-card-head{display:flex;align-items:center;gap:12px;}
+.tool-name{font-size:.92rem;font-weight:900;}
+.tool-card.featured .tool-name{color:#fff;}
+.tool-sub{font-size:.75rem;color:var(--muted);line-height:1.55;}
+.tool-card.featured .tool-sub{color:rgba(255,255,255,.55);}
+.tool-arrow{
+  margin-top:auto;font-size:.75rem;font-weight:700;
+  display:flex;align-items:center;gap:4px;
+}
+.tool-card.featured .tool-arrow{color:var(--accent);}
+.tool-arrow:not(.featured .tool-arrow){color:var(--muted);}
+
+/* Color themes */
+.icon-estimate{background:linear-gradient(135deg,#e8380d,#ff6b47);}
+.icon-web{background:linear-gradient(135deg,#2563eb,#60a5fa);}
+.icon-video{background:linear-gradient(135deg,#7c3aed,#a78bfa);}
+.icon-app{background:linear-gradient(135deg,#059669,#34d399);}
+.icon-system{background:linear-gradient(135deg,#d97706,#fbbf24);}
+.icon-design{background:linear-gradient(135deg,#db2777,#f472b6);}
+
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 20px;border-radius:30px;font-size:.82rem;opacity:0;transition:all .28s;pointer-events:none;z-index:9999;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media(max-width:760px){
+  .tools-grid{grid-template-columns:1fr 1fr;}
+  .tool-card.featured{grid-column:span 2;}
+  .admin-grid{grid-template-columns:1fr;}
+  .hero-title{font-size:1.7rem;}
+}
+@media(max-width:480px){
+  .tools-grid{grid-template-columns:1fr;}
+  .tool-card.featured{grid-column:span 1;}
+  .hero-stats{gap:16px;}
+  .hero-stat-sep{display:none;}
+  .pin-row{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a class="header-brand" href="portal.html">
+    <span class="header-brand-accent">YOSHIZAKI</span> STUDIO
+  </a>
+  <div class="header-right">
+    <span class="header-badge">PORTAL</span>
+    <span class="new-badge" id="headerNewBadge" style="display:none;"></span>
+    <button class="header-admin-btn" onclick="window.location.href='admin.html'">⚙ 管理</button>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Creative Production Management</div>
+    <h1 class="hero-title"><span>吉崎天晴</span>依頼</h1>
+    <p class="hero-sub">見積もり・ヒアリング・管理を一元管理するクリエイティブ制作システム</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="statTotal">0</div>
+        <div class="hero-stat-label">総送信数</div>
+      </div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-num accent" id="statNew">0</div>
+        <div class="hero-stat-label">新着</div>
+      </div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-num amber" id="statInprog">0</div>
+        <div class="hero-stat-label">対応中</div>
+      </div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-num green" id="statDone">0</div>
+        <div class="hero-stat-label">完了</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- Public tools -->
+  <div class="sec-head">
+    <span class="sec-title">お客様向けツール</span>
+    <div class="sec-divider"></div>
+  </div>
+
+  <div class="tools-grid">
+    <!-- 見積もり -->
+    <a class="tool-card featured" href="index.html">
+      <div class="tool-card-head">
+        <div class="tool-icon icon-estimate">💰</div>
+        <div>
+          <div class="tool-name">見積もりシミュレーター</div>
+        </div>
+      </div>
+      <div class="tool-sub">制作カテゴリ・仕様を選んで概算費用をその場で算出。見積もりコードをヒアリングシートに引き継ぎできます。</div>
+      <div class="tool-arrow">開く →</div>
+    </a>
+
+    <!-- Web -->
+    <a class="tool-card" href="hearing.html">
+      <div class="tool-card-head">
+        <div class="tool-icon icon-web">🌐</div>
+        <div><div class="tool-name">Webサイト制作</div></div>
+      </div>
+      <div class="tool-sub">コーポレート・LP・EC・メディアなど、Web制作専用のヒアリングシート。</div>
+      <div class="tool-arrow" style="color:var(--muted)">開く →</div>
+    </a>
+
+    <!-- 動画 -->
+    <a class="tool-card" href="hearing_video.html">
+      <div class="tool-card-head">
+        <div class="tool-icon icon-video">🎬</div>
+        <div><div class="tool-name">動画編集・映像制作</div></div>
+      </div>
+      <div class="tool-sub">カット編集・テロップ・モーション・SNS動画などの映像制作ヒアリング。</div>
+      <div class="tool-arrow" style="color:var(--muted)">開く →</div>
+    </a>
+
+    <!-- アプリ -->
+    <a class="tool-card" href="hearing_app.html">
+      <div class="tool-card-head">
+        <div class="tool-icon icon-app">📱</div>
+        <div><div class="tool-name">アプリ開発</div></div>
+      </div>
+      <div class="tool-sub">iOS・Android・Webアプリ。企画段階から要件定義までをカバーするヒアリング。</div>
+      <div class="tool-arrow" style="color:var(--muted)">開く →</div>
+    </a>
+
+    <!-- システム -->
+    <a class="tool-card" href="hearing_system.html">
+      <div class="tool-card-head">
+        <div class="tool-icon icon-system">⚙️</div>
+        <div><div class="tool-name">システム開発</div></div>
+      </div>
+      <div class="tool-sub">業務システム・CRM・受発注管理・API連携など、業務DX向けのヒアリング。</div>
+      <div class="tool-arrow" style="color:var(--muted)">開く →</div>
+    </a>
+
+    <!-- デザイン -->
+    <a class="tool-card" href="hearing_design.html">
+      <div class="tool-card-head">
+        <div class="tool-icon icon-design">🎨</div>
+        <div><div class="tool-name">グラフィック・デザイン</div></div>
+      </div>
+      <div class="tool-sub">ロゴ・チラシ・パンフ・名刺・ブランディングなど、印刷・グラフィック系のヒアリング。</div>
+      <div class="tool-arrow" style="color:var(--muted)">開く →</div>
+    </a>
+  </div>
+
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SK_SUBS = 'ty_submissions';
+function getSubmissions(){ try{ return JSON.parse(localStorage.getItem(SK_SUBS)||'[]'); }catch(e){ return []; } }
+
+function updateStats(){
+  const subs = getSubmissions();
+  document.getElementById('statTotal').textContent = subs.length;
+  const newCount = subs.filter(s=>s.status==='new').length;
+  document.getElementById('statNew').textContent = newCount;
+  document.getElementById('statInprog').textContent = subs.filter(s=>s.status==='inprogress').length;
+  document.getElementById('statDone').textContent = subs.filter(s=>s.status==='done').length;
+  if(newCount > 0){
+    const hb = document.getElementById('headerNewBadge');
+    hb.textContent = `NEW ${newCount}`;
+    hb.style.display = 'inline-block';
+  }
+}
+
+updateStats();
+if(new URLSearchParams(location.search).get('admin')==='1'){
+  window.location.replace('admin.html');
+}
+</script>
+</body>
+</html>

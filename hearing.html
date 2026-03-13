@@ -205,6 +205,12 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
 .act-btn{flex:1;min-width:120px;padding:12px 14px;border-radius:10px;border:none;font-size:.8rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:var(--gothic);transition:all .18s;}
 .act-btn:hover{transform:translateY(-2px);}
 .act-pdf{background:var(--ink);color:#fff;}
+.act-submit{background:var(--accent);color:#fff;flex:2;font-size:.88rem;}
+.act-submit:hover{background:#c02d0a;}
+.act-submit.submit-done{background:var(--green);cursor:default;}
+.act-submit.submit-done:hover{transform:none;}
+.act-client-email{background:var(--accent2);color:var(--ink);}
+.act-client-email:hover{background:#d48e00;}
 .act-copy{background:var(--bg);color:var(--ink);border:2px solid var(--line);}
 .act-copy:hover{border-color:var(--accent);}
 .act-reset{background:var(--bg);color:var(--muted);border:2px solid var(--line);}
@@ -316,9 +322,9 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
 <body>
 
 <header class="header">
-  <a class="header-brand" href="https://ty-mitumori.t-yoshizaki-taka.workers.dev/" onclick="return confirm('見積もりページに戻りますか？')">
-    <span class="header-brand-accent">見積書</span>作成
-    <span style="font-size:.65rem;color:rgba(255,255,255,.35);font-weight:400;">かんたん概算見積書</span>
+  <a class="header-brand" href="portal.html">
+    <span class="header-brand-accent">YOSHIZAKI</span> STUDIO
+    <span style="font-size:.65rem;color:rgba(255,255,255,.35);font-weight:400;">← ポータルへ</span>
   </a>
   <div class="header-total-wrap">
     <div class="header-total-label">Web Hearing</div>
@@ -915,6 +921,16 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
         最初からやり直す
       </button>
     </div>
+    <div style="margin-top:12px;">
+      <button class="act-btn act-submit" id="submitBtn" onclick="submitHearing()" style="width:100%;padding:15px;">
+        📨 この内容を担当者へ送信する
+      </button>
+    </div>
+    <div id="clientEmailWrap" style="display:none;margin-top:8px;">
+      <button class="act-btn act-client-email" onclick="sendClientEmail()" style="width:100%;">
+        📩 依頼者へ受付確認メールを送る
+      </button>
+    </div>
     <div class="result-edit-btn" onclick="goStep(1)">← 入力内容を修正する</div>
   </div>
 
@@ -953,6 +969,10 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
 
 <script>
 const SK = 'ty_hearing_web_v1';
+const ADMIN_EMAIL = 't.yoshizaki.taka@gmail.com';
+const SHEET_TYPE = 'web';
+const SHEET_NAME = 'Webサイト制作';
+function getAdminEmail(){ return localStorage.getItem('ty_admin_email') || ADMIN_EMAIL; }
 let D = {};
 let currentStep = 1;
 const TOTAL = 4;
@@ -1176,6 +1196,79 @@ function showResult(){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+function buildEmailBody() {
+  let t = `【ヒアリングシート】${SHEET_NAME}\n`;
+  t += `送信日時：${new Date().toLocaleString('ja-JP')}\n\n`;
+  ROWS.forEach(row => {
+    if (row.head) { t += `\n━━ ${row.head} ━━\n`; return; }
+    const raw = gv(row.key, '');
+    const empty = !raw || (Array.isArray(raw) && !raw.filter(Boolean).length);
+    if (!empty) {
+      const d = row.fmt ? row.fmt(raw) : labelOf(row.key, raw);
+      if (d && d !== '—') t += `${row.label}：${d}\n`;
+    }
+  });
+  t += `\n---\n管理一覧：${location.href.replace(/[^/]+$/, '')}hearing_list.html\n`;
+  return t;
+}
+
+function submitHearing() {
+  const btn = document.getElementById('submitBtn');
+  if (btn && btn.classList.contains('submit-done')) return;
+  const submission = {
+    id: 'TYH-' + Date.now(),
+    type: SHEET_TYPE,
+    typeName: SHEET_NAME,
+    timestamp: Date.now(),
+    clientName: gv('clientName', '（未入力）'),
+    company: gv('business', ''),
+    email: gv('contactEmail', ''),
+    tel: gv('contactTel', ''),
+    data: Object.assign({}, D),
+    status: 'new',
+    adminNote: ''
+  };
+  try {
+    const arr = JSON.parse(localStorage.getItem('ty_submissions') || '[]');
+    arr.unshift(submission);
+    localStorage.setItem('ty_submissions', JSON.stringify(arr));
+  } catch(e) {}
+  const body = buildEmailBody();
+  const subject = `【ヒアリング】${SHEET_NAME} - ${submission.clientName}`;
+  const mailto = `mailto:${getAdminEmail()}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.open(mailto, '_blank');
+  if (btn) { btn.textContent = '✅ 送信済み'; btn.classList.add('submit-done'); }
+  if (gv('contactEmail','')) { const cw=document.getElementById('clientEmailWrap'); if(cw)cw.style.display='block'; }
+  showToast('ヒアリング内容を記録しました');
+}
+
+function buildClientEmailBody() {
+  const name = gv('contactName') || gv('clientName') || 'お客様';
+  let t = `${name} 様\n\n`;
+  t += `この度は${SHEET_NAME}に関するヒアリングシートへのご回答ありがとうございました。\n`;
+  t += `以下の内容にて受付いたしましたので、ご確認ください。\n`;
+  t += `担当者より2営業日以内にご連絡いたします。\n\n`;
+  t += `━━━━ ご回答内容 ━━━━━━━━━━━━━━━━━━\n\n`;
+  ROWS.forEach(row => {
+    if (row.head) { t += `\n■ ${row.head}\n`; return; }
+    const raw = gv(row.key,'');
+    const empty = !raw||(Array.isArray(raw)&&!raw.filter(Boolean).length);
+    if (!empty) { const d=row.fmt?row.fmt(raw):labelOf(row.key,raw); if(d&&d!=='—') t+=`${row.label}：${d}\n`; }
+  });
+  t += `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+  t += `ご不明な点がございましたら、お気軽にお問い合わせください。\n`;
+  t += `${getAdminEmail()}\n\n─ YOSHIZAKI STUDIO ────────────\n`;
+  return t;
+}
+
+function sendClientEmail() {
+  const clientEmail = gv('contactEmail','');
+  if (!clientEmail) { showToast('メールアドレスが入力されていません'); return; }
+  const subject = `【受付確認】${SHEET_NAME}のヒアリングシートを受け付けました`;
+  const mailto = `mailto:${clientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(buildClientEmailBody())}`;
+  window.open(mailto,'_blank');
+}
+
 function copyResult(){
   let t='【詳細ヒアリングシート — Webサイト制作】\n\n';
   ROWS.forEach(row=>{
@@ -1200,6 +1293,10 @@ function resetAll(){
   document.getElementById('quoteBanner').classList.remove('show');
   const qs=document.getElementById('sideQuoteSection');
   if(qs)qs.style.display='none';
+  const sb = document.getElementById('submitBtn');
+  if (sb) { sb.textContent = '📨 この内容を担当者へ送信する'; sb.classList.remove('submit-done'); }
+  const cw = document.getElementById('clientEmailWrap');
+  if (cw) cw.style.display = 'none';
   updateSidePanel();
   window.scrollTo({top:0,behavior:'smooth'});
 }

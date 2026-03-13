@@ -412,14 +412,30 @@ function openModal(id) {
   const statusClass = 'badge-' + (s.status || 'new');
 
   // Build data rows from submission data object
+  const DATA_LABEL = {
+    clientName:'会社名・屋号', contactName:'担当者名', contactEmail:'メールアドレス', contactTel:'電話番号',
+    business:'事業・サービス概要', usp:'強み・特徴', challenge:'課題・問題点',
+    deadline:'希望納期', budget:'予算', howKnow:'お問い合わせのきっかけ',
+    projectMemo:'プロジェクト概要・相談内容', other:'その他・備考',
+    refUrls:'参考URL', colorMain:'メインカラー', colorSub:'サブカラー', colorPreset:'カラープリセット',
+    designNote:'デザイン・雰囲気の希望', designNg:'デザインNG・避けたいこと',
+    currentUrl:'既存サイト・アプリURL', targetDetail:'ターゲット・目標',
+    publishWhere:'公開場所・媒体', videoCount:'本数・シリーズ', rawDetail:'素材・撮影素材', assetNote:'素材・アセット',
+    featureDetail:'機能の詳細', refApps:'参考サービス・アプリ', techNote:'技術・連携要件',
+    currentSystem:'現在のシステム', userCount:'ユーザー数・規模',
+    integrationDetail:'既存システム・データ連携',
+    currentDesign:'現在のデザイン素材', quantity:'数量・サイズ', printer:'印刷会社',
+    specDetail:'仕様・詳細', brandColor:'ブランドカラー',
+  };
   const data = s.data || {};
-  const skip = ['_quoteData','category'];
+  const skip = ['_quoteData','category','clientName','contactName','contactEmail','contactTel'];
   const dataRows = Object.entries(data)
     .filter(([k]) => !skip.includes(k) && k[0] !== '_')
     .map(([k,v]) => {
       const val = Array.isArray(v) ? v.filter(Boolean).join('、') : String(v||'');
       if (!val) return '';
-      return `<tr><td>${esc(k)}</td><td>${esc(val)}</td></tr>`;
+      const label = DATA_LABEL[k] || k;
+      return `<tr><td>${esc(label)}</td><td>${esc(val)}</td></tr>`;
     }).filter(Boolean).join('');
 
   document.getElementById('modalBody').innerHTML = `

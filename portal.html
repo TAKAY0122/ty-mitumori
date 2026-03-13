@@ -136,7 +136,6 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
   </a>
   <div class="header-right">
     <span class="header-badge">PORTAL</span>
-    <span class="new-badge" id="headerNewBadge" style="display:none;"></span>
     <button class="header-admin-btn" onclick="window.location.href='admin.html'">⚙ 管理</button>
   </div>
 </header>
@@ -146,28 +145,6 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
   <div class="hero-content">
     <div class="hero-eyebrow">Creative Production Management</div>
     <h1 class="hero-title"><span>吉崎天晴</span>依頼</h1>
-
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="hero-stat-num" id="statTotal">0</div>
-        <div class="hero-stat-label">総送信数</div>
-      </div>
-      <div class="hero-stat-sep"></div>
-      <div class="hero-stat">
-        <div class="hero-stat-num accent" id="statNew">0</div>
-        <div class="hero-stat-label">新着</div>
-      </div>
-      <div class="hero-stat-sep"></div>
-      <div class="hero-stat">
-        <div class="hero-stat-num amber" id="statInprog">0</div>
-        <div class="hero-stat-label">対応中</div>
-      </div>
-      <div class="hero-stat-sep"></div>
-      <div class="hero-stat">
-        <div class="hero-stat-num green" id="statDone">0</div>
-        <div class="hero-stat-label">完了</div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -249,24 +226,6 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
 <div class="toast" id="toast"></div>
 
 <script>
-const SK_SUBS = 'ty_submissions';
-function getSubmissions(){ try{ return JSON.parse(localStorage.getItem(SK_SUBS)||'[]'); }catch(e){ return []; } }
-
-function updateStats(){
-  const subs = getSubmissions();
-  document.getElementById('statTotal').textContent = subs.length;
-  const newCount = subs.filter(s=>s.status==='new').length;
-  document.getElementById('statNew').textContent = newCount;
-  document.getElementById('statInprog').textContent = subs.filter(s=>s.status==='inprogress').length;
-  document.getElementById('statDone').textContent = subs.filter(s=>s.status==='done').length;
-  if(newCount > 0){
-    const hb = document.getElementById('headerNewBadge');
-    hb.textContent = `NEW ${newCount}`;
-    hb.style.display = 'inline-block';
-  }
-}
-
-updateStats();
 if(new URLSearchParams(location.search).get('admin')==='1'){
   window.location.replace('admin.html');
 }

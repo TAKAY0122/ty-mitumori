@@ -371,9 +371,12 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
 <body>
 
 <header class="header">
-  <div class="header-brand" onclick="goHome()">
-    <span class="header-brand-accent">見積書</span>作成
-    <span style="font-size:.65rem;color:rgba(255,255,255,.35);font-weight:400;">かんたん概算見積書</span>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <a href="portal.html" style="font-size:.68rem;font-weight:700;color:rgba(255,255,255,.5);text-decoration:none;border:1.5px solid rgba(255,255,255,.18);border-radius:6px;padding:4px 10px;transition:all .15s;white-space:nowrap;" onmouseover="this.style.color='#fff';this.style.borderColor='rgba(255,255,255,.45)'" onmouseout="this.style.color='rgba(255,255,255,.5)';this.style.borderColor='rgba(255,255,255,.18)'">← ポータル</a>
+    <div class="header-brand" onclick="goHome()">
+      <span class="header-brand-accent">見積書</span>作成
+      <span style="font-size:.65rem;color:rgba(255,255,255,.35);font-weight:400;">かんたん概算見積書</span>
+    </div>
   </div>
   <div style="display:flex;align-items:center;gap:16px;">
     <button class="header-admin-btn" onclick="window.location.href='portal.html?admin=1'">⚙ 管理</button>

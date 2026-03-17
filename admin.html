@@ -227,11 +227,21 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
       <!-- Price management -->
       <div class="admin-card">
         <div class="admin-card-title">見積もり料金変更</div>
-        <a class="admin-link-btn amber" href="index.html?admin=1" target="_blank">
+        <button class="admin-link-btn amber" onclick="togglePriceEditor()">
           <span>料金・プラン・ステップ編集</span>
-          <span class="btn-right">→</span>
-        </a>
+          <span class="btn-right" id="priceEditorArrow">▼ 開く</span>
+        </button>
       </div>
+    </div><!-- /admin-grid end here to allow full-width iframe -->
+
+    <!-- Price editor iframe -->
+    <div id="priceEditorSection" style="display:none;margin-top:16px;">
+      <iframe id="priceEditorFrame" src=""
+        style="width:100%;height:82vh;border:none;border-radius:12px;box-shadow:var(--shadow-lg);background:#fff;display:block;">
+      </iframe>
+    </div>
+
+    <div class="admin-grid" style="margin-top:0;"><!-- re-open grid for remaining cards -->
 
       <!-- Admin email -->
       <div class="admin-card">
@@ -377,6 +387,24 @@ function renderPanel(){
       <div class="recent-date">${fmtDate(s.timestamp)}</div>
     </div>`;
   }).join('');
+}
+
+// ── Price editor iframe ──
+let priceEditorOpen = false;
+function togglePriceEditor(){
+  const section = document.getElementById('priceEditorSection');
+  const frame   = document.getElementById('priceEditorFrame');
+  const arrow   = document.getElementById('priceEditorArrow');
+  priceEditorOpen = !priceEditorOpen;
+  if(priceEditorOpen){
+    if(!frame.src || frame.src === window.location.href) frame.src = 'index.html?admin=1';
+    section.style.display = 'block';
+    arrow.textContent = '▲ 閉じる';
+    setTimeout(()=>section.scrollIntoView({behavior:'smooth', block:'start'}), 80);
+  } else {
+    section.style.display = 'none';
+    arrow.textContent = '▼ 開く';
+  }
 }
 
 function saveAdminEmail(){

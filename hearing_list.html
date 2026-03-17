@@ -286,8 +286,8 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
 <script>
 const WORKERS_URL = 'https://rapid-dream-c353.t-yoshizaki-taka.workers.dev';
 const SK_PIN_KEY = 'ty_admin_pin';
-const SK_SESSION = 'ty_admin_time';
-const SESSION_MS = 30 * 60 * 1000; // 30分
+const SK_SESSION = 'ty_admin_ok';
+const SESSION_MS = 30 * 60 * 1000;
 const SK = 'ty_submissions';
 let ADMIN_PIN = localStorage.getItem(SK_PIN_KEY) || 'admin1234';
 let submissions = [];
@@ -295,11 +295,7 @@ let filterType = 'all';
 let filterStatus = 'all';
 let selectedId = null;
 
-// 30分セッション管理
-function isSessionValid(){
-  const t = parseInt(localStorage.getItem(SK_SESSION) || '0');
-  return Date.now() - t < SESSION_MS;
-}
+function isSessionValid(){ return Date.now() - parseInt(localStorage.getItem(SK_SESSION)||'0') < SESSION_MS; }
 function touchSession(){ localStorage.setItem(SK_SESSION, Date.now()); }
 
 // Worker からPINを同期

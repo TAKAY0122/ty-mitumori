@@ -270,8 +270,8 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
 <script>
 const DEFAULT_PIN = 'admin1234';
 const SK_PIN = 'ty_admin_pin';
-const SK_SESSION = 'ty_admin_time';
-const SESSION_MS = 30 * 60 * 1000; // 30分
+const SK_SESSION = 'ty_admin_ok';
+const SESSION_MS = 30 * 60 * 1000;
 const SK_SUBS = 'ty_submissions';
 const SK_EMAIL = 'ty_admin_email';
 const DEFAULT_EMAIL = 't.yoshizaki.taka@gmail.com';
@@ -280,11 +280,7 @@ const WORKERS_URL = 'https://rapid-dream-c353.t-yoshizaki-taka.workers.dev';
 function getPin(){ return localStorage.getItem(SK_PIN) || DEFAULT_PIN; }
 function getSubmissions(){ try{ return JSON.parse(localStorage.getItem(SK_SUBS)||'[]'); }catch(e){ return []; } }
 
-// 30分セッション管理
-function isSessionValid(){
-  const t = parseInt(localStorage.getItem(SK_SESSION) || '0');
-  return Date.now() - t < SESSION_MS;
-}
+function isSessionValid(){ return Date.now() - parseInt(localStorage.getItem(SK_SESSION)||'0') < SESSION_MS; }
 function touchSession(){ localStorage.setItem(SK_SESSION, Date.now()); }
 function clearSession(){ localStorage.removeItem(SK_SESSION); }
 
@@ -415,7 +411,7 @@ async function changePin(){
   // Worker からPINを同期（最新PINをローカルに反映）
   await syncPinFromWorker();
   if(isSessionValid()){
-    touchSession(); // セッションを延長
+    touchSession();
     openPanel();
   } else {
     setTimeout(()=>document.getElementById('pinInput').focus(), 200);

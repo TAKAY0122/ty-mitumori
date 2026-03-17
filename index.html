@@ -1745,10 +1745,14 @@ function scrollTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
 //  ADMIN
 // =============================================
 const ADMIN_PASS = 'admin1234';
-let adminLoggedIn = false;
+const ADMIN_SESSION_KEY = 'ty_admin_ok';
+const ADMIN_SESSION_MS = 30 * 60 * 1000;
 let adminCurrentCat = null;
 
-function openAdmin(){ document.getElementById('adminOverlay').classList.add('open'); adminLoggedIn?showAdminPanel():showAdminLogin(); }
+function isAdminSession(){ return Date.now() - parseInt(localStorage.getItem(ADMIN_SESSION_KEY)||'0') < ADMIN_SESSION_MS; }
+function touchAdminSession(){ localStorage.setItem(ADMIN_SESSION_KEY, Date.now()); }
+
+function openAdmin(){ document.getElementById('adminOverlay').classList.add('open'); isAdminSession()?showAdminPanel():showAdminLogin(); }
 function closeAdmin(){ document.getElementById('adminOverlay').classList.remove('open'); }
 document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeAdmin(); });
 
@@ -1766,15 +1770,14 @@ function showAdminLogin(){
 }
 function doAdminLogin(){
   const pin = localStorage.getItem('ty_admin_pin') || ADMIN_PASS;
-  if(document.getElementById('adminPassInput').value===pin){ adminLoggedIn=true; showAdminPanel(); }
+  if(document.getElementById('adminPassInput').value===pin){ touchAdminSession(); showAdminPanel(); }
   else document.getElementById('adminLoginErr').textContent='パスワードが違います';
 }
 // URLパラメータ ?admin=1 で管理画面を自動オープン
 if(new URLSearchParams(location.search).get('admin')==='1'){
-  if(sessionStorage.getItem('ty_portal_admin')==='1') adminLoggedIn=true;
   setTimeout(()=>{ openAdmin(); },400);
 }
-function adminLogout(){ adminLoggedIn=false; closeAdmin(); }
+function adminLogout(){ localStorage.removeItem(ADMIN_SESSION_KEY); closeAdmin(); }
 
 function showAdminPanel(){
   const cats=Object.entries(CATS);

@@ -299,7 +299,8 @@ async function syncPinFromWorker(){
   try {
     const res = await fetch(`${WORKERS_URL}?action=getData`);
     if(res.ok){
-      const {data={}} = await res.json();
+      const _j = await res.json();
+      const data = _j.data || {};
       if(data.__adminPin__) localStorage.setItem(SK_PIN, data.__adminPin__);
       // 送信履歴も同期しておく
       if(Array.isArray(data.__submissions__)) localStorage.setItem(SK_SUBS, JSON.stringify(data.__submissions__));
@@ -426,7 +427,8 @@ async function changePin(){
   try {
     const wKey = localStorage.getItem('ty_worker_key') || 'admin1234';
     const getRes = await fetch(`${WORKERS_URL}?action=getData`);
-    const {data={}} = getRes.ok ? await getRes.json() : {};
+    const _gj = getRes.ok ? await getRes.json() : {};
+    const data = _gj.data || {};
     data.__adminPin__ = val;
     const saveRes = await fetch(`${WORKERS_URL}?action=saveData`, {
       method:'POST', headers:{'Content-Type':'application/json'},

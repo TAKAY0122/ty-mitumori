@@ -1234,7 +1234,8 @@ function submitHearing() {
     try {
       const r = await fetch(WORKERS_URL + '?action=getData');
       if (!r.ok) return;
-      const {data = {}} = await r.json();
+      const _json = await r.json();
+      const data = _json.data || {};
       const subs = data.__submissions__ || [];
       if (!subs.find(s => s.id === submission.id)) {
         subs.unshift(submission);

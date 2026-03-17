@@ -335,13 +335,36 @@ function logout() {
   location.reload();
 }
 
-// ── Worker sync helper ─────────────────────────
+// ── Worker helper (既存 getData/saveData を使用) ──
+const WKEY = localStorage.getItem('ty_worker_key') || 'admin1234';
+
+async function getCloudData() {
+  const res = await fetch(`${WORKERS_URL}?action=getData`);
+  if (!res.ok) throw new Error('fetch failed');
+  return (await res.json()).data || {};
+}
+async function putCloudData(data) {
+  const res = await fetch(`${WORKERS_URL}?action=saveData`, {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ adminKey: WKEY, data })
+  });
+  if (!res.ok) throw new Error('save failed');
+}
+
 async function syncToWorker(action, payload) {
   try {
-    await fetch(`${WORKERS_URL}?action=${action}`, {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ adminKey: ADMIN_PIN, ...payload })
-    });
+    const data = await getCloudData();
+    let subs = data.__submissions__ || [];
+    if (action === 'updateSubmission') {
+      const idx = subs.findIndex(s => s.id === payload.id);
+      if (idx >= 0) Object.assign(subs[idx], payload.updates);
+    } else if (action === 'deleteSubmission') {
+      subs = subs.filter(s => s.id !== payload.id);
+    } else if (action === 'clearSubmissions') {
+      subs = [];
+    }
+    data.__submissions__ = subs;
+    await putCloudData(data);
   } catch(e) {}
 }
 
@@ -351,30 +374,24 @@ async function loadAndRender() {
   try { submissions = JSON.parse(localStorage.getItem(SK) || '[]'); } catch(e) { submissions = []; }
   updateStats();
   renderCards();
-  // Worker から取得してマージ（クロスデバイス同期）
+  // Worker から取得してマージ（既存 getData を使用）
   try {
-    const res = await fetch(`${WORKERS_URL}?action=getSubmissions&adminKey=${encodeURIComponent(ADMIN_PIN)}`);
-    if (res.ok) {
-      const json = await res.json();
-      if (json.submissions) {
-        const localIds = new Set(submissions.map(s => s.id));
-        const workerIds = new Set(json.submissions.map(s => s.id));
-        // Worker側にあるがローカルにない → 追加
-        const fromWorker = json.submissions.filter(s => !localIds.has(s.id));
-        // ローカルにしかない → Workerに送信
-        submissions.filter(s => !workerIds.has(s.id)).forEach(s => {
-          fetch(`${WORKERS_URL}?action=saveSubmission`, {
-            method: 'POST', headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({ submission: s })
-          }).catch(()=>{});
-        });
-        // マージ（Worker側を優先しステータス・メモを上書き）
-        submissions = [...json.submissions, ...submissions.filter(s => !workerIds.has(s.id))]
+    const data = await getCloudData();
+    const cloudSubs = data.__submissions__;
+    if (Array.isArray(cloudSubs)) {
+      const localIds = new Set(submissions.map(s => s.id));
+      const cloudIds = new Set(cloudSubs.map(s => s.id));
+      // ローカルのみにある分はクラウドにも追加
+      const localOnly = submissions.filter(s => !cloudIds.has(s.id));
+      if (localOnly.length) {
+        data.__submissions__ = [...cloudSubs, ...localOnly].sort((a,b) => b.timestamp - a.timestamp);
+        putCloudData(data).catch(()=>{});
+        submissions = data.__submissions__;
+      } else {
+        submissions = [...cloudSubs, ...submissions.filter(s => !cloudIds.has(s.id))]
           .sort((a,b) => b.timestamp - a.timestamp);
-        save();
-        updateStats();
-        renderCards();
       }
+      save(); updateStats(); renderCards();
     }
   } catch(e) {}
 }

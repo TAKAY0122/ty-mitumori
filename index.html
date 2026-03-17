@@ -495,7 +495,7 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
     </div>
     <div class="form-row">
       <label class="form-label">電話番号</label>
-      <input class="finput" id="fTel" type="tel" placeholder="090-0000-0000（任意）">
+      <input class="finput" id="fTel" type="tel" placeholder="09000000000（任意）">
     </div>
 
     <div class="form-divider">プロジェクト詳細</div>
@@ -1478,12 +1478,7 @@ function appendResultActions(panel) {
       <div class="hearing-code-val" id="hearingCodeVal">${code}</div>
       <button class="hearing-copy-btn" id="hearingCopyBtn" onclick="copyHearingCode()">コピー</button>
     </div>
-    <button class="hearing-open-btn" onclick="openHearingSheet()">
-      📋 このコードでヒアリングシートを開く →
-    </button>
-    <button class="hearing-admin-btn" onclick="window.open('hearing_list.html','_blank')">
-      📋 ヒアリング一覧・管理を開く
-    </button>`;
+    `;
   panel.appendChild(hb);
 }
 
@@ -2041,7 +2036,9 @@ function deleteSet(catId,si){
 
 // ── Save / Reset ──
 async function saveAllAdmin(){
-  const data={};
+  // まず既存データを取得（__submissions__・__adminPin__ を上書きしないため）
+  let data={};
+  try{ const r=await fetch(WORKERS_URL+'?action=getData'); if(r.ok){const j=await r.json();if(j.data)data=j.data;} }catch(e){}
   Object.keys(CATS).forEach(catId=>{ data[catId]={ sets:CATS[catId].sets, steps:CATS[catId].steps }; });
   data.__settings__ = { globalSettings: GLOBAL_SETTINGS, deliveryOptions: DELIVERY_OPTIONS };
   try {

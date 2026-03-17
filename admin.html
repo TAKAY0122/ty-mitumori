@@ -294,13 +294,15 @@ function isSessionValid(){ return Date.now() - parseInt(localStorage.getItem(SK_
 function touchSession(){ localStorage.setItem(SK_SESSION, Date.now()); }
 function clearSession(){ localStorage.removeItem(SK_SESSION); }
 
-// Worker からPINを取得してローカルに同期
+// Worker から最新データを取得してローカルに同期
 async function syncPinFromWorker(){
   try {
-    const res = await fetch(`${WORKERS_URL}?action=getPin`);
+    const res = await fetch(`${WORKERS_URL}?action=getData`);
     if(res.ok){
-      const j = await res.json();
-      if(j.pin) localStorage.setItem(SK_PIN, j.pin);
+      const {data={}} = await res.json();
+      if(data.__adminPin__) localStorage.setItem(SK_PIN, data.__adminPin__);
+      // 送信履歴も同期しておく
+      if(Array.isArray(data.__submissions__)) localStorage.setItem(SK_SUBS, JSON.stringify(data.__submissions__));
     }
   } catch(e){}
 }
@@ -419,19 +421,21 @@ async function changePin(){
   const val = document.getElementById('newPinInput').value.trim();
   if(!val){ showToast('新しいPINを入力してください'); return; }
   if(val.length < 4){ showToast('4文字以上で設定してください'); return; }
-  const oldPin = getPin();
-  // Worker に保存（別端末にも反映）
-  try {
-    const res = await fetch(`${WORKERS_URL}?action=setPin`, {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ oldPin, newPin: val })
-    });
-    if(!res.ok) { showToast('Worker への保存に失敗しました'); }
-  } catch(e){ showToast('オフライン中 — ローカルのみ変更しました'); }
   localStorage.setItem(SK_PIN, val);
+  // Worker に保存（getData→__adminPin__更新→saveData）
+  try {
+    const wKey = localStorage.getItem('ty_worker_key') || 'admin1234';
+    const getRes = await fetch(`${WORKERS_URL}?action=getData`);
+    const {data={}} = getRes.ok ? await getRes.json() : {};
+    data.__adminPin__ = val;
+    const saveRes = await fetch(`${WORKERS_URL}?action=saveData`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ adminKey: wKey, data })
+    });
+    showToast(saveRes.ok ? 'PINを変更しました（全端末に反映）' : 'PIN変更済み（クラウド同期失敗）');
+  } catch(e){ showToast('PIN変更済み（オフライン）'); }
   document.getElementById('newPinInput').value = '';
-  document.getElementById('pinCurrent').textContent = '現在のPIN：変更済み（新しいPINが適用されました）';
-  showToast('PINを変更しました');
+  document.getElementById('pinCurrent').textContent = '現在のPIN：変更済み';
 }
 
 // ── Init ──

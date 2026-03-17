@@ -1172,11 +1172,24 @@ function submitHearing() {
     arr.unshift(submission);
     localStorage.setItem('ty_submissions', JSON.stringify(arr));
   } catch(e) {}
-  // Worker に保存（クロスデバイス同期）
-  fetch(WORKERS_URL + '?action=saveSubmission', {
-    method: 'POST', headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ submission })
-  }).catch(()=>{});
+  // Worker に保存（既存 getData/saveData を使用してクロスデバイス同期）
+  (async () => {
+    try {
+      const r = await fetch(WORKERS_URL + '?action=getData');
+      if (!r.ok) return;
+      const {data = {}} = await r.json();
+      const subs = data.__submissions__ || [];
+      if (!subs.find(s => s.id === submission.id)) {
+        subs.unshift(submission);
+        if (subs.length > 500) subs.splice(500);
+      }
+      data.__submissions__ = subs;
+      await fetch(WORKERS_URL + '?action=saveData', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ adminKey: 'admin1234', data })
+      });
+    } catch(e) {}
+  })();
   // 管理者へメール
   const body = buildEmailBody();
   const subject = `【ヒアリング】${SHEET_NAME} - ${submission.clientName}`;

@@ -1718,7 +1718,19 @@ async function submitContact() {
         body:JSON.stringify({clientType,name,company,dept,email,tel,budget,deadline,message,estimate}) });
       if(!res.ok) throw new Error('API error');
     }
-    closeModal(); showToast('お問い合わせを送信しました 🎉');
+    // 管理者へメール
+    const adminEmail = localStorage.getItem('ty_admin_email') || 't.yoshizaki.taka@gmail.com';
+    const adminSubj = encodeURIComponent(`【見積もり依頼】${cat.label} - ${name}`);
+    window.open(`mailto:${adminEmail}?subject=${adminSubj}&body=${encodeURIComponent(estimate)}`, '_blank');
+    // 依頼者へ受付確認メール
+    if(email){
+      setTimeout(()=>{
+        const cBody = `${name} 様\n\nこの度はお問い合わせいただきありがとうございました。\n以下の内容にてお問い合わせを受け付けました。\n\n${estimate}\n\n担当者より2営業日以内にご連絡いたします。\n\n─ YOSHIZAKI STUDIO ────────────\n${adminEmail}`;
+        const cSubj = encodeURIComponent(`【受付確認】見積もりのお問い合わせを受け付けました`);
+        window.open(`mailto:${email}?subject=${cSubj}&body=${encodeURIComponent(cBody)}`, '_blank');
+      }, 800);
+    }
+    closeModal(); showToast('お問い合わせを送信しました');
   } catch(e){ showToast('送信に失敗しました。時間をおいてお試しください。'); }
   finally { btn.textContent='送信する →'; btn.disabled=false; }
 }

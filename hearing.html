@@ -926,11 +926,6 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
         📨 この内容を担当者へ送信する
       </button>
     </div>
-    <div id="clientEmailWrap" style="display:none;margin-top:8px;">
-      <button class="act-btn act-client-email" onclick="sendClientEmail()" style="width:100%;">
-        📩 自分宛に受付確認メールを送る
-      </button>
-    </div>
     <div class="result-edit-btn" onclick="goStep(1)">← 入力内容を修正する</div>
   </div>
 
@@ -972,6 +967,7 @@ const SK = 'ty_hearing_web_v1';
 const ADMIN_EMAIL = 't.yoshizaki.taka@gmail.com';
 const SHEET_TYPE = 'web';
 const SHEET_NAME = 'Webサイト制作';
+const WORKERS_URL = 'https://rapid-dream-c353.t-yoshizaki-taka.workers.dev';
 function getAdminEmail(){ return localStorage.getItem('ty_admin_email') || ADMIN_EMAIL; }
 let D = {};
 let currentStep = 1;
@@ -1233,13 +1229,25 @@ function submitHearing() {
     arr.unshift(submission);
     localStorage.setItem('ty_submissions', JSON.stringify(arr));
   } catch(e) {}
+  // Worker に保存（クロスデバイス同期）
+  fetch(WORKERS_URL + '?action=saveSubmission', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ submission })
+  }).catch(()=>{});
+  // 管理者へメール
   const body = buildEmailBody();
   const subject = `【ヒアリング】${SHEET_NAME} - ${submission.clientName}`;
-  const mailto = `mailto:${getAdminEmail()}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  window.open(mailto, '_blank');
+  window.open(`mailto:${getAdminEmail()}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+  // 依頼者へ受付確認メール（メアドがあれば自動で開く）
+  const clientEmail = gv('contactEmail','');
+  if (clientEmail) {
+    setTimeout(() => {
+      const cs = `【受付確認】${SHEET_NAME}のヒアリングを受け付けました`;
+      window.open(`mailto:${clientEmail}?subject=${encodeURIComponent(cs)}&body=${encodeURIComponent(buildClientEmailBody())}`, '_blank');
+    }, 800);
+  }
   if (btn) { btn.textContent = '✅ 送信済み'; btn.classList.add('submit-done'); }
-  if (gv('contactEmail','')) { const cw=document.getElementById('clientEmailWrap'); if(cw)cw.style.display='block'; }
-  showToast('ヒアリング内容を記録しました');
+  showToast('ヒアリング内容を送信しました');
 }
 
 function buildClientEmailBody() {

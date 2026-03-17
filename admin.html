@@ -270,12 +270,34 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
 <script>
 const DEFAULT_PIN = 'admin1234';
 const SK_PIN = 'ty_admin_pin';
+const SK_SESSION = 'ty_admin_time';
+const SESSION_MS = 30 * 60 * 1000; // 30分
 const SK_SUBS = 'ty_submissions';
 const SK_EMAIL = 'ty_admin_email';
 const DEFAULT_EMAIL = 't.yoshizaki.taka@gmail.com';
+const WORKERS_URL = 'https://rapid-dream-c353.t-yoshizaki-taka.workers.dev';
 
 function getPin(){ return localStorage.getItem(SK_PIN) || DEFAULT_PIN; }
 function getSubmissions(){ try{ return JSON.parse(localStorage.getItem(SK_SUBS)||'[]'); }catch(e){ return []; } }
+
+// 30分セッション管理
+function isSessionValid(){
+  const t = parseInt(localStorage.getItem(SK_SESSION) || '0');
+  return Date.now() - t < SESSION_MS;
+}
+function touchSession(){ localStorage.setItem(SK_SESSION, Date.now()); }
+function clearSession(){ localStorage.removeItem(SK_SESSION); }
+
+// Worker からPINを取得してローカルに同期
+async function syncPinFromWorker(){
+  try {
+    const res = await fetch(`${WORKERS_URL}?action=getPin`);
+    if(res.ok){
+      const j = await res.json();
+      if(j.pin) localStorage.setItem(SK_PIN, j.pin);
+    }
+  } catch(e){}
+}
 
 const TYPE_LABEL = {web:'Web制作',video:'動画編集',app:'アプリ開発',system:'システム開発',design:'デザイン'};
 const STATUS_LABEL = {new:'新着',contacted:'連絡済み',inprogress:'対応中',done:'完了'};
@@ -297,7 +319,7 @@ function showToast(msg){
 function checkPin(){
   const val = document.getElementById('pinInput').value;
   if(val === getPin()){
-    sessionStorage.setItem('ty_portal_admin','1');
+    touchSession();
     openPanel();
   } else {
     const inp = document.getElementById('pinInput');
@@ -316,7 +338,7 @@ function openPanel(){
 }
 
 function doLogout(){
-  sessionStorage.removeItem('ty_portal_admin');
+  clearSession();
   document.getElementById('loginCard').style.display = 'block';
   document.getElementById('adminPanel').style.display = 'none';
   document.getElementById('pinInput').value = '';
@@ -369,10 +391,19 @@ function saveAdminEmail(){
   showToast('メールアドレスを保存しました');
 }
 
-function changePin(){
+async function changePin(){
   const val = document.getElementById('newPinInput').value.trim();
   if(!val){ showToast('新しいPINを入力してください'); return; }
   if(val.length < 4){ showToast('4文字以上で設定してください'); return; }
+  const oldPin = getPin();
+  // Worker に保存（別端末にも反映）
+  try {
+    const res = await fetch(`${WORKERS_URL}?action=setPin`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ oldPin, newPin: val })
+    });
+    if(!res.ok) { showToast('Worker への保存に失敗しました'); }
+  } catch(e){ showToast('オフライン中 — ローカルのみ変更しました'); }
   localStorage.setItem(SK_PIN, val);
   document.getElementById('newPinInput').value = '';
   document.getElementById('pinCurrent').textContent = '現在のPIN：変更済み（新しいPINが適用されました）';
@@ -380,11 +411,16 @@ function changePin(){
 }
 
 // ── Init ──
-if(sessionStorage.getItem('ty_portal_admin') === '1'){
-  openPanel();
-} else {
-  setTimeout(()=>document.getElementById('pinInput').focus(), 200);
-}
+(async function(){
+  // Worker からPINを同期（最新PINをローカルに反映）
+  await syncPinFromWorker();
+  if(isSessionValid()){
+    touchSession(); // セッションを延長
+    openPanel();
+  } else {
+    setTimeout(()=>document.getElementById('pinInput').focus(), 200);
+  }
+})();
 </script>
 </body>
 </html>

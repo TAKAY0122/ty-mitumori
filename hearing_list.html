@@ -284,21 +284,41 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
 <div class="toast" id="toast"></div>
 
 <script>
-const ADMIN_PIN = localStorage.getItem('ty_admin_pin') || 'admin1234';
+const WORKERS_URL = 'https://rapid-dream-c353.t-yoshizaki-taka.workers.dev';
+const SK_PIN_KEY = 'ty_admin_pin';
+const SK_SESSION = 'ty_admin_time';
+const SESSION_MS = 30 * 60 * 1000; // 30分
 const SK = 'ty_submissions';
+let ADMIN_PIN = localStorage.getItem(SK_PIN_KEY) || 'admin1234';
 let submissions = [];
 let filterType = 'all';
 let filterStatus = 'all';
 let selectedId = null;
 
+// 30分セッション管理
+function isSessionValid(){
+  const t = parseInt(localStorage.getItem(SK_SESSION) || '0');
+  return Date.now() - t < SESSION_MS;
+}
+function touchSession(){ localStorage.setItem(SK_SESSION, Date.now()); }
+
+// Worker からPINを同期
+async function syncPinFromWorker(){
+  try {
+    const res = await fetch(`${WORKERS_URL}?action=getPin`);
+    if(res.ok){
+      const j = await res.json();
+      if(j.pin){ localStorage.setItem(SK_PIN_KEY, j.pin); ADMIN_PIN = j.pin; }
+    }
+  } catch(e){}
+}
+
 // ── Auth ──────────────────────────────────────
 function checkPin() {
   const val = document.getElementById('pinInput').value;
   if (val === ADMIN_PIN) {
-    sessionStorage.setItem('ty_admin_ok', '1');
-    document.getElementById('pinOverlay').style.display = 'none';
-    document.getElementById('mainContent').style.display = 'block';
-    loadAndRender();
+    touchSession();
+    showMain();
   } else {
     const inp = document.getElementById('pinInput');
     document.getElementById('pinErr').textContent = 'PINが正しくありません';
@@ -308,16 +328,59 @@ function checkPin() {
   }
 }
 
+function showMain(){
+  document.getElementById('pinOverlay').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'block';
+  loadAndRender();
+}
+
 function logout() {
-  sessionStorage.removeItem('ty_admin_ok');
+  localStorage.removeItem(SK_SESSION);
   location.reload();
 }
 
+// ── Worker sync helper ─────────────────────────
+async function syncToWorker(action, payload) {
+  try {
+    await fetch(`${WORKERS_URL}?action=${action}`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ adminKey: ADMIN_PIN, ...payload })
+    });
+  } catch(e) {}
+}
+
 // ── Data ──────────────────────────────────────
-function loadAndRender() {
+async function loadAndRender() {
+  // まずローカルを表示（高速）
   try { submissions = JSON.parse(localStorage.getItem(SK) || '[]'); } catch(e) { submissions = []; }
   updateStats();
   renderCards();
+  // Worker から取得してマージ（クロスデバイス同期）
+  try {
+    const res = await fetch(`${WORKERS_URL}?action=getSubmissions&adminKey=${encodeURIComponent(ADMIN_PIN)}`);
+    if (res.ok) {
+      const json = await res.json();
+      if (json.submissions) {
+        const localIds = new Set(submissions.map(s => s.id));
+        const workerIds = new Set(json.submissions.map(s => s.id));
+        // Worker側にあるがローカルにない → 追加
+        const fromWorker = json.submissions.filter(s => !localIds.has(s.id));
+        // ローカルにしかない → Workerに送信
+        submissions.filter(s => !workerIds.has(s.id)).forEach(s => {
+          fetch(`${WORKERS_URL}?action=saveSubmission`, {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ submission: s })
+          }).catch(()=>{});
+        });
+        // マージ（Worker側を優先しステータス・メモを上書き）
+        submissions = [...json.submissions, ...submissions.filter(s => !workerIds.has(s.id))]
+          .sort((a,b) => b.timestamp - a.timestamp);
+        save();
+        updateStats();
+        renderCards();
+      }
+    }
+  } catch(e) {}
 }
 
 function save() {
@@ -501,16 +564,19 @@ function closeModalOnBg(e) {
 // ── Status / Note ─────────────────────────────
 function updateStatus(id, status) {
   const s = submissions.find(x => x.id === id);
-  if (s) { s.status = status; save(); updateStats(); renderCards(); showToast('ステータスを更新しました'); }
+  if (s) {
+    s.status = status; save(); updateStats(); renderCards();
+    showToast('ステータスを更新しました');
+    syncToWorker('updateSubmission', { id, updates: { status } });
+  }
 }
 
 function saveNote(id) {
   const s = submissions.find(x => x.id === id);
   if (s) {
     s.adminNote = document.getElementById('noteArea').value;
-    save();
-    renderCards();
-    showToast('メモを保存しました');
+    save(); renderCards(); showToast('メモを保存しました');
+    syncToWorker('updateSubmission', { id, updates: { adminNote: s.adminNote } });
   }
 }
 
@@ -525,20 +591,17 @@ function replyEmail(id) {
 function deleteSubmission(id) {
   if (!confirm('この送信データを削除しますか？')) return;
   submissions = submissions.filter(x => x.id !== id);
-  save();
-  closeModal();
-  updateStats();
-  renderCards();
+  save(); closeModal(); updateStats(); renderCards();
   showToast('削除しました');
+  syncToWorker('deleteSubmission', { id });
 }
 
 function clearAll() {
   if (!confirm('すべてのヒアリングデータを削除しますか？この操作は取り消せません。')) return;
   submissions = [];
-  save();
-  updateStats();
-  renderCards();
+  save(); updateStats(); renderCards();
   showToast('全件削除しました');
+  syncToWorker('clearSubmissions', {});
 }
 
 // ── CSV Export ────────────────────────────────
@@ -571,13 +634,15 @@ function showToast(msg) {
 }
 
 // ── Init ──────────────────────────────────────
-if (sessionStorage.getItem('ty_admin_ok') === '1') {
-  document.getElementById('pinOverlay').style.display = 'none';
-  document.getElementById('mainContent').style.display = 'block';
-  loadAndRender();
-} else {
-  setTimeout(() => document.getElementById('pinInput').focus(), 100);
-}
+(async function(){
+  await syncPinFromWorker(); // 最新PINを取得
+  if(isSessionValid()){
+    touchSession();
+    showMain();
+  } else {
+    setTimeout(() => document.getElementById('pinInput').focus(), 100);
+  }
+})();
 </script>
 </body>
 </html>

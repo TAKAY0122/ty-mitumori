@@ -943,7 +943,7 @@ let ST = { cat:null, step:-1, maxStep:0, sel:{}, setPlan:null, discount:0, deliv
 // 起動時にKVからデータ取得して反映
 (async function(){
   try {
-    const res = await fetch(WORKERS_URL + '?action=getData');
+    const res = await fetch(WORKERS_URL + '?action=getData&_t=' + Date.now(), {cache:'no-store'});
     if (res.ok) {
       const json = await res.json();
       if (json.data) mergeSavedData(json.data);
@@ -2041,7 +2041,7 @@ function deleteSet(catId,si){
 async function saveAllAdmin(){
   // まず既存データを取得（__submissions__・__adminPin__ を上書きしないため）
   let data={};
-  try{ const r=await fetch(WORKERS_URL+'?action=getData'); if(r.ok){const j=await r.json();if(j.data)data=j.data;} }catch(e){}
+  try{ const r=await fetch(WORKERS_URL+'?action=getData&_t='+Date.now(),{cache:'no-store'}); if(r.ok){const j=await r.json();if(j.data)data=j.data;} }catch(e){}
   Object.keys(CATS).forEach(catId=>{ data[catId]={ sets:CATS[catId].sets, steps:CATS[catId].steps }; });
   data.__settings__ = { globalSettings: GLOBAL_SETTINGS, deliveryOptions: DELIVERY_OPTIONS };
   try {

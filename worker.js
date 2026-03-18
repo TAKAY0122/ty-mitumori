@@ -38,7 +38,7 @@ export default {
     const respond = (data, status = 200) =>
       new Response(JSON.stringify(data), {
         status,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
       });
 
     const getAdminKey = () => env.ADMIN_KEY || 'admin1234';

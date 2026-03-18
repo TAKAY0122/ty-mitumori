@@ -829,6 +829,8 @@ async function saveAllAdmin(){
     Object.keys(CATS).forEach(catId=>{ data[catId]={sets:CATS[catId].sets,steps:CATS[catId].steps}; });
     data.__settings__={globalSettings:GLOBAL_SETTINGS,deliveryOptions:DELIVERY_OPTIONS};
     await workerSave(data);
+    // 同端末でも即時反映されるようlocalStorageにも保存
+    localStorage.setItem('ty_price_data', JSON.stringify(data));
     statusEl.innerHTML='<div class="sync-ok">✅ 保存しました。全端末に反映されます。</div>';
     showToast('✅ 保存しました！全端末に反映されます');
   }catch(e){

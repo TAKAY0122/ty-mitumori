@@ -940,24 +940,39 @@ function renderSaleBanner() {
 let CATS = JSON.parse(JSON.stringify(CATS_DEFAULT));
 let ST = { cat:null, step:-1, maxStep:0, sel:{}, setPlan:null, discount:0, delivery:'normal' };
 
-// 起動時にデータ取得して反映（localStorageで即時 → Workerで最新に更新）
-(async function(){
-  // 1. まずlocalStorageから即時反映（同端末で管理画面保存後すぐ反映）
-  try {
-    const local = localStorage.getItem('ty_price_data');
-    if (local) mergeSavedData(JSON.parse(local));
-  } catch(e){}
-  // 2. WorkerからKVの最新データを取得して上書き（別端末の変更も反映）
+// Workerから最新データを取得して反映する共通関数
+async function fetchAndApplyPriceData() {
   try {
     const res = await fetch(WORKERS_URL + '?action=getData&_t=' + Date.now(), {cache:'no-store'});
     if (res.ok) {
       const json = await res.json();
       if (json.data) {
         mergeSavedData(json.data);
-        localStorage.setItem('ty_price_data', JSON.stringify(json.data)); // ローカルも最新化
+        localStorage.setItem('ty_price_data', JSON.stringify(json.data));
       }
     }
   } catch(e){}
+}
+
+// 起動時にデータ取得して反映（localStorageで即時 → Workerで最新に更新）
+(async function(){
+  // 1. まずlocalStorageから即時反映
+  try {
+    const local = localStorage.getItem('ty_price_data');
+    if (local) mergeSavedData(JSON.parse(local));
+  } catch(e){}
+  // 2. Workerから最新データを取得
+  await fetchAndApplyPriceData();
+
+  // 3. 同ブラウザの別タブ（管理画面など）でlocalStorageが更新されたら即時反映
+  window.addEventListener('storage', e => {
+    if (e.key === 'ty_price_data' && e.newValue) {
+      try { mergeSavedData(JSON.parse(e.newValue)); } catch(e2){}
+    }
+  });
+
+  // 4. 60秒ごとにWorkerから自動取得（別端末の変更を自動反映）
+  setInterval(fetchAndApplyPriceData, 60 * 1000);
 })();
 
 function mergeSavedData(data) {

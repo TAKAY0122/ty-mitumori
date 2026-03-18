@@ -21,117 +21,107 @@
 html{scroll-behavior:smooth;}
 body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:100vh;}
 
-/* ── Header ── */
-.header{
-  position:sticky;top:0;z-index:300;
-  background:var(--ink);height:60px;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;box-shadow:0 2px 16px rgba(0,0,0,.3);
-}
+.header{position:sticky;top:0;z-index:300;background:var(--ink);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;box-shadow:0 2px 16px rgba(0,0,0,.3);}
 .header-brand{font-size:1.05rem;font-weight:700;color:#fff;letter-spacing:.05em;display:flex;align-items:center;gap:8px;text-decoration:none;}
 .header-brand-accent{color:var(--accent);}
 .header-right{display:flex;align-items:center;gap:10px;}
 .header-badge{background:rgba(255,255,255,.12);color:rgba(255,255,255,.7);font-size:.65rem;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:.06em;}
-.back-btn{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);border:1.5px solid rgba(255,255,255,.2);border-radius:6px;padding:4px 11px;font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--gothic);transition:all .15s;letter-spacing:.06em;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+.back-btn{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);border:1.5px solid rgba(255,255,255,.2);border-radius:6px;padding:4px 11px;font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--gothic);transition:all .15s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
 .back-btn:hover{background:rgba(255,255,255,.2);color:#fff;}
 
-/* ── Hero ── */
-.hero{
-  background:var(--ink);
-  padding:44px 28px 40px;
-  text-align:center;
-  position:relative;overflow:hidden;
-}
-.hero::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 20% 50%, rgba(232,56,13,.2) 0%, transparent 60%),
-             radial-gradient(ellipse at 80% 30%, rgba(240,165,0,.12) 0%, transparent 55%);
-}
+.hero{background:var(--ink);padding:44px 28px 40px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%, rgba(232,56,13,.2) 0%, transparent 60%),radial-gradient(ellipse at 80% 30%, rgba(240,165,0,.12) 0%, transparent 55%);}
 .hero-content{position:relative;z-index:1;}
 .hero-eyebrow{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px;}
 .hero-title{font-size:1.8rem;font-weight:900;color:#fff;letter-spacing:-.01em;line-height:1.2;margin-bottom:6px;}
 .hero-title span{color:var(--accent);}
 .hero-sub{font-size:.84rem;color:rgba(255,255,255,.5);max-width:400px;margin:0 auto;}
 
-/* ── Container ── */
-.container{max-width:800px;margin:0 auto;padding:44px 18px 80px;}
+.container{max-width:860px;margin:0 auto;padding:44px 18px 80px;}
 
-/* ── Login card ── */
-.login-card{
-  background:var(--card);border-radius:20px;overflow:hidden;
-  box-shadow:var(--shadow);max-width:420px;margin:0 auto;
-}
+/* Login */
+.login-card{background:var(--card);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);max-width:420px;margin:0 auto;}
 .login-inner{padding:40px 32px;text-align:center;}
 .login-icon{font-size:2.4rem;margin-bottom:16px;}
 .login-title{font-size:1.1rem;font-weight:900;margin-bottom:6px;}
 .login-sub{font-size:.8rem;color:var(--muted);margin-bottom:24px;}
 .pin-row{display:flex;gap:8px;justify-content:center;}
-.pin-input{
-  flex:1;padding:12px 14px;border:2px solid var(--line);border-radius:10px;
-  font-size:1rem;font-family:var(--mono);text-align:center;letter-spacing:.18em;
-  outline:none;transition:border-color .18s;
-}
+.pin-input{flex:1;padding:12px 14px;border:2px solid var(--line);border-radius:10px;font-size:1rem;font-family:var(--mono);text-align:center;letter-spacing:.18em;outline:none;transition:border-color .18s;}
 .pin-input:focus{border-color:var(--accent);}
 .pin-input.shake{animation:shake .35s ease;}
 @keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-8px);}40%,80%{transform:translateX(8px);}}
-.pin-btn{
-  padding:12px 20px;border:none;border-radius:10px;background:var(--accent);
-  color:#fff;font-size:.88rem;font-weight:700;cursor:pointer;
-  font-family:var(--gothic);transition:all .18s;white-space:nowrap;
-}
+.pin-btn{padding:12px 20px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:.88rem;font-weight:700;cursor:pointer;font-family:var(--gothic);transition:all .18s;white-space:nowrap;}
 .pin-btn:hover{background:#c02d0a;}
 .pin-err{font-size:.76rem;color:var(--accent);margin-top:10px;height:16px;text-align:center;}
 
-/* ── Admin panel ── */
+/* Admin panel */
 .admin-panel{display:none;}
-.admin-top-bar{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:28px;flex-wrap:wrap;gap:10px;
-}
+.admin-top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:10px;}
 .admin-bar-title{font-size:1rem;font-weight:900;display:flex;align-items:center;gap:8px;}
 .admin-bar-badge{background:var(--accent);color:#fff;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:20px;}
 .admin-logout{background:transparent;border:2px solid var(--line);color:var(--muted);padding:6px 14px;border-radius:8px;font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--gothic);transition:all .18s;}
 .admin-logout:hover{border-color:var(--accent);color:var(--accent);}
-
-.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
 .admin-card{background:var(--card);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow);}
 .admin-card-title{font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;}
-
-.admin-link-btn{
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--ink);color:#fff;border:none;border-radius:10px;
-  padding:14px 16px;width:100%;cursor:pointer;font-family:var(--gothic);
-  font-size:.88rem;font-weight:700;transition:all .18s;text-decoration:none;
-}
+.admin-link-btn{display:flex;align-items:center;justify-content:space-between;background:var(--ink);color:#fff;border:none;border-radius:10px;padding:14px 16px;width:100%;cursor:pointer;font-family:var(--gothic);font-size:.88rem;font-weight:700;transition:all .18s;text-decoration:none;}
 .admin-link-btn:hover{background:var(--ink2);transform:translateY(-1px);}
-.admin-link-btn.amber{background:var(--accent2);color:var(--ink);}
-.admin-link-btn.amber:hover{background:#d4920a;}
 .btn-right{display:flex;align-items:center;gap:8px;font-family:var(--mono);}
 .new-pill{background:var(--accent);color:#fff;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:20px;}
-
 .field-row{display:flex;gap:8px;margin-bottom:8px;}
-.field-input{
-  flex:1;padding:10px 12px;border:2px solid var(--line);border-radius:9px;
-  font-size:.84rem;font-family:var(--gothic);outline:none;transition:border-color .18s;
-}
+.field-input{flex:1;padding:10px 12px;border:2px solid var(--line);border-radius:9px;font-size:.84rem;font-family:var(--gothic);outline:none;transition:border-color .18s;}
 .field-input:focus{border-color:var(--accent);}
-.save-btn{
-  padding:10px 14px;border:none;border-radius:9px;background:var(--green);
-  color:#fff;font-size:.78rem;font-weight:700;cursor:pointer;font-family:var(--gothic);
-  transition:all .18s;white-space:nowrap;
-}
+.save-btn{padding:10px 14px;border:none;border-radius:9px;background:var(--green);color:#fff;font-size:.78rem;font-weight:700;cursor:pointer;font-family:var(--gothic);transition:all .18s;white-space:nowrap;}
 .save-btn:hover{background:#0a8459;}
 .field-note{font-size:.72rem;color:var(--muted);}
 
-/* ── Recent submissions ── */
+/* Price editor */
+.price-editor-wrap{background:var(--card);border-radius:16px;box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden;}
+.price-editor-header{padding:20px 22px 16px;}
+.price-editor-toggle{display:flex;align-items:center;justify-content:space-between;background:var(--accent2);color:var(--ink);border:none;border-radius:10px;padding:14px 16px;width:100%;cursor:pointer;font-family:var(--gothic);font-size:.88rem;font-weight:700;transition:all .18s;}
+.price-editor-toggle:hover{background:#d4920a;}
+.price-editor-body{padding:0 22px 24px;}
+
+/* ADM UI */
+.adm-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;gap:12px;flex-wrap:wrap;}
+.adm-title{font-size:1.05rem;font-weight:900;}
+.adm-sub{font-size:.76rem;color:var(--muted);}
+.adm-btn-save{background:var(--green);color:#fff;border:none;padding:9px 18px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--gothic);transition:all .15s;}
+.adm-btn-save:hover{background:#0a8459;}
+.adm-btn-reset{background:var(--bg);color:var(--muted);border:2px solid var(--line);padding:8px 14px;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:var(--gothic);}
+.adm-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;border-bottom:2px solid var(--line);padding-bottom:10px;}
+.adm-tab{background:transparent;border:2px solid var(--line);border-radius:8px;padding:6px 13px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:var(--gothic);transition:all .15s;}
+.adm-tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.adm-tab:hover:not(.active){border-color:var(--ink);}
+.adm-section{margin-bottom:22px;}
+.adm-section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:.78rem;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+.adm-add-btn{background:var(--accent);color:#fff;border:none;padding:5px 12px;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:var(--gothic);}
+.adm-card{background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:13px;margin-bottom:7px;transition:border-color .15s;}
+.adm-card:hover{border-color:var(--muted);}
+.adm-card-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+.adm-card-label{font-size:.84rem;font-weight:700;}
+.adm-icon-btn{background:transparent;border:2px solid var(--line);border-radius:6px;padding:4px 8px;font-size:.75rem;cursor:pointer;transition:all .15s;font-family:var(--gothic);}
+.adm-icon-btn:hover{background:var(--line);}
+.adm-icon-btn.danger:hover{background:#ffe5e5;border-color:#ffc0c0;}
+.adm-price-preview{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:5px;}
+.adm-saving{color:var(--green);margin-left:8px;font-weight:700;}
+.adm-edit-body{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px;}
+.adm-row{display:flex;align-items:center;gap:10px;}
+.adm-row label{font-size:.7rem;color:var(--muted);font-weight:700;min-width:160px;flex-shrink:0;}
+.adm-input-sm{flex:1;padding:7px 10px;border:2px solid var(--line);border-radius:7px;font-size:.82rem;font-family:var(--gothic);background:#fff;outline:none;transition:border-color .15s;}
+.adm-input-sm:focus{border-color:var(--accent);}
+.adm-step-block{background:var(--bg);border:2px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;}
+.adm-step-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.adm-step-badge{background:var(--ink);color:#fff;font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.06em;}
+.adm-opts-head{display:flex;justify-content:space-between;align-items:center;margin:12px 0 8px;padding-top:10px;border-top:1px dashed var(--line);}
+.sync-ok{font-size:.76rem;color:var(--green);margin-top:10px;padding:8px 12px;background:rgba(13,158,106,.08);border-radius:8px;border-left:3px solid var(--green);}
+.sync-err{font-size:.76rem;color:var(--accent);margin-top:10px;padding:8px 12px;background:var(--accent-light);border-radius:8px;border-left:3px solid var(--accent);}
+
+/* Recent */
 .recent-sec{background:var(--card);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow);}
 .recent-title{font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;}
 .recent-list{display:flex;flex-direction:column;gap:8px;}
-.recent-item{
-  background:var(--bg);border-radius:10px;padding:12px 14px;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  cursor:pointer;transition:all .18s;border:2px solid transparent;
-}
+.recent-item{background:var(--bg);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;transition:all .18s;border:2px solid transparent;}
 .recent-item:hover{border-color:var(--line);}
 .recent-item-left{min-width:0;}
 .recent-name{font-size:.84rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -146,26 +136,23 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
 .badge-design{background:#ffe8f4;color:#db2777;}
 .no-submissions{text-align:center;padding:20px;color:var(--muted);font-size:.82rem;}
 
-/* ── Toast ── */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 20px;border-radius:30px;font-size:.82rem;opacity:0;transition:all .28s;pointer-events:none;z-index:9999;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 @media(max-width:640px){
   .admin-grid{grid-template-columns:1fr;}
   .hero-title{font-size:1.4rem;}
+  .adm-row{flex-direction:column;align-items:flex-start;}
+  .adm-row label{min-width:unset;}
+  .adm-input-sm{width:100%;}
 }
-@media(max-width:420px){
-  .pin-row{flex-direction:column;}
-  .login-inner{padding:28px 20px;}
-}
+@media(max-width:420px){.pin-row{flex-direction:column;}.login-inner{padding:28px 20px;}}
 </style>
 </head>
 <body>
 
 <header class="header">
-  <a class="header-brand" href="portal.html">
-    <span class="header-brand-accent">YOSHIZAKI</span> STUDIO
-  </a>
+  <a class="header-brand" href="portal.html"><span class="header-brand-accent">YOSHIZAKI</span> STUDIO</a>
   <div class="header-right">
     <span class="header-badge">ADMIN</span>
     <a class="back-btn" href="portal.html">← ポータルへ</a>
@@ -182,15 +169,13 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
 
 <div class="container">
 
-  <!-- Login card -->
   <div class="login-card" id="loginCard">
     <div class="login-inner">
       <div class="login-icon">🔐</div>
       <div class="login-title">管理者ログイン</div>
       <div class="login-sub">PINコードを入力してください</div>
       <div class="pin-row">
-        <input class="pin-input" id="pinInput" type="password" maxlength="20"
-          placeholder="PIN"
+        <input class="pin-input" id="pinInput" type="password" maxlength="20" placeholder="PIN"
           onkeydown="if(event.key==='Enter')checkPin()"
           oninput="document.getElementById('pinErr').textContent=''">
         <button class="pin-btn" onclick="checkPin()">ログイン</button>
@@ -199,7 +184,6 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
     </div>
   </div>
 
-  <!-- Admin panel (shown after PIN) -->
   <div class="admin-panel" id="adminPanel">
 
     <div class="admin-top-bar">
@@ -211,39 +195,13 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
     </div>
 
     <div class="admin-grid">
-
-      <!-- Hearing list -->
       <div class="admin-card">
         <div class="admin-card-title">ヒアリング一覧</div>
         <a class="admin-link-btn" href="hearing_list.html" target="_blank">
           <span>送信一覧・ステータス管理</span>
-          <span class="btn-right">
-            <span class="new-pill" id="listNewCount" style="display:none;"></span>
-            →
-          </span>
+          <span class="btn-right"><span class="new-pill" id="listNewCount" style="display:none;"></span>→</span>
         </a>
       </div>
-
-      <!-- Price management -->
-      <div class="admin-card">
-        <div class="admin-card-title">見積もり料金変更</div>
-        <button class="admin-link-btn amber" onclick="togglePriceEditor()">
-          <span>料金・プラン・ステップ編集</span>
-          <span class="btn-right" id="priceEditorArrow">▼ 開く</span>
-        </button>
-      </div>
-    </div><!-- /admin-grid end here to allow full-width iframe -->
-
-    <!-- Price editor iframe -->
-    <div id="priceEditorSection" style="display:none;margin-top:16px;">
-      <iframe id="priceEditorFrame" src=""
-        style="width:100%;height:82vh;border:none;border-radius:12px;box-shadow:var(--shadow-lg);background:#fff;display:block;">
-      </iframe>
-    </div>
-
-    <div class="admin-grid" style="margin-top:0;"><!-- re-open grid for remaining cards -->
-
-      <!-- Admin email -->
       <div class="admin-card">
         <div class="admin-card-title">管理者メールアドレス</div>
         <div class="field-row">
@@ -252,139 +210,364 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
         </div>
         <div class="field-note" id="emailCurrent"></div>
       </div>
-
-      <!-- Password change -->
       <div class="admin-card">
         <div class="admin-card-title">パスワード変更</div>
         <div class="field-row">
           <input class="field-input" id="newPinInput" type="password" placeholder="新しいPIN" maxlength="30">
           <button class="save-btn" onclick="changePin()">変更</button>
         </div>
-        <div class="field-note" id="pinCurrent">現在のPIN：設定済み</div>
+        <div class="field-note" id="pinSyncNote"></div>
       </div>
-
+      <div class="admin-card">
+        <div class="admin-card-title">クラウド同期キー</div>
+        <div class="field-row">
+          <input class="field-input" id="workerKeyInput" type="password" placeholder="worker admin key">
+          <button class="save-btn" onclick="saveWorkerKey()">保存</button>
+        </div>
+        <div class="field-note" id="syncStatus">Workerへの保存に使うキー（デフォルト: admin1234）</div>
+      </div>
     </div>
 
-    <!-- Recent submissions -->
+    <!-- インライン料金エディタ -->
+    <div class="price-editor-wrap">
+      <div class="price-editor-header">
+        <div class="admin-card-title" style="margin-bottom:12px;">見積もり料金変更</div>
+        <button class="price-editor-toggle" onclick="togglePriceEditor()" id="priceToggleBtn">
+          <span>料金・プラン・ステップ編集</span>
+          <span id="priceEditorArrow">▼ 開く</span>
+        </button>
+      </div>
+      <div id="priceEditorSection" style="display:none;">
+        <div class="price-editor-body">
+          <div id="priceEditorStatus"></div>
+          <div id="priceEditorInner"></div>
+        </div>
+      </div>
+    </div>
+
     <div class="recent-sec">
       <div class="recent-title">最近の送信（最新5件）</div>
       <div class="recent-list" id="recentList"></div>
     </div>
 
   </div>
-
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-const DEFAULT_PIN = 'admin1234';
-const SK_PIN = 'ty_admin_pin';
-const SK_SESSION = 'ty_admin_ok';
-const SESSION_MS = 30 * 60 * 1000;
-const SK_SUBS = 'ty_submissions';
-const SK_EMAIL = 'ty_admin_email';
+// ── Config ──
+const DEFAULT_PIN   = 'admin1234';
+const SK_PIN        = 'ty_admin_pin';
+const SK_SESSION    = 'ty_admin_ok';
+const SESSION_MS    = 30 * 60 * 1000;
+const SK_SUBS       = 'ty_submissions';
+const SK_EMAIL      = 'ty_admin_email';
+const SK_WKEY       = 'ty_worker_key';
 const DEFAULT_EMAIL = 't.yoshizaki.taka@gmail.com';
-const WORKERS_URL = 'https://rapid-dream-c353.t-yoshizaki-taka.workers.dev';
+const WORKERS_URL   = 'https://rapid-dream-c353.t-yoshizaki-taka.workers.dev';
 
-function getPin(){ return localStorage.getItem(SK_PIN) || DEFAULT_PIN; }
+function getPin()       { return localStorage.getItem(SK_PIN) || DEFAULT_PIN; }
+function getWorkerKey() { return localStorage.getItem(SK_WKEY) || 'admin1234'; }
 function getSubmissions(){ try{ return JSON.parse(localStorage.getItem(SK_SUBS)||'[]'); }catch(e){ return []; } }
-
 function isSessionValid(){ return Date.now() - parseInt(localStorage.getItem(SK_SESSION)||'0') < SESSION_MS; }
 function touchSession(){ localStorage.setItem(SK_SESSION, Date.now()); }
 function clearSession(){ localStorage.removeItem(SK_SESSION); }
 
-// Worker から最新データを取得してローカルに同期
-async function syncPinFromWorker(){
+// ── Worker ──
+async function workerGet(){
+  const res = await fetch(`${WORKERS_URL}?action=getData`);
+  if(!res.ok) throw new Error('GET failed');
+  const j = await res.json();
+  return j.data || {};
+}
+async function workerSave(data){
+  const res = await fetch(`${WORKERS_URL}?action=saveData`,{
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ adminKey: getWorkerKey(), data })
+  });
+  if(!res.ok) throw new Error('SAVE failed');
+  const j = await res.json();
+  if(!j.ok) throw new Error(j.error || 'rejected');
+  return j;
+}
+async function syncFromWorker(){
   try {
-    const res = await fetch(`${WORKERS_URL}?action=getData`);
-    if(res.ok){
-      const _j = await res.json();
-      const data = _j.data || {};
-      if(data.__adminPin__) localStorage.setItem(SK_PIN, data.__adminPin__);
-      // 送信履歴も同期しておく
-      if(Array.isArray(data.__submissions__)) localStorage.setItem(SK_SUBS, JSON.stringify(data.__submissions__));
-    }
+    const data = await workerGet();
+    if(data.__adminPin__)   localStorage.setItem(SK_PIN, data.__adminPin__);
+    if(data.__adminEmail__) localStorage.setItem(SK_EMAIL, data.__adminEmail__);
+    if(Array.isArray(data.__submissions__)) localStorage.setItem(SK_SUBS, JSON.stringify(data.__submissions__));
   } catch(e){}
 }
 
-const TYPE_LABEL = {web:'Web制作',video:'動画編集',app:'アプリ開発',system:'システム開発',design:'デザイン'};
+// ── Price data ──
+const CATS_DEFAULT = {
+  web:{ label:'Webサイト制作', icon:'🌐', color:'#2563eb',
+    sets:[
+      {id:'ws1',tag:'スタートアップ向け',name:'LP スターターパック',popular:false,chips:['LP（1P）','レスポンシブ','お問い合わせ','SEO内部対策'],original:297000,price:247500,saving:49500,presets:{}},
+      {id:'ws2',popular:true,tag:'中小企業向け',name:'コーポレート スタンダード',chips:['コーポレート（小）','CMS','SEO内部対策','GA4','レスポンシブ'],original:522000,price:435000,saving:87000,presets:{}},
+      {id:'ws3',tag:'EC・ショップ向け',name:'ECサイト スタンダード',chips:['ECサイト','CMS','SEO','GA4','月額保守'],original:792000,price:660000,saving:132000,presets:{}},
+    ],
+    steps:[
+      {id:'step-w1',label:'Step 1',title:'サイトタイプを選択',sub:'最も近いものを1つ選んでください。',type:'single',options:[
+        {id:'lp',icon:'🎯',name:'ランディングページ（LP）',desc:'1ページで訴求・CV重視',price:135000},
+        {id:'web-small',icon:'🏢',name:'コーポレートサイト（5P前後）',desc:'5〜8ページの企業サイト',price:180000},
+        {id:'web-medium',icon:'🌐',name:'コーポレートサイト（中規模）',desc:'10〜25ページ、ブログ・採用含む',price:360000},
+        {id:'ec-site',icon:'🛒',name:'ECサイト（Shopify等）',desc:'商品販売・カート・決済付き',price:540000},
+        {id:'service-st',icon:'⚙️',name:'サービスサイト',desc:'会員・予約・業務フロー',price:270000},
+        {id:'renewal',icon:'🔄',name:'リニューアル',desc:'既存サイトをリデザイン・再構築',price:180000},
+      ]},
+      {id:'step-w2',label:'Step 2',title:'ページ構成を選択',sub:'必要なページを複数選択。数量指定可。',type:'multi',options:[
+        {id:'top',icon:'🏠',name:'トップページ',desc:'FV・メインビジュアル含む',price:50000},
+        {id:'about',icon:'👤',name:'会社概要・About',desc:'企業情報・ミッション・沿革',price:20000},
+        {id:'service-p',icon:'📋',name:'サービス紹介ページ',desc:'各サービスの説明ページ',price:25000,qty:true},
+        {id:'blog',icon:'✍️',name:'ブログ・お知らせ',desc:'一覧＋詳細ページセット',price:35000},
+        {id:'works',icon:'💼',name:'実績・事例紹介',desc:'ポートフォリオ・事例一覧',price:30000},
+        {id:'recruit',icon:'🙋',name:'採用ページ',desc:'求人・インタビュー・フォーム',price:35000},
+        {id:'contact',icon:'📩',name:'お問い合わせフォーム',desc:'フォーム・確認・完了 CV率向上',price:22500},
+        {id:'faq',icon:'❓',name:'FAQ',desc:'アコーディオン型Q&A',price:15000},
+        {id:'lp-top',icon:'🎯',name:'LPトップ（フル）',desc:'スクロール型LP 1本',price:120000},
+        {id:'product-p',icon:'🛍️',name:'商品一覧・詳細ページ',desc:'ECの商品ページ群',price:50000,qty:true},
+      ]},
+      {id:'step-w3',label:'Step 3',title:'デザイン・機能オプション',sub:'必要なオプションを選択。複数可。',type:'multi',options:[
+        {id:'responsive',icon:'📱',name:'レスポンシブ対応（SP/PC）',desc:'スマホ主流時代の事実上標準機能',price:45000},
+        {id:'cms',icon:'📝',name:'CMS導入（WordPress等）',desc:'自社でコンテンツ更新できる管理画面',price:135000},
+        {id:'seo-basic',icon:'🔍',name:'SEO内部対策（メタ・構造化）',desc:'検索流入に直結する内部SEO対策',price:72000},
+        {id:'analytics',icon:'📈',name:'GA4（アクセス解析）設定',desc:'納品後の成果可視化・目標設定',price:27000},
+        {id:'ssl',icon:'🔒',name:'SSL設定',desc:'HTTPS化・セキュリティ必須対応',price:13500},
+        {id:'server-setup',icon:'🖥️',name:'サーバー・ドメイン初期設定',desc:'初心者クライアントに人気の代行設定',price:18000},
+        {id:'multilang',icon:'🌍',name:'多言語対応（英語ページ追加）',desc:'インバウンド・海外向け対策',price:90000},
+        {id:'reserve',icon:'📅',name:'予約・カレンダー機能',desc:'飲食・サロン系に需要大',price:72000},
+        {id:'design-prem',icon:'🎨',name:'プレミアムデザイン',desc:'ゼロからブランドデザイン制作',price:120000},
+        {id:'animation',icon:'✨',name:'アニメーション演出',desc:'スクロールアニメ・インタラクション',price:60000},
+        {id:'payment',icon:'💳',name:'決済機能（Stripe/PAY.JP）',desc:'クレカ決済・サブスク実装',price:100000},
+        {id:'member',icon:'🔐',name:'会員登録・マイページ',desc:'ユーザー認証・履歴管理',price:120000},
+        {id:'search',icon:'🔎',name:'サイト内検索機能',desc:'全文検索・フィルター',price:50000},
+        {id:'og-seo',icon:'📣',name:'OGP・SNSシェア最適化',desc:'SNSシェア時の表示最適化',price:25000},
+        {id:'perf',icon:'⚡',name:'表示速度最適化',desc:'Core Web Vitals改善',price:50000},
+        {id:'cookie',icon:'🍪',name:'Cookie同意バナー（GDPR対応）',desc:'同意管理・ポリシー設定',price:20000},
+      ]},
+      {id:'step-w4',label:'Step 4',title:'保守・運用プラン',sub:'公開後のサポートプランを選択。',type:'multi',options:[
+        {id:'support-light',icon:'🛡️',name:'月額保守・更新サポート',desc:'セキュリティ・バックアップ・軽微対応',price:18000,note:'月額'},
+        {id:'support-std',icon:'⚡',name:'保守プラン スタンダード',desc:'ライト＋コンテンツ更新月4回',price:30000,note:'月額'},
+        {id:'analytics-m',icon:'📊',name:'アクセス解析・月次レポート',desc:'GA4分析・改善提案付き',price:20000,note:'月額'},
+        {id:'lecture-w',icon:'🎓',name:'納品後レクチャー（使い方説明）',desc:'更新方法・管理画面の使い方を丁寧に説明',price:15000},
+        {id:'extra-rev-w',icon:'🔄',name:'追加修正（+3回）',desc:'基本修正回数を超える場合の追加分',price:9000},
+        {id:'no-support',icon:'🚀',name:'保守不要（自社対応）',desc:'納品のみ',price:0},
+      ]}
+    ]
+  },
+  video:{ label:'動画・映像制作・編集', icon:'🎬', color:'#7c3aed',
+    sets:[
+      {id:'vs1',popular:true,tag:'YouTube運用向け',name:'YouTubeチャンネル スタートパック',chips:['動画編集×4本','サムネ×4','テロップ','BGM'],original:70000,price:57600,saving:12400,presets:{}},
+      {id:'vs2',tag:'SNS・TikTok向け',name:'ショート動画 3本パック',chips:['60秒以内×3本','テロップ全文','BGM・SE','縦型フォーマット'],original:40500,price:33750,saving:6750,presets:{}},
+      {id:'vs3',tag:'企業・法人向け',name:'企業紹介動画 スタンダード',chips:['3〜5分','テロップ','BGM','SNS用縦型カット'],original:180000,price:150000,saving:30000,presets:{}},
+    ],
+    steps:[
+      {id:'step-v1',label:'Step 1',title:'動画の種類を選択',sub:'制作・編集したい動画タイプを1つ選んでください。',type:'single',options:[
+        {id:'yt-long',icon:'▶️',name:'YouTube 動画編集（〜15分/本）',desc:'解説・Vlog・インタビュー等',price:9000},
+        {id:'short-tiktok',icon:'📱',name:'ショート動画（TikTok・Reels/本）',desc:'60秒以内・縦型・SNS向け',price:4500},
+        {id:'yt-short',icon:'⚡',name:'YouTube ショート（/本）',desc:'60秒以内・横/縦両対応',price:4500},
+        {id:'corporate',icon:'🏢',name:'企業紹介・コーポレート動画',desc:'3〜5分、会社紹介・採用向け',price:135000},
+        {id:'product-pr',icon:'🛍️',name:'商品・サービスPR動画',desc:'1〜3分、訴求・広告用',price:135000},
+        {id:'cm-vid',icon:'📺',name:'CM・Web広告動画（撮影込み）',desc:'撮影〜編集・ナレーション対応',price:180000},
+      ]},
+      {id:'step-v2',label:'Step 2',title:'編集・仕上げオプション',sub:'必要な編集オプションを選択。複数可。',type:'multi',options:[
+        {id:'subtitle',icon:'💬',name:'テロップ・字幕追加',desc:'視聴完了率向上・全文字幕挿入',price:4500},
+        {id:'bgm',icon:'🎵',name:'BGM・効果音追加',desc:'著作権フリー音源・商用ライセンス',price:4500},
+        {id:'thumbnail',icon:'🖼️',name:'サムネイル作成',desc:'再生数に直結・クリック率重視',price:2700,qty:true},
+        {id:'ai-subtitle',icon:'🤖',name:'AI字幕生成（多言語対応）',desc:'アクセシビリティ・海外向け対応',price:31500},
+        {id:'narration',icon:'🎙️',name:'プロナレーション手配',desc:'企業動画の品質向上・声優手配',price:72000},
+        {id:'sns-format',icon:'📱',name:'SNS用リサイズ（縦横変換）',desc:'YouTube→Reels等の二次利用',price:9000},
+        {id:'animation-vi',icon:'✨',name:'アニメーション・モーション追加',desc:'ロゴアニメ・テキストアニメ',price:27000},
+        {id:'color-grade',icon:'🎨',name:'カラーグレーディング',desc:'映像の色調・雰囲気の演出',price:30000},
+        {id:'yt-optimize',icon:'📈',name:'YouTube概要欄・タグ最適化',desc:'SEOに強いタイトル・説明文',price:15000},
+      ]},
+      {id:'step-v3',label:'Step 3',title:'継続・運用プラン',sub:'継続的な制作・運用をご希望の場合は選択。',type:'multi',options:[
+        {id:'monthly-yt',icon:'📅',name:'月次動画制作パック（4本/月）',desc:'SNS運用需要急増・継続収益',price:36000,note:'月額'},
+        {id:'monthly-short',icon:'📱',name:'ショート動画 月次制作（8本/月）',desc:'TikTok・Reels・YTショート',price:36000,note:'月額'},
+        {id:'lecture-v',icon:'🎓',name:'納品後レクチャー（使い方説明）',desc:'動画活用・更新方法の説明',price:15000},
+        {id:'extra-rev-v',icon:'🔄',name:'追加修正（+3回）',desc:'基本修正回数を超える場合の追加分',price:9000},
+        {id:'single',icon:'🚀',name:'単発のみ（継続なし）',desc:'今回1本のみ',price:0},
+      ]}
+    ]
+  },
+  app:{ label:'アプリ開発', icon:'📱', color:'#0d9e6a',
+    sets:[
+      {id:'as1',tag:'MVP・検証向け',name:'MVP スターターパック',chips:['PWA・簡易Webアプリ','SNSログイン','Push通知'],original:720000,price:585000,saving:135000,presets:{}},
+      {id:'as2',popular:true,tag:'本格サービス向け',name:'ネイティブアプリ スタンダード',chips:['iOS+Android','管理画面','Push通知','保守サポート'],original:3510000,price:2835000,saving:675000,presets:{}},
+      {id:'as3',tag:'業務効率化向け',name:'業務アプリ スタンダード',chips:['業務アプリ','管理画面','ユーザー認証','データ出力'],original:1350000,price:1080000,saving:270000,presets:{}},
+    ],
+    steps:[
+      {id:'step-a1',label:'Step 1',title:'アプリの種類を選択',sub:'開発したいアプリの種類を1つ選んでください。',type:'single',options:[
+        {id:'pwa',icon:'🌐',name:'PWA・簡易Webアプリ',desc:'ブラウザで動くスマホ対応Webアプリ',price:450000},
+        {id:'native-ios',icon:'🍎',name:'iOSアプリ（Swift）',desc:'App Store公開向けネイティブ',price:1350000},
+        {id:'native-and',icon:'🤖',name:'Androidアプリ（Kotlin）',desc:'Google Play公開向けネイティブ',price:1350000},
+        {id:'native-both',icon:'📱',name:'iOS + Android 両対応',desc:'React Nativeで同時開発',price:2700000},
+        {id:'biz-app',icon:'💼',name:'業務アプリ（社内向け）',desc:'バックオフィス・管理業務の効率化',price:720000},
+        {id:'mvp',icon:'🚀',name:'MVP・プロトタイプ',desc:'アイデア検証・基本機能のみ',price:450000},
+      ]},
+      {id:'step-a2',label:'Step 2',title:'機能を選択',sub:'必要な機能を選択。複数可。',type:'multi',options:[
+        {id:'sns-login',icon:'🔑',name:'SNSログイン（Google/Apple等）',desc:'UX向上・現代アプリの標準機能',price:135000},
+        {id:'auth',icon:'🔐',name:'ユーザー認証・会員管理',desc:'メール認証・マイページ・履歴管理',price:270000},
+        {id:'push',icon:'🔔',name:'プッシュ通知機能',desc:'リテンション向上・お知らせ通知',price:135000},
+        {id:'admin-a',icon:'🖥️',name:'管理画面（ダッシュボード）',desc:'ユーザー管理・データ閲覧',price:360000},
+        {id:'payment-a',icon:'💳',name:'決済機能（Stripe/Pay等）',desc:'課金・サブスク・定期払い',price:720000},
+        {id:'chat-a',icon:'💬',name:'チャット・メッセージ機能',desc:'リアルタイムチャット',price:270000},
+        {id:'multilang-a',icon:'🌍',name:'多言語対応（i18n）',desc:'グローバル展開・海外ユーザー向け',price:180000},
+        {id:'map-a',icon:'🗺️',name:'地図・位置情報機能',desc:'マップ表示・GPS・ルート案内',price:130000},
+        {id:'camera-a',icon:'📷',name:'カメラ・写真機能',desc:'撮影・アップロード・加工',price:120000},
+      ]},
+      {id:'step-a3',label:'Step 3',title:'保守・運用',sub:'リリース後のサポートを選択。',type:'multi',options:[
+        {id:'app-maint',icon:'🛡️',name:'リリース後保守サポート（月額）',desc:'アップデート必須・バグ修正・OS対応',price:72000,note:'月額'},
+        {id:'lecture-a',icon:'🎓',name:'納品後レクチャー（使い方説明）',desc:'アプリ管理・運用方法の説明',price:15000},
+        {id:'extra-rev-a',icon:'🔄',name:'追加修正（+3回）',desc:'基本修正回数を超える場合の追加分',price:9000},
+        {id:'no-app',icon:'🚀',name:'保守不要',desc:'納品のみ',price:0},
+      ]}
+    ]
+  },
+  design:{ label:'グラフィック・ロゴデザイン', icon:'✏️', color:'#f0a500',
+    sets:[
+      {id:'ds1',tag:'スタートアップ向け',name:'ブランディング スターター',chips:['ロゴデザイン','名刺（両面）','カラー・フォントガイド'],original:130000,price:108000,saving:22000,presets:{}},
+      {id:'ds2',popular:true,tag:'企業・法人向け',name:'コーポレートブランディング',chips:['ブランドVI設計','名刺・封筒','ブランドガイドライン'],original:243000,price:202500,saving:40500,presets:{}},
+      {id:'ds3',tag:'販促・集客向け',name:'販促物 制作パック',chips:['チラシA4×2種','SNSバナーセット','印刷用データ'],original:90000,price:75000,saving:15000,presets:{}},
+    ],
+    steps:[
+      {id:'step-d1',label:'Step 1',title:'制作物の種類を選択',sub:'主に制作したいものを1つ選んでください。',type:'single',options:[
+        {id:'logo-simple',icon:'✏️',name:'ロゴデザイン（シンプル）',desc:'ロゴマーク or ロゴタイプ 1案',price:27000},
+        {id:'logo-std',icon:'🎨',name:'ロゴデザイン（本格オリジナル）',desc:'3案提案→修正→最終納品',price:72000},
+        {id:'logo-prem',icon:'💎',name:'ブランドVI設計（一式）',desc:'ロゴ+展開物+ガイドライン フルパッケージ',price:135000},
+        {id:'flyer',icon:'📄',name:'チラシ・フライヤー（A4）',desc:'A4/A5/B5など各種サイズ',price:27000},
+        {id:'pamphlet',icon:'📚',name:'パンフレット・会社案内',desc:'4P〜16Pブックレット',price:80000},
+        {id:'banner-web',icon:'🖼️',name:'Webバナー・広告クリエイティブ',desc:'SNS・リスティング用バナー',price:20000},
+        {id:'card',icon:'🃏',name:'名刺デザイン',desc:'表裏デザイン・高品質仕上げ',price:18000},
+      ]},
+      {id:'step-d2',label:'Step 2',title:'追加制作物・オプション',sub:'セットで制作するものを選択。複数可。',type:'multi',options:[
+        {id:'color-var',icon:'🎨',name:'カラーバリエーション追加（+2色）',desc:'ダークモード・白抜き対応',price:9000},
+        {id:'extra-rev',icon:'🔄',name:'修正回数追加（+3回）',desc:'基本修正回数を超える場合の追加分',price:9000},
+        {id:'card-dbl',icon:'🃏',name:'名刺（両面）',desc:'表裏デザイン・高品質仕上げ',price:18000},
+        {id:'envelope',icon:'✉️',name:'封筒・レターヘッドデザイン',desc:'長3・角2封筒デザイン',price:18000},
+        {id:'brand-simple',icon:'📋',name:'カラー・フォントガイド（簡易）',desc:'ブランドカラー・書体の定義',price:30000},
+        {id:'brand-full',icon:'📖',name:'ブランドガイドライン作成',desc:'VI統一・ロゴ使用規定・各種展開ルール',price:90000},
+        {id:'banner-sns',icon:'📱',name:'SNSアイコン・バナーセット',desc:'Instagram・X・Facebook用',price:36000,qty:true},
+        {id:'package',icon:'📦',name:'商品パッケージデザイン',desc:'EC・製造業向け・印刷入稿対応',price:31500},
+      ]},
+      {id:'step-d3',label:'Step 3',title:'納品・印刷対応',sub:'納品形式や印刷手配を選択。',type:'multi',options:[
+        {id:'ai-data',icon:'💾',name:'印刷用データ入稿対応（ai/PDF）',desc:'印刷会社への持込対応・トンボ付き',price:13500},
+        {id:'print-sup',icon:'🖨️',name:'印刷手配サポート',desc:'優良印刷会社への入稿代行',price:20000},
+        {id:'lecture-d',icon:'🎓',name:'納品後レクチャー（使い方説明）',desc:'ファイル管理・更新方法の説明',price:15000},
+      ]}
+    ]
+  },
+  system:{ label:'システム開発', icon:'⚙️', color:'#e8380d',
+    sets:[
+      {id:'ss1',tag:'中小企業向け',name:'業務改善 スターターパック',chips:['業務システム','管理画面','ユーザー認証','CSV入出力'],original:1350000,price:1080000,saving:270000,presets:{}},
+      {id:'ss2',popular:true,tag:'SaaS・サービス向け',name:'SaaS MVP スタンダード',chips:['SaaS開発','決済','管理画面','保守サポート'],original:2790000,price:2232000,saving:558000,presets:{}},
+      {id:'ss3',tag:'API・自動化向け',name:'API連携・自動化パック',chips:['API連携（3件）','自動化ツール','セキュリティ診断'],original:990000,price:792000,saving:198000,presets:{}},
+    ],
+    steps:[
+      {id:'step-s1',label:'Step 1',title:'システムの種類を選択',sub:'開発したいシステムの種類を1つ選んでください。',type:'single',options:[
+        {id:'internal',icon:'🏢',name:'業務システム（小規模）',desc:'日次業務・データ管理の効率化',price:720000},
+        {id:'saas',icon:'☁️',name:'SaaS・Webアプリ開発',desc:'Web上で提供するサービス型システム',price:1800000},
+        {id:'api-int',icon:'🔗',name:'API連携・外部サービス接続',desc:'Slack/kintone等との外部API連携',price:180000},
+        {id:'automate',icon:'⚙️',name:'自動化ツール開発',desc:'業務自動化・RPA・定期処理',price:450000},
+        {id:'ec-back',icon:'🛒',name:'ECバックエンド',desc:'受注・在庫・決済・配送管理',price:1200000},
+        {id:'matching',icon:'🤝',name:'マッチングプラットフォーム',desc:'ユーザー間のマッチング機能',price:1800000},
+        {id:'reserve-s',icon:'📅',name:'予約・スケジュール管理',desc:'予約受付・空き管理・通知',price:800000},
+        {id:'data-plat',icon:'📊',name:'データ分析基盤',desc:'BIダッシュボード・データパイプライン',price:1500000},
+      ]},
+      {id:'step-s2',label:'Step 2',title:'機能を選択',sub:'搭載する機能を複数選択できます。',type:'multi',options:[
+        {id:'admin-s',icon:'🖥️',name:'管理画面・ダッシュボード構築',desc:'ほぼ必須・データ閲覧・ユーザー管理',price:360000},
+        {id:'auth-s',icon:'🔐',name:'ユーザー認証・会員管理機能',desc:'ログイン・ロール・アクセス制御',price:270000},
+        {id:'api-s',icon:'🔗',name:'API連携（外部サービス1件）',desc:'Slack/kintone連携需要大',price:180000},
+        {id:'payment-s',icon:'💳',name:'決済機能実装（Stripe等）',desc:'SaaS収益化・定期課金に必須',price:630000},
+        {id:'cloud-s',icon:'☁️',name:'クラウドインフラ構築（AWS/GCP）',desc:'サーバー・DB・ストレージ設計',price:360000},
+        {id:'cicd-s',icon:'🔁',name:'自動テスト・CI/CD構築',desc:'品質保証・デプロイ自動化',price:270000},
+        {id:'sec-s',icon:'🛡️',name:'セキュリティ診断・脆弱性対応',desc:'需要急増・競合少ない分野',price:180000},
+        {id:'csv-s',icon:'📊',name:'CSV入出力',desc:'データの一括取込・出力',price:100000},
+        {id:'inventory',icon:'📦',name:'在庫・商品管理',desc:'在庫数管理・アラート機能',price:200000},
+        {id:'doc-s',icon:'📄',name:'仕様書・設計ドキュメント',desc:'DB設計書・API仕様書',price:150000},
+      ]},
+      {id:'step-s3',label:'Step 3',title:'保守・運用',sub:'リリース後の保守プランを選択。',type:'multi',options:[
+        {id:'sys-maint',icon:'🛡️',name:'月額保守・障害対応サポート',desc:'業務停止リスク対策・継続収益',price:72000,note:'月額'},
+        {id:'lecture-s',icon:'🎓',name:'納品後レクチャー（使い方説明）',desc:'システム操作・管理方法の説明',price:15000},
+        {id:'extra-rev-s',icon:'🔄',name:'追加修正（+3回）',desc:'基本修正回数を超える場合の追加分',price:9000},
+        {id:'no-sys',icon:'🚀',name:'保守不要',desc:'納品のみ',price:0},
+      ]}
+    ]
+  }
+};
+
+let DELIVERY_OPTIONS = [
+  {id:'urgent',  label:'⚡ 特急（通常の半分以下）',rate:0.5, sign:'+',desc:'通常納期の50%UP'},
+  {id:'fast',    label:'🔥 急ぎ（通常より早め）',  rate:0.25,sign:'+',desc:'通常納期の25%UP'},
+  {id:'normal',  label:'📅 通常納期',              rate:0,   sign:'', desc:'標準スケジュール'},
+  {id:'relaxed', label:'🌿 ゆったり（+1ヶ月〜）',  rate:-0.05,sign:'-',desc:'5%割引'},
+  {id:'flexible',label:'🍃 完全フレキシブル（+2ヶ月〜）',rate:-0.1,sign:'-',desc:'10%割引'},
+];
+let GLOBAL_SETTINGS = {saleEnabled:true,saleRate:50,salePeriod:'2026年8月末'};
+let CATS = JSON.parse(JSON.stringify(CATS_DEFAULT));
+let adminCurrentCat = '__settings__';
+let priceEditorOpen = false;
+let priceDataLoaded = false;
+
+// ── Utils ──
+const TYPE_LABEL   = {web:'Web制作',video:'動画編集',app:'アプリ開発',system:'システム開発',design:'デザイン'};
 const STATUS_LABEL = {new:'新着',contacted:'連絡済み',inprogress:'対応中',done:'完了'};
-
-function fmtDate(ts){
-  const d = new Date(ts);
-  return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-}
-
+function fmtDate(ts){ const d=new Date(ts); return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-function showToast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2400);
-}
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
+function toggleEl(id){ const e=document.getElementById(id); if(e) e.style.display=e.style.display==='none'?'block':'none'; }
 
 // ── Auth ──
 function checkPin(){
   const val = document.getElementById('pinInput').value;
-  if(val === getPin()){
-    touchSession();
-    openPanel();
-  } else {
+  if(val === getPin()){ touchSession(); openPanel(); }
+  else {
     const inp = document.getElementById('pinInput');
-    document.getElementById('pinErr').textContent = 'PINが正しくありません';
-    inp.classList.add('shake');
-    inp.value = '';
-    setTimeout(()=>inp.classList.remove('shake'), 400);
+    document.getElementById('pinErr').textContent='PINが正しくありません';
+    inp.classList.add('shake'); inp.value='';
+    setTimeout(()=>inp.classList.remove('shake'),400);
   }
 }
-
 function openPanel(){
-  document.getElementById('loginCard').style.display = 'none';
-  const panel = document.getElementById('adminPanel');
-  panel.style.display = 'block';
+  document.getElementById('loginCard').style.display='none';
+  document.getElementById('adminPanel').style.display='block';
   renderPanel();
 }
-
 function doLogout(){
   clearSession();
-  document.getElementById('loginCard').style.display = 'block';
-  document.getElementById('adminPanel').style.display = 'none';
-  document.getElementById('pinInput').value = '';
-  setTimeout(()=>document.getElementById('pinInput').focus(), 100);
+  document.getElementById('loginCard').style.display='block';
+  document.getElementById('adminPanel').style.display='none';
+  document.getElementById('pinInput').value='';
+  priceEditorOpen=false; priceDataLoaded=false;
+  setTimeout(()=>document.getElementById('pinInput').focus(),100);
 }
 
-// ── Render panel ──
+// ── Panel ──
 function renderPanel(){
-  const subs = getSubmissions();
-  const newCount = subs.filter(s=>s.status==='new').length;
-
-  const nb = document.getElementById('adminNewBadge');
-  if(newCount > 0){ nb.textContent=`新着 ${newCount}件`; nb.style.display='inline-block'; } else { nb.style.display='none'; }
-
-  const lnc = document.getElementById('listNewCount');
-  if(newCount > 0){ lnc.textContent=`新着 ${newCount}`; lnc.style.display='inline-block'; } else { lnc.style.display='none'; }
-
-  const currentEmail = localStorage.getItem(SK_EMAIL) || DEFAULT_EMAIL;
-  document.getElementById('adminEmailInput').value = currentEmail;
-  document.getElementById('emailCurrent').textContent = `現在の設定：${currentEmail}`;
-
-  const recent = subs.slice(0,5);
-  const list = document.getElementById('recentList');
-  if(!recent.length){
-    list.innerHTML = '<div class="no-submissions">まだ送信はありません</div>';
-    return;
-  }
-  list.innerHTML = recent.map(s=>{
-    const typeClass = 'badge-'+(s.type||'web');
-    const isNew = s.status === 'new';
+  const subs=getSubmissions();
+  const newCount=subs.filter(s=>s.status==='new').length;
+  const nb=document.getElementById('adminNewBadge');
+  if(newCount>0){nb.textContent=`新着 ${newCount}件`;nb.style.display='inline-block';}else{nb.style.display='none';}
+  const lnc=document.getElementById('listNewCount');
+  if(newCount>0){lnc.textContent=`新着 ${newCount}`;lnc.style.display='inline-block';}else{lnc.style.display='none';}
+  const currentEmail=localStorage.getItem(SK_EMAIL)||DEFAULT_EMAIL;
+  document.getElementById('adminEmailInput').value=currentEmail;
+  document.getElementById('emailCurrent').textContent=`現在の設定：${currentEmail}`;
+  document.getElementById('workerKeyInput').value=localStorage.getItem(SK_WKEY)||'';
+  const recent=subs.slice(0,5);
+  const list=document.getElementById('recentList');
+  if(!recent.length){list.innerHTML='<div class="no-submissions">まだ送信はありません</div>';return;}
+  list.innerHTML=recent.map(s=>{
+    const isNew=s.status==='new';
     return `<div class="recent-item" onclick="window.open('hearing_list.html','_blank')">
       <div class="recent-item-left">
         <div class="recent-name">${esc(s.clientName||'（名称未入力）')}</div>
         <div class="recent-meta">
-          <span class="badge ${typeClass}">${TYPE_LABEL[s.type]||s.type}</span>
-          ${isNew ? '<span class="badge badge-new">新着</span>' : `<span>${STATUS_LABEL[s.status]||s.status}</span>`}
-          ${s.email ? `<span>${esc(s.email)}</span>` : ''}
+          <span class="badge badge-${s.type||'web'}">${TYPE_LABEL[s.type]||s.type}</span>
+          ${isNew?'<span class="badge badge-new">新着</span>':`<span>${STATUS_LABEL[s.status]||s.status}</span>`}
+          ${s.email?`<span>${esc(s.email)}</span>`:''}
         </div>
       </div>
       <div class="recent-date">${fmtDate(s.timestamp)}</div>
@@ -392,64 +575,284 @@ function renderPanel(){
   }).join('');
 }
 
-// ── Price editor iframe ──
-let priceEditorOpen = false;
-function togglePriceEditor(){
-  const section = document.getElementById('priceEditorSection');
-  const frame   = document.getElementById('priceEditorFrame');
-  const arrow   = document.getElementById('priceEditorArrow');
-  priceEditorOpen = !priceEditorOpen;
-  if(priceEditorOpen){
-    if(!frame.src || frame.src === window.location.href) frame.src = 'index.html?admin=1';
-    section.style.display = 'block';
-    arrow.textContent = '▲ 閉じる';
-    setTimeout(()=>section.scrollIntoView({behavior:'smooth', block:'start'}), 80);
-  } else {
-    section.style.display = 'none';
-    arrow.textContent = '▼ 開く';
-  }
-}
-
 function saveAdminEmail(){
-  const val = document.getElementById('adminEmailInput').value.trim();
-  if(!val){ showToast('メールアドレスを入力してください'); return; }
-  localStorage.setItem(SK_EMAIL, val);
-  document.getElementById('emailCurrent').textContent = `現在の設定：${val}`;
-  showToast('メールアドレスを保存しました');
+  const val=document.getElementById('adminEmailInput').value.trim();
+  if(!val){showToast('メールアドレスを入力してください');return;}
+  localStorage.setItem(SK_EMAIL,val);
+  document.getElementById('emailCurrent').textContent=`現在の設定：${val}`;
+  (async()=>{
+    try{ const data=await workerGet(); data.__adminEmail__=val; await workerSave(data); showToast('メールアドレスを保存しました（全端末に反映）'); }
+    catch(e){ showToast('メールアドレスを保存しました（ローカルのみ）'); }
+  })();
 }
 
 async function changePin(){
-  const val = document.getElementById('newPinInput').value.trim();
-  if(!val){ showToast('新しいPINを入力してください'); return; }
-  if(val.length < 4){ showToast('4文字以上で設定してください'); return; }
-  localStorage.setItem(SK_PIN, val);
-  // Worker に保存（getData→__adminPin__更新→saveData）
-  try {
-    const wKey = localStorage.getItem('ty_worker_key') || 'admin1234';
-    const getRes = await fetch(`${WORKERS_URL}?action=getData`);
-    const _gj = getRes.ok ? await getRes.json() : {};
-    const data = _gj.data || {};
-    data.__adminPin__ = val;
-    const saveRes = await fetch(`${WORKERS_URL}?action=saveData`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ adminKey: wKey, data })
+  const val=document.getElementById('newPinInput').value.trim();
+  if(!val){showToast('新しいPINを入力してください');return;}
+  if(val.length<4){showToast('4文字以上で設定してください');return;}
+  localStorage.setItem(SK_PIN,val);
+  const note=document.getElementById('pinSyncNote');
+  try{
+    const data=await workerGet(); data.__adminPin__=val; await workerSave(data);
+    note.textContent='変更済み（全端末に反映されました）'; note.style.color='var(--green)';
+    showToast('PINを変更しました（全端末に反映）');
+  }catch(e){
+    note.textContent='変更済み（クラウド同期失敗 — このデバイスのみ）'; note.style.color='var(--accent)';
+    showToast('PIN変更済み（同期失敗）');
+  }
+  document.getElementById('newPinInput').value='';
+}
+
+function saveWorkerKey(){
+  const val=document.getElementById('workerKeyInput').value.trim();
+  localStorage.setItem(SK_WKEY,val||'admin1234');
+  const el=document.getElementById('syncStatus');
+  el.textContent='キーを保存しました。次回の保存から有効です。'; el.style.color='var(--green)';
+  showToast('Workerキーを保存しました');
+}
+
+// ── Price editor ──
+async function togglePriceEditor(){
+  const section=document.getElementById('priceEditorSection');
+  const arrow=document.getElementById('priceEditorArrow');
+  priceEditorOpen=!priceEditorOpen;
+  if(priceEditorOpen){
+    arrow.textContent='▲ 閉じる';
+    section.style.display='block';
+    if(!priceDataLoaded){
+      document.getElementById('priceEditorStatus').innerHTML='<div style="padding:12px 0;color:var(--muted);font-size:.82rem;">データを読み込み中...</div>';
+      try{
+        const data=await workerGet();
+        mergePriceData(data);
+        priceDataLoaded=true;
+        document.getElementById('priceEditorStatus').innerHTML='<div class="sync-ok">✅ クラウドから最新データを読み込みました</div>';
+      }catch(e){
+        document.getElementById('priceEditorStatus').innerHTML='<div class="sync-err">⚠️ クラウドへの接続に失敗しました。デフォルト値を表示しています。<br>「クラウド同期キー」が正しいか確認してください。</div>';
+        priceDataLoaded=true;
+      }
+      renderPriceEditor();
+    }
+    setTimeout(()=>section.scrollIntoView({behavior:'smooth',block:'start'}),80);
+  }else{
+    arrow.textContent='▼ 開く';
+    section.style.display='none';
+  }
+}
+
+function mergePriceData(data){
+  if(!data) return;
+  Object.keys(data).forEach(catId=>{
+    if(catId==='__settings__'){
+      if(data[catId].globalSettings)  Object.assign(GLOBAL_SETTINGS,data[catId].globalSettings);
+      if(data[catId].deliveryOptions) DELIVERY_OPTIONS.splice(0,DELIVERY_OPTIONS.length,...data[catId].deliveryOptions);
+      return;
+    }
+    if(!CATS[catId]) return;
+    if(data[catId].sets)  CATS[catId].sets  = data[catId].sets;
+    if(data[catId].steps) CATS[catId].steps = data[catId].steps;
+  });
+}
+
+function renderPriceEditor(){
+  const cats=Object.entries(CATS);
+  document.getElementById('priceEditorInner').innerHTML=`
+    <div class="adm-header" style="margin-top:16px;">
+      <div><div class="adm-title">⚙️ 料金・プラン編集</div><div class="adm-sub">変更後は「保存して反映」を押してください。全端末に同期されます。</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="adm-btn-save" onclick="saveAllAdmin()">💾 保存して反映</button>
+        <button class="adm-btn-reset" onclick="resetAdminData()">↺ 初期化</button>
+      </div>
+    </div>
+    <div class="adm-tabs" id="priceAdminTabs">
+      <button class="adm-tab${adminCurrentCat==='__settings__'?' active':''}" onclick="switchAdminTab('__settings__',this)">⚙️ 全体設定</button>
+      ${cats.map(([id,c])=>`<button class="adm-tab${id===adminCurrentCat?' active':''}" onclick="switchAdminTab('${id}',this)">${c.icon} ${c.label}</button>`).join('')}
+    </div>
+    <div id="adminTabContent"></div>
+    <div style="margin-top:16px;"><button class="adm-btn-save" onclick="saveAllAdmin()">💾 保存して反映</button></div>`;
+  if(adminCurrentCat==='__settings__') renderAdminSettings();
+  else renderAdminTab(adminCurrentCat);
+}
+
+function switchAdminTab(catId,btn){
+  adminCurrentCat=catId;
+  document.querySelectorAll('#priceAdminTabs .adm-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(catId==='__settings__') renderAdminSettings();
+  else renderAdminTab(catId);
+}
+
+function renderAdminSettings(){
+  document.getElementById('adminTabContent').innerHTML=`
+    <div class="adm-section">
+      <div class="adm-section-head"><span>🎉 キャンペーン設定</span></div>
+      <div class="adm-card"><div class="adm-edit-body">
+        <div class="adm-row"><label>キャンペーン有効</label>
+          <select class="adm-input-sm" onchange="GLOBAL_SETTINGS.saleEnabled=this.value==='true'">
+            <option value="true"  ${GLOBAL_SETTINGS.saleEnabled?'selected':''}>有効（割引を表示）</option>
+            <option value="false" ${!GLOBAL_SETTINGS.saleEnabled?'selected':''}>無効（通常価格を表示）</option>
+          </select></div>
+        <div class="adm-row"><label>OFF率（%）</label>
+          <input class="adm-input-sm" type="number" min="1" max="99" value="${GLOBAL_SETTINGS.saleRate}" oninput="GLOBAL_SETTINGS.saleRate=Number(this.value)"></div>
+        <div class="adm-row"><label>キャンペーン期間</label>
+          <input class="adm-input-sm" value="${esc(GLOBAL_SETTINGS.salePeriod)}" oninput="GLOBAL_SETTINGS.salePeriod=this.value"></div>
+      </div>
+      <div class="adm-price-preview" style="margin-top:10px;">現在: ${GLOBAL_SETTINGS.saleEnabled?`<strong>${GLOBAL_SETTINGS.saleRate}%OFF</strong>（〜${esc(GLOBAL_SETTINGS.salePeriod)}）`:'<span style="color:var(--muted)">キャンペーン無効</span>'}</div>
+      </div>
+    </div>
+    <div class="adm-section">
+      <div class="adm-section-head"><span>🗓️ 納品スケジュール 料率設定</span></div>
+      ${DELIVERY_OPTIONS.map((d,di)=>`
+      <div class="adm-card">
+        <div class="adm-card-head"><span class="adm-card-label">${esc(d.label)}</span>
+          <button class="adm-icon-btn" onclick="toggleEl('deliv-edit-${di}')">✏️ 編集</button></div>
+        <div id="deliv-edit-${di}" style="display:none;" class="adm-edit-body">
+          <div class="adm-row"><label>ラベル</label><input class="adm-input-sm" value="${esc(d.label)}" oninput="DELIVERY_OPTIONS[${di}].label=this.value"></div>
+          <div class="adm-row"><label>料率（0.5=+50%, -0.1=−10%）</label><input class="adm-input-sm" type="number" step="0.01" min="-0.5" max="2" value="${d.rate}" oninput="DELIVERY_OPTIONS[${di}].rate=Number(this.value)"></div>
+          <div class="adm-row"><label>説明文</label><input class="adm-input-sm" value="${esc(d.desc)}" oninput="DELIVERY_OPTIONS[${di}].desc=this.value"></div>
+        </div>
+        <div class="adm-price-preview">${d.rate===0?'標準':(d.rate>0?'+':'')+Math.round(d.rate*100)+'%'} — ${esc(d.desc)}</div>
+      </div>`).join('')}
+    </div>`;
+}
+
+function renderAdminTab(catId){
+  const cat=CATS[catId];
+  let html='';
+
+  // セットプラン
+  html+=`<div class="adm-section"><div class="adm-section-head"><span>🎁 セットプラン</span><button class="adm-add-btn" onclick="addSet('${catId}')">＋ 追加</button></div>`;
+  cat.sets.forEach((s,si)=>{
+    html+=`<div class="adm-card">
+      <div class="adm-card-head"><span class="adm-card-label">${s.popular?'⭐ ':''}${esc(s.name)}</span>
+        <div style="display:flex;gap:5px;"><button class="adm-icon-btn" onclick="toggleEl('set-edit-${catId}-${si}')">✏️ 編集</button><button class="adm-icon-btn danger" onclick="deleteSet('${catId}',${si})">🗑️</button></div></div>
+      <div id="set-edit-${catId}-${si}" style="display:none;" class="adm-edit-body">
+        <div class="adm-row"><label>タグ</label><input class="adm-input-sm" value="${esc(s.tag)}" oninput="CATS['${catId}'].sets[${si}].tag=this.value"></div>
+        <div class="adm-row"><label>プラン名</label><input class="adm-input-sm" value="${esc(s.name)}" oninput="CATS['${catId}'].sets[${si}].name=this.value"></div>
+        <div class="adm-row"><label>内容チップ（カンマ区切り）</label><input class="adm-input-sm" value="${esc(s.chips.join(','))}" oninput="CATS['${catId}'].sets[${si}].chips=this.value.split(',').map(v=>v.trim())"></div>
+        <div class="adm-row"><label>通常価格（税込）</label><input class="adm-input-sm" type="number" value="${s.original}" oninput="CATS['${catId}'].sets[${si}].original=Number(this.value);CATS['${catId}'].sets[${si}].saving=Number(this.value)-CATS['${catId}'].sets[${si}].price"></div>
+        <div class="adm-row"><label>割引後価格（税込）</label><input class="adm-input-sm" type="number" value="${s.price}" oninput="CATS['${catId}'].sets[${si}].price=Number(this.value);CATS['${catId}'].sets[${si}].saving=CATS['${catId}'].sets[${si}].original-Number(this.value)"></div>
+        <div class="adm-row"><label>割引額</label><input class="adm-input-sm" type="number" value="${s.saving}" oninput="CATS['${catId}'].sets[${si}].saving=Number(this.value)"></div>
+        <div class="adm-row"><label>人気バッジ</label>
+          <select class="adm-input-sm" onchange="CATS['${catId}'].sets[${si}].popular=this.value==='true'">
+            <option value="false" ${!s.popular?'selected':''}>なし</option><option value="true" ${s.popular?'selected':''}>人気No.1</option>
+          </select></div>
+      </div>
+      <div class="adm-price-preview">通常 <s>¥${s.original.toLocaleString()}</s> → <strong>¥${s.price.toLocaleString()}</strong> <span class="adm-saving">−¥${s.saving.toLocaleString()}</span></div>
+    </div>`;
+  });
+  html+=`</div>`;
+
+  // ステップ
+  html+=`<div class="adm-section"><div class="adm-section-head"><span>📋 ステップ構成（${cat.steps.length}ステップ）</span>
+    <button class="adm-add-btn" style="background:#2563eb" onclick="addStep('${catId}')">＋ ステップ追加</button></div>`;
+  cat.steps.forEach((step,si)=>{
+    html+=`<div class="adm-step-block">
+      <div class="adm-step-head">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="adm-step-badge">Step ${si+1}</span>
+          <div><div style="font-weight:700;font-size:.88rem;">${esc(step.title)}</div>
+          <div style="font-size:.72rem;color:var(--muted);">${step.type==='single'?'単一選択':'複数選択'} / ${step.options.length}項目</div></div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          ${si>0?`<button class="adm-icon-btn" onclick="moveStep('${catId}',${si},-1)">↑</button>`:''}
+          ${si<cat.steps.length-1?`<button class="adm-icon-btn" onclick="moveStep('${catId}',${si},1)">↓</button>`:''}
+          <button class="adm-icon-btn" onclick="toggleEl('step-edit-${catId}-${si}')">✏️ 編集</button>
+          ${cat.steps.length>1?`<button class="adm-icon-btn danger" onclick="deleteStep('${catId}',${si})">🗑️ 削除</button>`:''}
+        </div>
+      </div>
+      <div id="step-edit-${catId}-${si}" style="display:none;" class="adm-edit-body">
+        <div class="adm-row"><label>ステップ名</label><input class="adm-input-sm" value="${esc(step.title)}" oninput="CATS['${catId}'].steps[${si}].title=this.value"></div>
+        <div class="adm-row"><label>説明文</label><input class="adm-input-sm" value="${esc(step.sub)}" oninput="CATS['${catId}'].steps[${si}].sub=this.value"></div>
+        <div class="adm-row"><label>選択タイプ</label>
+          <select class="adm-input-sm" onchange="CATS['${catId}'].steps[${si}].type=this.value">
+            <option value="single" ${step.type==='single'?'selected':''}>単一選択（1つだけ）</option>
+            <option value="multi"  ${step.type==='multi'?'selected':''}>複数選択（複数可）</option>
+          </select></div>
+        <div class="adm-opts-head">
+          <span style="font-size:.75rem;font-weight:700;color:var(--muted);">📌 選択項目</span>
+          <button class="adm-add-btn" onclick="addOption('${catId}',${si})">＋ 項目追加</button>
+        </div><div>`;
+    step.options.forEach((opt,oi)=>{
+      html+=`<div class="adm-card" style="margin:6px 0;">
+        <div class="adm-card-head"><span class="adm-card-label">${esc(opt.icon)} ${esc(opt.name)}</span>
+          <div style="display:flex;gap:4px;">
+            ${oi>0?`<button class="adm-icon-btn" onclick="moveOption('${catId}',${si},${oi},-1)">↑</button>`:''}
+            ${oi<step.options.length-1?`<button class="adm-icon-btn" onclick="moveOption('${catId}',${si},${oi},1)">↓</button>`:''}
+            <button class="adm-icon-btn" onclick="toggleEl('opt-edit-${catId}-${si}-${oi}')">✏️</button>
+            <button class="adm-icon-btn danger" onclick="deleteOption('${catId}',${si},${oi})">🗑️</button>
+          </div></div>
+        <div id="opt-edit-${catId}-${si}-${oi}" style="display:none;" class="adm-edit-body">
+          <div class="adm-row"><label>絵文字アイコン</label><input class="adm-input-sm" value="${esc(opt.icon)}" oninput="CATS['${catId}'].steps[${si}].options[${oi}].icon=this.value"></div>
+          <div class="adm-row"><label>項目名</label><input class="adm-input-sm" value="${esc(opt.name)}" oninput="CATS['${catId}'].steps[${si}].options[${oi}].name=this.value"></div>
+          <div class="adm-row"><label>説明文</label><input class="adm-input-sm" value="${esc(opt.desc)}" oninput="CATS['${catId}'].steps[${si}].options[${oi}].desc=this.value"></div>
+          <div class="adm-row"><label>金額（税抜）</label><input class="adm-input-sm" type="number" value="${opt.price}" oninput="CATS['${catId}'].steps[${si}].options[${oi}].price=Number(this.value)"></div>
+          <div class="adm-row"><label>備考（月額など）</label><input class="adm-input-sm" value="${esc(opt.note||'')}" oninput="CATS['${catId}'].steps[${si}].options[${oi}].note=this.value||undefined"></div>
+          <div class="adm-row"><label>数量指定</label>
+            <select class="adm-input-sm" onchange="if(this.value==='true'){CATS['${catId}'].steps[${si}].options[${oi}].qty=true}else{delete CATS['${catId}'].steps[${si}].options[${oi}].qty}">
+              <option value="false" ${!opt.qty?'selected':''}>なし</option><option value="true" ${opt.qty?'selected':''}>あり（×個）</option>
+            </select></div>
+        </div>
+        <div class="adm-price-preview">¥${opt.price.toLocaleString()}${opt.note?' / '+opt.note:''}</div>
+      </div>`;
     });
-    showToast(saveRes.ok ? 'PINを変更しました（全端末に反映）' : 'PIN変更済み（クラウド同期失敗）');
-  } catch(e){ showToast('PIN変更済み（オフライン）'); }
-  document.getElementById('newPinInput').value = '';
-  document.getElementById('pinCurrent').textContent = '現在のPIN：変更済み';
+    html+=`</div></div></div>`;
+  });
+  html+=`</div>`;
+
+  // 納品スケジュール参照
+  html+=`<div class="adm-section"><div class="adm-section-head"><span>🗓️ 納品スケジュール</span><span style="font-size:.72rem;color:var(--muted);">「全体設定」タブで編集</span></div>
+    <div class="adm-card"><table style="width:100%;font-size:.78rem;border-collapse:collapse;">
+      <tr style="background:var(--bg)"><th style="padding:6px 10px;text-align:left;">スケジュール</th><th style="padding:6px 10px;text-align:right;">料率</th></tr>
+      ${DELIVERY_OPTIONS.map(d=>`<tr><td style="padding:7px 10px;border-bottom:1px solid var(--line);">${esc(d.label)}</td><td style="padding:7px 10px;border-bottom:1px solid var(--line);text-align:right;font-family:var(--mono);color:${d.rate>0?'var(--accent)':d.rate<0?'var(--green)':'var(--muted)'}">${d.rate===0?'標準':(d.rate>0?'+':'')+Math.round(d.rate*100)+'%'}</td></tr>`).join('')}
+    </table></div></div>`;
+
+  document.getElementById('adminTabContent').innerHTML=html;
+}
+
+// ── Step/Option/Set operations ──
+function addStep(catId){ const si=CATS[catId].steps.length; CATS[catId].steps.push({id:`step-new-${catId}-${Date.now()}`,label:`Step ${si+1}`,title:'新しいステップ',sub:'項目を選択してください。',type:'multi',options:[{id:`opt-new-${Date.now()}`,icon:'✨',name:'新しい項目',desc:'説明文を入力',price:50000}]}); renderAdminTab(catId); showToast(`Step ${si+1} を追加しました`); }
+function deleteStep(catId,si){ if(!confirm(`Step ${si+1}「${CATS[catId].steps[si].title}」を削除しますか？`))return; CATS[catId].steps.splice(si,1); CATS[catId].steps.forEach((s,i)=>{s.label=`Step ${i+1}`;}); renderAdminTab(catId); showToast('ステップを削除しました'); }
+function moveStep(catId,si,dir){ const steps=CATS[catId].steps,t=si+dir; if(t<0||t>=steps.length)return; [steps[si],steps[t]]=[steps[t],steps[si]]; steps.forEach((s,i)=>{s.label=`Step ${i+1}`;}); renderAdminTab(catId); }
+function addOption(catId,si){ CATS[catId].steps[si].options.push({id:`opt-new-${Date.now()}`,icon:'✨',name:'新しい項目',desc:'説明文を入力',price:50000}); renderAdminTab(catId); showToast('項目を追加しました'); }
+function deleteOption(catId,si,oi){ if(!confirm('この項目を削除しますか？'))return; CATS[catId].steps[si].options.splice(oi,1); renderAdminTab(catId); }
+function moveOption(catId,si,oi,dir){ const opts=CATS[catId].steps[si].options,t=oi+dir; if(t<0||t>=opts.length)return; [opts[oi],opts[t]]=[opts[t],opts[oi]]; renderAdminTab(catId); }
+function addSet(catId){ CATS[catId].sets.push({id:`set-new-${Date.now()}`,tag:'新しいタグ',name:'新しいセットプラン',popular:false,chips:['項目1','項目2'],original:500000,price:400000,saving:100000,presets:{}}); renderAdminTab(catId); showToast('セットプランを追加しました'); }
+function deleteSet(catId,si){ if(!confirm('このセットプランを削除しますか？'))return; CATS[catId].sets.splice(si,1); renderAdminTab(catId); }
+
+// ── Save / Reset ──
+async function saveAllAdmin(){
+  const statusEl=document.getElementById('priceEditorStatus');
+  statusEl.innerHTML='<div style="padding:8px 0;color:var(--muted);font-size:.82rem;">保存中...</div>';
+  try{
+    let data={};
+    try{ data=await workerGet(); }catch(e){}
+    Object.keys(CATS).forEach(catId=>{ data[catId]={sets:CATS[catId].sets,steps:CATS[catId].steps}; });
+    data.__settings__={globalSettings:GLOBAL_SETTINGS,deliveryOptions:DELIVERY_OPTIONS};
+    await workerSave(data);
+    statusEl.innerHTML='<div class="sync-ok">✅ 保存しました。全端末に反映されます。</div>';
+    showToast('✅ 保存しました！全端末に反映されます');
+  }catch(e){
+    statusEl.innerHTML=`<div class="sync-err">❌ 保存に失敗しました（${esc(e.message)}）<br>「クラウド同期キー」が正しいか確認してください。</div>`;
+    showToast('❌ 保存に失敗しました');
+  }
+}
+
+async function resetAdminData(){
+  if(!confirm('すべての料金設定を初期値にリセットしますか？'))return;
+  try{ await fetch(`${WORKERS_URL}?action=resetData`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminKey:getWorkerKey()})}); }catch(e){}
+  CATS=JSON.parse(JSON.stringify(CATS_DEFAULT));
+  DELIVERY_OPTIONS=[{id:'urgent',label:'⚡ 特急（通常の半分以下）',rate:0.5,sign:'+',desc:'通常納期の50%UP'},{id:'fast',label:'🔥 急ぎ（通常より早め）',rate:0.25,sign:'+',desc:'通常納期の25%UP'},{id:'normal',label:'📅 通常納期',rate:0,sign:'',desc:'標準スケジュール'},{id:'relaxed',label:'🌿 ゆったり（+1ヶ月〜）',rate:-0.05,sign:'-',desc:'5%割引'},{id:'flexible',label:'🍃 完全フレキシブル（+2ヶ月〜）',rate:-0.1,sign:'-',desc:'10%割引'}];
+  GLOBAL_SETTINGS={saleEnabled:true,saleRate:50,salePeriod:'2026年8月末'};
+  adminCurrentCat='__settings__';
+  renderPriceEditor();
+  showToast('初期値にリセットしました');
 }
 
 // ── Init ──
 (async function(){
-  // Worker からPINを同期（最新PINをローカルに反映）
-  await syncPinFromWorker();
-  if(isSessionValid()){
-    touchSession();
-    openPanel();
-  } else {
-    setTimeout(()=>document.getElementById('pinInput').focus(), 200);
-  }
+  await syncFromWorker();
+  if(isSessionValid()){ touchSession(); openPanel(); }
+  else { setTimeout(()=>document.getElementById('pinInput').focus(),200); }
 })();
 </script>
 </body>

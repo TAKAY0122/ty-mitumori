@@ -296,6 +296,7 @@ async function syncFromWorker(){
     const data = await workerGet();
     if(data.__adminPin__)   localStorage.setItem(SK_PIN, data.__adminPin__);
     if(data.__adminEmail__) localStorage.setItem(SK_EMAIL, data.__adminEmail__);
+    if(data.__workerKey__)  localStorage.setItem(SK_WKEY, data.__workerKey__);
     if(Array.isArray(data.__submissions__)) localStorage.setItem(SK_SUBS, JSON.stringify(data.__submissions__));
   } catch(e){}
 }
@@ -555,7 +556,7 @@ function renderPanel(){
   const currentEmail=localStorage.getItem(SK_EMAIL)||DEFAULT_EMAIL;
   document.getElementById('adminEmailInput').value=currentEmail;
   document.getElementById('emailCurrent').textContent=`現在の設定：${currentEmail}`;
-  document.getElementById('workerKeyInput').value=localStorage.getItem(SK_WKEY)||'';
+  document.getElementById('workerKeyInput').value=localStorage.getItem(SK_WKEY)||'admin1234';
   const recent=subs.slice(0,5);
   const list=document.getElementById('recentList');
   if(!recent.length){list.innerHTML='<div class="no-submissions">まだ送信はありません</div>';return;}
@@ -603,11 +604,21 @@ async function changePin(){
   document.getElementById('newPinInput').value='';
 }
 
-function saveWorkerKey(){
-  const val=document.getElementById('workerKeyInput').value.trim();
-  localStorage.setItem(SK_WKEY,val||'admin1234');
+async function saveWorkerKey(){
+  const val=document.getElementById('workerKeyInput').value.trim()||'admin1234';
+  localStorage.setItem(SK_WKEY,val);
   const el=document.getElementById('syncStatus');
-  el.textContent='キーを保存しました。次回の保存から有効です。'; el.style.color='var(--green)';
+  el.textContent='保存中...'; el.style.color='var(--muted)';
+  // Worker KVにも保存して他端末と同期
+  try{
+    let wdata={};
+    try{ wdata=await workerGet(); }catch(e){}
+    wdata.__workerKey__=val;
+    await workerSave(wdata);
+    el.textContent='✅ キーを保存しました。全端末に同期されます。'; el.style.color='var(--green)';
+  }catch(e){
+    el.textContent='⚠️ ローカルに保存しました（Worker同期失敗）'; el.style.color='var(--accent)';
+  }
   showToast('Workerキーを保存しました');
 }
 

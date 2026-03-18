@@ -390,6 +390,13 @@ body{font-family:var(--gothic);background:var(--bg);color:var(--ink);min-height:
   </div>
 </header>
 
+<!-- ローディングオーバーレイ（Worker取得完了まで表示） -->
+<div id="loadingOverlay" style="position:fixed;inset:0;z-index:9999;background:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
+  <div style="width:36px;height:36px;border:3px solid #eee;border-top-color:var(--accent,#e8380d);border-radius:50%;animation:spin .7s linear infinite;"></div>
+  <div style="font-size:.85rem;color:#999;font-family:var(--gothic);">読み込み中...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
 <div class="container">
 
 <!-- STEP0: カテゴリ選択 -->
@@ -954,24 +961,34 @@ async function fetchAndApplyPriceData() {
   } catch(e){}
 }
 
-// 起動時にデータ取得して反映（localStorageで即時 → Workerで最新に更新）
+// 起動時にデータ取得して反映（Workerから最新データを取得してからページ表示）
 (async function(){
-  // 1. まずlocalStorageから即時反映
-  try {
-    const local = localStorage.getItem('ty_price_data');
-    if (local) mergeSavedData(JSON.parse(local));
-  } catch(e){}
-  // 2. Workerから最新データを取得
-  await fetchAndApplyPriceData();
+  const overlay = document.getElementById('loadingOverlay');
+  const hideOverlay = () => { if(overlay) overlay.style.display='none'; };
 
-  // 3. 同ブラウザの別タブ（管理画面など）でlocalStorageが更新されたら即時反映
+  // タイムアウト保険（3秒以内にWorkerが応答しなくてもページを表示）
+  const timeout = setTimeout(hideOverlay, 3000);
+
+  try {
+    // localStorageがあれば先に反映（オフライン時の保険）
+    const local = localStorage.getItem('ty_price_data');
+    if (local) try { mergeSavedData(JSON.parse(local)); } catch(e){}
+
+    // Workerから最新データを取得（ページ表示前に完了させる）
+    await fetchAndApplyPriceData();
+  } catch(e){}
+
+  clearTimeout(timeout);
+  hideOverlay();
+
+  // 同ブラウザの別タブ（管理画面など）でlocalStorageが更新されたら即時反映
   window.addEventListener('storage', e => {
     if (e.key === 'ty_price_data' && e.newValue) {
       try { mergeSavedData(JSON.parse(e.newValue)); } catch(e2){}
     }
   });
 
-  // 4. 60秒ごとにWorkerから自動取得（別端末の変更を自動反映）
+  // 60秒ごとにWorkerから自動取得（別端末の変更を自動反映）
   setInterval(fetchAndApplyPriceData, 60 * 1000);
 })();
 
